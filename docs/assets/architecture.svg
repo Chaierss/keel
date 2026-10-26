@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 700" width="1160" height="700" role="img" aria-label="Keel 数据流：仓库源文件 → 设置页四件套 → 模式开关 → 上线门禁">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1160 710" width="1160" height="710" role="img" aria-label="Keel 数据流：仓库源文件 → 设置页四件套 → 模式开关 → 上线门禁">
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,1 L9,5 L0,9 z" fill="#94a3b8"/>
@@ -8,7 +8,7 @@
     </marker>
   </defs>
 
-  <rect x="0.5" y="0.5" width="1159" height="699" rx="18" fill="#ffffff" stroke="#e2e8f0"/>
+  <rect x="0.5" y="0.5" width="1159" height="709" rx="18" fill="#ffffff" stroke="#e2e8f0"/>
 
   <text x="48" y="66" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="23" font-weight="700" fill="#0f172a">Keel 数据流：一条源文件，四个页面，一个开关</text>
   <text x="48" y="96" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="13" fill="#64748b">四件套全部从仓库源文件生成，页面里没有任何一份手抄副本；开发/线上模式决定这些内部事实给谁看。</text>
@@ -38,8 +38,8 @@
   </g>
 
   <!-- 第一列 → 第二列 -->
-  <line x1="344" y1="329" x2="388" y2="329" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
-  <text x="366" y="316" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10.5" fill="#94a3b8" text-anchor="middle">自动生成</text>
+  <line x1="344" y1="331" x2="388" y2="331" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="366" y="318" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10.5" fill="#94a3b8" text-anchor="middle">自动生成</text>
 
   <!-- 第二列：设置页 -->
   <rect x="396" y="164" width="368" height="334" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-dasharray="5 4"/>
@@ -60,58 +60,57 @@
     <text x="430" y="402" font-size="13.5" font-weight="600" fill="#312e81">Wiki</text>
     <text x="430" y="422" font-size="11" fill="#4c1d95">直接挂 docs/wiki，无缓存、无搬运</text>
 
-    <text x="412" y="466" font-size="11" fill="#94a3b8">四个页签都只读源文件 · 没有「同步文档」这一步</text>
-    <text x="412" y="484" font-size="11" fill="#94a3b8">改代码的同一次提交，页面就是最新的</text>
+    <text x="412" y="462" font-size="11" fill="#94a3b8">四个页签都只读源文件 · 没有「同步文档」这一步</text>
+    <text x="412" y="480" font-size="11" fill="#94a3b8">改代码的同一次提交，页面就是最新的</text>
   </g>
 
   <!-- 第二列 → 第三列 -->
-  <line x1="770" y1="329" x2="814" y2="329" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arrowAccent)"/>
-  <text x="792" y="316" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10.5" fill="#6366f1" text-anchor="middle">可见性</text>
+  <line x1="770" y1="331" x2="814" y2="331" stroke="#4f46e5" stroke-width="1.5" marker-end="url(#arrowAccent)"/>
+  <text x="792" y="318" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10.5" fill="#6366f1" text-anchor="middle">可见性</text>
 
   <!-- 第三列：模式开关 -->
   <g font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif">
-    <rect x="822" y="164" width="290" height="152" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
+    <rect x="822" y="164" width="290" height="156" rx="10" fill="#f0fdf4" stroke="#bbf7d0"/>
     <text x="842" y="192" font-size="13.5" font-weight="700" fill="#14532d">开发模式</text>
-    <text x="842" y="214" font-size="11" fill="#166534">· 未登记组件告警条</text>
-    <text x="842" y="234" font-size="11" fill="#166534">· 组件源码路径与 demo 预览</text>
-    <text x="842" y="254" font-size="11" fill="#166534">· 「待下架」清单</text>
-    <text x="842" y="274" font-size="11" fill="#166534">· 全部四页签可读</text>
-    <text x="842" y="298" font-size="10.5" fill="#4d7c0f">内部债务看得见，才可能被还掉</text>
+    <text x="842" y="216" font-size="11" fill="#166534">· 未登记组件告警条</text>
+    <text x="842" y="236" font-size="11" fill="#166534">· 组件源码路径与 demo 预览</text>
+    <text x="842" y="256" font-size="11" fill="#166534">· 「待下架」清单</text>
+    <text x="842" y="276" font-size="11" fill="#166534">· 全部四页签可读</text>
+    <text x="842" y="302" font-size="10.5" fill="#4d7c0f">内部债务看得见，才可能被还掉</text>
 
-    <rect x="822" y="336" width="290" height="162" rx="10" fill="#fef2f2" stroke="#fecaca"/>
+    <rect x="822" y="336" width="290" height="156" rx="10" fill="#fef2f2" stroke="#fecaca"/>
     <text x="842" y="364" font-size="13.5" font-weight="700" fill="#7f1d1d">线上模式</text>
-    <text x="842" y="386" font-size="11" fill="#991b1b">· 内部事实整块消失</text>
-    <text x="842" y="406" font-size="11" fill="#991b1b">· 接口文档仅内网可达</text>
-    <text x="842" y="426" font-size="11" fill="#991b1b">· 模式角标常驻，刷新保持</text>
-    <text x="842" y="446" font-size="11" fill="#991b1b">· 判定只在一个函数里</text>
-    <text x="842" y="472" font-size="10.5" fill="#b91c1c">散落读 NODE_ENV 的项目一定漏</text>
-    <text x="842" y="490" font-size="10.5" fill="#b91c1c">某一处，线上就一定露出内部页</text>
+    <text x="842" y="388" font-size="11" fill="#991b1b">· 内部事实整块消失</text>
+    <text x="842" y="408" font-size="11" fill="#991b1b">· 接口文档仅内网可达</text>
+    <text x="842" y="428" font-size="11" fill="#991b1b">· 模式角标常驻，刷新保持</text>
+    <text x="842" y="448" font-size="11" fill="#991b1b">· 判定只在一个函数里</text>
+    <text x="842" y="474" font-size="10.5" fill="#b91c1c">散落读 NODE_ENV，线上一定露内部页</text>
   </g>
 
   <!-- 底部：门禁 -->
-  <rect x="48" y="540" width="1064" height="112" rx="12" fill="#0f172a"/>
-  <text x="72" y="572" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" font-weight="700" fill="#e2e8f0">上线门禁 · 六步全绿才允许切线上模式</text>
+  <rect x="48" y="534" width="1064" height="140" rx="12" fill="#0f172a"/>
+  <text x="72" y="566" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="12.5" font-weight="700" fill="#e2e8f0">上线门禁 · 六步全绿才允许切线上模式</text>
 
   <g font-family="'SFMono-Regular', Consolas, 'Liberation Mono', monospace" font-size="11.5">
-    <rect x="72" y="588" width="196" height="44" rx="7" fill="#1e293b" stroke="#334155"/>
-    <text x="86" y="606" fill="#7dd3fc">console-check</text>
-    <text x="86" y="622" fill="#94a3b8">--strict  四件套完整</text>
+    <rect x="72" y="580" width="196" height="46" rx="7" fill="#1e293b" stroke="#334155"/>
+    <text x="86" y="599" fill="#7dd3fc">console-check</text>
+    <text x="86" y="616" fill="#94a3b8">--strict  四件套完整</text>
 
-    <rect x="284" y="588" width="196" height="44" rx="7" fill="#1e293b" stroke="#334155"/>
-    <text x="298" y="606" fill="#7dd3fc">preflight-scan</text>
-    <text x="298" y="622" fill="#94a3b8">--strict  零 error</text>
+    <rect x="284" y="580" width="196" height="46" rx="7" fill="#1e293b" stroke="#334155"/>
+    <text x="298" y="599" fill="#7dd3fc">preflight-scan</text>
+    <text x="298" y="616" fill="#94a3b8">--strict  零 error</text>
 
-    <rect x="496" y="588" width="150" height="44" rx="7" fill="#1e293b" stroke="#334155"/>
-    <text x="510" y="606" fill="#7dd3fc">依赖审计</text>
-    <text x="510" y="622" fill="#94a3b8">high 及以上清零</text>
+    <rect x="496" y="580" width="150" height="46" rx="7" fill="#1e293b" stroke="#334155"/>
+    <text x="510" y="599" fill="#7dd3fc">依赖审计</text>
+    <text x="510" y="616" fill="#94a3b8">high 及以上清零</text>
 
-    <rect x="662" y="588" width="196" height="44" rx="7" fill="#1e293b" stroke="#334155"/>
-    <text x="676" y="606" fill="#fca5a5">五项人工</text>
-    <text x="676" y="622" fill="#94a3b8">IDOR / SSRF / 越权</text>
+    <rect x="662" y="580" width="196" height="46" rx="7" fill="#1e293b" stroke="#334155"/>
+    <text x="676" y="599" fill="#fca5a5">五项人工</text>
+    <text x="676" y="616" fill="#94a3b8">IDOR / SSRF / 越权</text>
 
-    <rect x="874" y="588" width="214" height="44" rx="7" fill="#1e293b" stroke="#334155"/>
-    <text x="888" y="606" fill="#7dd3fc">dist/ 产物扫描</text>
-    <text x="888" y="622" fill="#94a3b8">打包进去的密钥等于公开</text>
+    <rect x="874" y="580" width="214" height="46" rx="7" fill="#1e293b" stroke="#334155"/>
+    <text x="888" y="599" fill="#7dd3fc">dist/ 产物扫描</text>
+    <text x="888" y="616" fill="#94a3b8">打包进去的密钥等于公开</text>
   </g>
-  <text x="72" y="648" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10.5" fill="#64748b">两个脚本零依赖、只读、不发网络请求 —— 所以能被放心挂进 CI，而不是靠自觉。</text>
+  <text x="72" y="652" font-family="-apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif" font-size="10.5" fill="#94a3b8">两个脚本零依赖、只读、不发网络请求 —— 所以能被放心挂进 CI，而不是靠自觉。</text>
 </svg>

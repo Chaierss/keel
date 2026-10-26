@@ -50,15 +50,11 @@ jobs:
         with:
           node-version: 22
 
-      # 技能包必须零依赖：出现 node_modules 或外部 import 就说明有人偷偷加了包
-      - name: 技能包无外部依赖
+      # 「零依赖」由 tests 里的用例守着（扫描 import 说明符）；这里只查有没有偷偷放 node_modules
+      - name: 技能包里没有 node_modules
         run: |
           if [ -d skills/keel/node_modules ]; then
             echo "::error::skills/keel 里出现了 node_modules，技能必须零依赖"
-            exit 1
-          fi
-          if grep -rInE "require\(['\"][^.'\"]" skills/keel/scripts skills/keel/templates/*.ts 2>/dev/null; then
-            echo "::error::检测到外部 require，技能必须零依赖"
             exit 1
           fi
           echo "ok"
