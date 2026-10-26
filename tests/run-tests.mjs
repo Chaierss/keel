@@ -462,6 +462,32 @@ test('tools/package-skill.mjs：产出的 zip 根目录就是 SKILL.md', () => {
   assert.ok(!names.some((n) => n.startsWith('keel/')), 'zip 里不能多套一层目录，WorkBuddy 会认不出技能')
 })
 
+// ---------------------------------------------------------------- 门面（断图会直接毁掉转化）
+test('README 与 docs 里引用的本地图片都存在（不留断图）', () => {
+  const files = ['README.md', 'README.zh-CN.md', 'docs/architecture.md', 'docs/launch.md', 'docs/publishing.md']
+  for (const rel of files) {
+    const abs = join(REPO, rel)
+    if (!existsSync(abs)) continue
+    const md = readFileSync(abs, 'utf8')
+    const imgs = [...md.matchAll(/!\[[^\]]*\]\(([^)\s]+)/g)]
+      .map((m) => m[1])
+      .filter((p) => !/^https?:/i.test(p))
+    for (const img of imgs) {
+      assert.ok(existsSync(resolve(dirname(abs), img)), `${rel} 引用了不存在的图片：${img}`)
+    }
+  }
+})
+
+test('README 首屏有钩子、有可试入口（不靠形容词开场）', () => {
+  for (const rel of ['README.md', 'README.zh-CN.md']) {
+    const md = readFileSync(join(REPO, rel), 'utf8')
+    const firstScreen = md.split(/\r?\n/).slice(0, 40).join('\n')
+    assert.ok(/docs\/assets\/console\.png/.test(firstScreen), `${rel} 首屏缺产品截图，读者无法判断"长什么样"`)
+    assert.ok(/console-demo\.html/.test(firstScreen), `${rel} 首屏缺可立即打开的演示入口`)
+    assert.ok(/npx skills add|install-local\.mjs|console-check\.mjs/.test(firstScreen), `${rel} 首屏缺可执行命令`)
+  }
+})
+
 // ---------------------------------------------------------------- 跑起来
 const filters = process.argv.slice(2).filter((a) => !a.startsWith('-'))
 const keep = process.argv.includes('--keep')

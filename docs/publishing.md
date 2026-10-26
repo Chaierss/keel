@@ -2,6 +2,8 @@
 
 三个渠道，三套动作。**先做 GitHub 仓库，再做 `npx skills`，最后做需要审核的平台**——顺序反了会在等待审核时无事可做。
 
+各平台要粘的文案（仓库 About、Topics、市场卡片、社交三条）已经写在 [launch.md](launch.md)，直接取用，不要临场编。
+
 ## 0. 发布前自检
 
 ```bash
@@ -31,7 +33,9 @@ keel/
 仓库设置里补齐这几项，转化率差别很大：
 
 - **About**：描述一行 + Topics（`agent-skill` `claude-code` `cursor` `trae` `workbuddy` `design-system` `code-quality`）。
-- **Social preview 图**：1280×640，放架构图或演示页截图。
+  现成的文案在 [launch.md](launch.md)，直接粘。
+- **Social preview 图**：1280×640，用 [`assets/social-preview.png`](assets/social-preview.png)，上传位置在
+  Settings → General → Social preview。**跳过这步，所有转发场景都显示 GitHub 默认灰图。**
 - **Releases**：每个 tag 附上 `dist/keel-<version>.zip`，让不会用命令行的人也能下载。
 - **README 首屏**：一句话定位 + "30 秒演示" + 安装命令。**不要以"背景与动机"开头**。
 

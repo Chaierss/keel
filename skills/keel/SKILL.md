@@ -3,9 +3,9 @@ name: keel
 version: 1.0.0
 author: chaierss
 agent_created: true
-description: 给项目装一副自更新骨架 Keel（龙骨）——先用开发模式/线上模式划清信息边界，再把规则、组件、接口文档、Wiki 四件套放进设置页，全部从仓库源文件自动生成、禁止手写副本。附带页面形态词汇表（专注模式/沉浸模式/主从/画布等）、可判定的设计优雅原则、上线前漏洞扫描门禁，以及两个零依赖脚本。用在项目开荒、接手陌生代码、多个 AI 接力开发、发布前自查。触发词：keel、龙骨、开发模式、线上模式、设置页、系统设置、规则页、术语表、命名约定、设计模式、专注模式、沉浸模式、主从模式、组件统一管理、组件未使用、接口文档、wiki文档、自动更新、单一真相源、漏洞扫描、上线检查、项目体检。
-description_zh: 给项目装一副自更新骨架：规则、组件注册表、接口文档、Wiki 四件套收进同一个设置页，全部从仓库源文件自动生成；用开发/线上模式决定内部事实给谁看，两个零依赖脚本钉成门禁。
-description_en: A self-updating skeleton for software projects. Rules, a component registry, API docs and a wiki live in one settings console, all generated from repo sources. Adds dev/prod visibility modes, a page-mode vocabulary, testable elegance criteria and a pre-release security gate.
+description: 给项目补一套不会过期的内部文档——规则、组件注册表、接口文档、Wiki 四件套收进同一个设置页，四页各读一份仓库源文件、禁止手写副本；再用开发模式/线上模式划分信息边界，两个零依赖脚本（四件套体检 + 上线前漏洞扫描）把它钉成 CI 门禁。用在项目开荒、接手陌生代码、多个 AI 接力开发、组件统一管理、发版前自查。触发词：keel、龙骨、开发模式、线上模式、设置页、系统设置、规则页、术语表、命名约定、设计模式、专注模式、沉浸模式、主从模式、组件统一管理、组件未使用、接口文档、wiki文档、自动更新、单一真相源、漏洞扫描、上线检查、项目体检。
+description_zh: 让项目的规则、组件、接口文档、Wiki 不再靠手抄第二份：四页各读一份仓库源文件，用开发/线上模式决定内部事实给谁看，两个零依赖脚本钉成 CI 门禁。
+description_en: Internal docs that can't go stale — rules, a component registry, API reference and a wiki, each read straight from the repo. Adds dev/prod visibility modes, a page-mode vocabulary, testable elegance criteria and a pre-release security gate. Zero dependencies, read-only.
 ---
 
 # Keel · 龙骨
