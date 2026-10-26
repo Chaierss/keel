@@ -1,0 +1,13 @@
+{
+  "$comment": "keel 扫描范围。只用相对项目根的路径，正斜杠。",
+  "version": 1,
+  "consoleDir": "keel",
+  "srcDir": "src",
+  "scanDirs": ["src", "backend", "frontend"],
+  "componentsDirs": ["src/components"],
+  "wikiDir": "docs/wiki",
+  "sourceExts": [".vue", ".tsx", ".jsx", ".ts", ".js"],
+  "excludeDirs": ["node_modules", "dist", "build", ".git", ".next", "coverage"],
+  "testPatterns": [".test.", ".spec.", ".stories."],
+  "demoSuffix": ".demo"
+}

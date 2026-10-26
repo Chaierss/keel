@@ -1,0 +1,120 @@
+{
+  "version": "2026-10-25",
+  "projectName": "示例项目",
+  "$comment": "初始规则必须包含 P-01（设计优雅原则）与 S-01（上线前安全扫描），这两条是项目底色，缺了后面所有规则都是装饰。",
+  "pageModes": [
+    {
+      "key": "focus",
+      "name": "专注模式",
+      "english": "Focus Mode",
+      "aliases": ["常规页", "主菜单模式"],
+      "definition": "全局菜单栏常驻左侧，右侧为单一内容区。用户在主菜单下按模块专注浏览或操作，导航始终可见，随时可切到别的模块。",
+      "appliesTo": ["工作台", "数据源", "采集任务", "任务运维"],
+      "signal": "240px 全局菜单常驻 + 右侧内容区滚动 + 顶栏「最近访问」",
+      "codeHint": "普通路由：不声明 immersive，壳层保留全局菜单。",
+      "avoid": ["不要把全屏画布/编辑器塞进常规页", "不要把它叫「二级菜单」"]
+    },
+    {
+      "key": "immersive",
+      "name": "沉浸模式",
+      "english": "Immersive Mode",
+      "aliases": ["沉浸式工作区", "全屏工作台", "旧代码注释里的「专注模式」"],
+      "definition": "进入模块后隐藏全局菜单栏，由模块自持整屏；画布或编辑区是绝对主角，退出统一走「返回主菜单」。",
+      "appliesTo": ["工作流创建/编辑", "看板编辑", "智能问数", "系统设置"],
+      "signal": "全局菜单隐藏 + 模块自持整屏 + 左上「返回主菜单」",
+      "codeHint": "路由 meta.immersive：shell = 壳层渲染模块左栏；inline = 页面自持左栏。",
+      "avoid": ["不要叫「弹窗 / 抽屉 / 全屏弹窗」——它是可深链、可刷新的整屏路由态", "不要叫「二级菜单」"]
+    }
+  ],
+  "categories": [
+    { "key": "principle", "label": "设计原则", "description": "判定「好不好」的总纲：优雅、克制、可恢复。它管方向，其余分类管细节。" },
+    { "key": "visual", "label": "视觉与令牌", "description": "颜色、字体、字号、圆角、主题切换的唯一来源与达标线。" },
+    { "key": "motion", "label": "动效", "description": "动效归属、允许的属性、分级使用。" },
+    { "key": "component", "label": "组件", "description": "组件边界、复用方式与新增登记要求。" },
+    { "key": "engineering", "label": "工程与契约", "description": "权限、接口信封、配置来源与禁用演示数据等硬约束。" },
+    { "key": "security", "label": "安全与发布", "description": "上线门槛：漏洞扫描、密钥管理、权限边界。发布前必须全绿。" }
+  ],
+  "rules": [
+    {
+      "id": "P-01",
+      "category": "principle",
+      "severity": "must",
+      "title": "设计优雅原则",
+      "summary": "优雅不是好看，是「少了它会觉得不方便」。任何设计取舍必须能说清付出什么、换回什么。",
+      "detail": "十条可判定条款（每条都要能回答是/否，答不上来就是没做到）：① 一处定义处处一致——改一处能全站生效吗；② 命名先于人——新同事听到这个词能 grep 到实现吗；③ 删除优先——这个开关 90% 的人会用默认值吗，是就别做；④ 默认值即最佳实践——没读过文档的人直接用会踩坑吗；⑤ 一步能完成不要两步——从看到目标到完成要几次点击；⑥ 渐进披露——首屏每个信息 80% 场景会用到吗；⑦ 状态永远可见——「没有数据」和「加载失败」用户分得清吗；⑧ 失败可恢复——误操作后 10 秒内能恢复吗；⑨ 一屏一个主动作——遮住其他元素能立刻知道该点哪吗；⑩ 装饰必须有职责——把它关掉用户会失去什么信息。三条不可越的线：不拿正确性、可访问性、可维护性去换「简洁」。说不出代价的取舍通常不成立，说不出收益的复杂度一定是浪费。",
+      "source": "references/elegance.md"
+    },
+    {
+      "id": "S-01",
+      "category": "security",
+      "severity": "must",
+      "title": "上线前必须通过漏洞扫描",
+      "summary": "切线上模式前必须跑完预检：四件套完整 + 静态扫描零 error + 依赖无 high 漏洞 + 五项人工检查。",
+      "detail": "顺序固定不可颠倒：① console-check.mjs --strict（四件套完整，先知道漏了什么）；② preflight-scan.mjs --strict（硬编码密钥、命令注入、反序列化、关闭证书校验、CORS 通配、调试残留、默认口令等，error 必须清零）；③ 依赖审计（npm audit --audit-level=high / pip-audit），high 及以上清零，禁止用 audit fix --force 蛮干；④ 人工五项（工具查不出，真实事故多在这里）：越权 IDOR（换 id 拿别人数据）、权限只做在前端、业务逻辑绕过、文件上传（类型/路径穿越/可执行）、SSRF（内网地址）；⑤ 构建产物扫描（dist/ 里无密钥，前端打包的「密钥」等于公开）。六步全绿才允许切线上模式。扫描不是一次性仪式，必须挂在 CI 里，否则赶进度时第一个被跳过。豁免写进 .preflightignore 且必须注明原因，无原因的豁免等于关掉检测。",
+      "source": "references/preflight.md · keel/preflight-scan.mjs"
+    },
+    {
+      "id": "V-01",
+      "category": "visual",
+      "severity": "must",
+      "title": "字号、圆角、行高只用令牌",
+      "summary": "禁止裸写 px 字号/圆角与行高数值，统一消费 CSS 变量令牌。",
+      "detail": "调对比度只改令牌层，通过桥接同步组件库同名变量，不逐组件改样式。",
+      "source": "src/theme/tokens.css · scripts/check-theme-contract.mjs"
+    },
+    {
+      "id": "M-01",
+      "category": "motion",
+      "severity": "must",
+      "title": "动效统一由全局层接管",
+      "summary": "组件动效由全局 motion 样式统一接管，组件内不重复实现。",
+      "detail": "只允许 transform / opacity / box-shadow；必须尊重 prefers-reduced-motion。",
+      "source": "src/theme/motion.css"
+    },
+    {
+      "id": "C-01",
+      "category": "component",
+      "severity": "must",
+      "title": "业务视图不直连组件库",
+      "summary": "views 只能从 components/ui 与 components/patterns 取件。",
+      "detail": "UI 库是 components/ui 的实现细节；直接 import 会被门禁拦截。",
+      "source": "scripts/check-architecture.mjs"
+    },
+    {
+      "id": "C-05",
+      "category": "component",
+      "severity": "must",
+      "title": "新增共享组件先登记",
+      "summary": "新增共享组件必须登记到「系统设置 → 组件」注册表后才算完成。",
+      "detail": "注册表会扫描真实目录，未登记的组件会在页面上直接标记并让体检脚本报错。",
+      "source": "keel/components.json · keel/console-check.mjs"
+    },
+    {
+      "id": "E-02",
+      "category": "engineering",
+      "severity": "must",
+      "title": "禁止任何形式的演示数据",
+      "summary": "不种演示数据、不造假运行、不用 demo 名占位；空态就展示空态。",
+      "detail": "没有数据时显示说明性空态，而不是填几条假数据让页面好看。",
+      "source": "src/shared/"
+    },
+    {
+      "id": "E-05",
+      "category": "engineering",
+      "severity": "must",
+      "title": "规则、组件、接口文档、Wiki 必须自动更新",
+      "summary": "这四类文档不允许人肉另存一份：源文件一变，页面必须自动反映最新事实。",
+      "detail": "规则以 keel/rules.json 为唯一源；组件以 components.json + 目录扫描为准，未登记即告警；接口文档由框架生成 OpenAPI 并内嵌，禁止手写接口清单；Wiki 读仓库 docs/wiki/*.md 并无缓存挂载。验收标准：改动后在对应页面无需额外「同步文档」步骤即可见，任何手写副本都视为违规。",
+      "source": "keel/*.json · backend openapi · docs/wiki/"
+    },
+    {
+      "id": "E-06",
+      "category": "engineering",
+      "severity": "should",
+      "title": "设置是页面不是弹窗",
+      "summary": "四件套放在设置中枢的整屏路由页里，可深链、可刷新保持、可分享。",
+      "detail": "容器本身不挂权限，权限下沉到每个 tab；入口放账号菜单，不占业务一级菜单。",
+      "source": "src/app/shell/SystemSettingsPanel.vue"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+# 统一 LF：脚本要能在 Linux CI 与 Windows 本地之间来回，CRLF 会让 shebang 失效
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+*.png binary
+*.jpg binary
+*.zip binary
+*.svg text eol=lf

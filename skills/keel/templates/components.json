@@ -1,0 +1,66 @@
+[
+  {
+    "$comment": "基础控件：UI 库组件经统一出口再导出。只登记出口约定，不逐个登记库内部文件。",
+    "key": "button",
+    "name": "按钮",
+    "exportName": "Button",
+    "layer": "base",
+    "category": "按钮",
+    "path": "src/components/ui/index.ts",
+    "summary": "操作按钮统一出口；页面禁止直接 import UI 库。",
+    "variants": ["primary", "secondary", "outline", "text", "small"],
+    "demo": "src/components/ui/Button.demo.vue",
+    "deprecated": false
+  },
+  {
+    "key": "app-tag",
+    "name": "业务标签",
+    "exportName": "AppTag",
+    "layer": "ui",
+    "category": "展示",
+    "path": "src/components/ui/AppTag.vue",
+    "summary": "业务语义标签的唯一出口：页面只声明 tone，不写死颜色。",
+    "variants": ["neutral", "info", "success", "warning", "danger", "processing"],
+    "demo": "auto",
+    "deprecated": false
+  },
+  {
+    "key": "entity-card",
+    "name": "资源实体卡",
+    "exportName": "EntityCard",
+    "layer": "patterns",
+    "category": "数据展示",
+    "path": "src/components/patterns/EntityCard.vue",
+    "summary": "资源列表的唯一卡片形态：图标+名称+状态 / 标签行 / 元数据 / 悬停操作条。",
+    "variants": ["selected", "unavailable", "leading", "icon", "actions"],
+    "demo": "auto",
+    "note": "不可用态整体降透明并用标签说明原因，不要只用 tooltip。",
+    "deprecated": false
+  },
+  {
+    "key": "empty-state",
+    "name": "空态",
+    "exportName": "EmptyState",
+    "layer": "patterns",
+    "category": "反馈",
+    "path": "src/components/patterns/EmptyState.vue",
+    "summary": "整页与区块两档密度的空态，统一操作区。",
+    "variants": ["default", "small", "action"],
+    "demo": "auto",
+    "deprecated": false
+  },
+  {
+    "$comment": "依赖整页上下文、无法独立渲染时，demo 明确写 null 并说明原因，这是唯一允许的无预览档位。",
+    "key": "grid-canvas",
+    "name": "网格画布",
+    "exportName": "GridCanvas",
+    "layer": "visualization",
+    "category": "画布",
+    "path": "src/components/visualization/GridCanvas.vue",
+    "summary": "看板网格布局画布。",
+    "variants": ["preview", "edit"],
+    "demo": null,
+    "note": "需真实看板数据与拖拽上下文，不提供内联预览。",
+    "deprecated": false
+  }
+]

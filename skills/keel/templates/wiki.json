@@ -1,0 +1,7 @@
+[
+  { "name": "README.md", "title": "总览与导航" },
+  { "name": "architecture.md", "title": "整体架构" },
+  { "name": "backend.md", "title": "后端代码地图" },
+  { "name": "frontend.md", "title": "前端代码地图" },
+  { "name": "operations.md", "title": "运行、验证与扩展" }
+]

@@ -1,0 +1,79 @@
+name: validate
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 夹具从 templates/ 生成：模板写坏会直接红，不用等用户踩到
+      - name: 自测
+        run: node tests/run-tests.mjs
+
+      # 打包必须能成功，且 SKILL.md 必须在 zip 根目录
+      - name: 打包技能
+        if: matrix.node == 22
+        run: node tools/package-skill.mjs --out dist/keel.zip
+
+      - uses: actions/upload-artifact@v4
+        if: matrix.node == 22
+        with:
+          name: keel-skill
+          path: dist/keel.zip
+          if-no-files-found: error
+          retention-days: 30
+
+  guard:
+    name: 不夹带私货
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 技能包必须零依赖：出现 node_modules 或外部 import 就说明有人偷偷加了包
+      - name: 技能包无外部依赖
+        run: |
+          if [ -d skills/keel/node_modules ]; then
+            echo "::error::skills/keel 里出现了 node_modules，技能必须零依赖"
+            exit 1
+          fi
+          if grep -rInE "require\(['\"][^.'\"]" skills/keel/scripts skills/keel/templates/*.ts 2>/dev/null; then
+            echo "::error::检测到外部 require，技能必须零依赖"
+            exit 1
+          fi
+          echo "ok"
+
+      # 用官方 preflight 脚本扫自己：仓库不该把密钥带进来
+      # 豁免写在仓库根 .preflightignore，每条都注明原因
+      - name: 扫描本仓库
+        run: node skills/keel/scripts/preflight-scan.mjs --root . --dirs skills,tools,tests --strict
+
+      - name: 检查提交里没有大文件
+        run: |
+          big=$(find . -path ./.git -prune -o -type f -size +1M -print)
+          if [ -n "$big" ]; then
+            echo "::error::有超过 1MB 的文件，确认是否该进仓库："
+            echo "$big"
+            exit 1
+          fi
+          echo "ok"

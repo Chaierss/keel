@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light" data-mode="dev">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keel · 龙骨 · 演示</title>
+<style>
+  :root {
+    --bg: #f6f7f6;
+    --panel: #ffffff;
+    --panel-2: #fbfbfa;
+    --border: #e3e6e3;
+    --border-soft: #eef0ee;
+    --text: #14171a;
+    --text-2: #5b6470;
+    --text-3: #8b949e;
+    --primary: #16885a;
+    --primary-bg: #e9f6ef;
+    --warn: #9a5b00;
+    --warn-bg: #fdf5e4;
+    --danger: #b3261e;
+    --danger-bg: #fdeceb;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --radius: 10px;
+    --radius-sm: 7px;
+  }
+  html[data-theme="dark"] {
+    --bg: #12151a;
+    --panel: #191d24;
+    --panel-2: #1d222a;
+    --border: #2a303b;
+    --border-soft: #232830;
+    --text: #e7eaee;
+    --text-2: #a2acba;
+    --text-3: #78828f;
+    --primary: #4ad295;
+    --primary-bg: #16302250;
+    --warn: #e0b34a;
+    --warn-bg: #2b2517;
+    --danger: #f2837c;
+    --danger-bg: #2c1817;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 400 14px/1.65 system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .app { display: flex; min-height: 100vh; }
+
+  .rail {
+    width: 232px; flex: 0 0 232px;
+    border-right: 1px solid var(--border);
+    background: var(--panel);
+    display: flex; flex-direction: column;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { padding: 20px 18px 14px; }
+  .brand h1 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: .2px; }
+  .brand p { margin: 4px 0 0; font-size: 12px; color: var(--text-3); line-height: 1.5; }
+  .nav { padding: 4px 10px; display: flex; flex-direction: column; gap: 2px; flex: 1; }
+  .nav button {
+    all: unset; cursor: pointer;
+    padding: 9px 10px; border-radius: var(--radius-sm);
+    font-size: 13.5px; color: var(--text-2);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav button:hover { background: var(--panel-2); color: var(--text); }
+  .nav button.on { background: var(--primary-bg); color: var(--primary); font-weight: 500; }
+  .nav .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .45; }
+  .nav button.on .dot { opacity: 1; }
+
+  .rail-foot { padding: 12px; border-top: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: 8px; }
+  .mode-badge {
+    all: unset; cursor: pointer; text-align: center;
+    font-size: 12px; padding: 6px 10px; border-radius: 999px;
+    background: var(--danger-bg); color: var(--danger); font-weight: 500;
+  }
+  html[data-mode="prod"] .mode-badge { background: var(--panel-2); color: var(--text-3); }
+  .ghost-btn {
+    all: unset; cursor: pointer; text-align: center;
+    font-size: 12px; padding: 5px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border); color: var(--text-2);
+  }
+  .ghost-btn:hover { border-color: var(--text-3); color: var(--text); }
+
+  main { flex: 1; min-width: 0; }
+  .topbar {
+    padding: 22px 32px 18px; border-bottom: 1px solid var(--border);
+    background: var(--panel); display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;
+  }
+  .topbar h2 { margin: 0; font-size: 18px; font-weight: 600; }
+  .topbar .sub { margin: 5px 0 0; font-size: 13px; color: var(--text-2); max-width: 620px; }
+  .topbar .hint { font-size: 12px; color: var(--text-3); text-align: right; line-height: 1.7; flex: 0 0 auto; }
+  .topbar .hint b { color: var(--primary); font-weight: 500; }
+
+  .view { display: none; padding: 26px 32px 64px; max-width: 1080px; }
+  .view.on { display: block; }
+
+  .hero {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--panel); padding: 20px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    margin-bottom: 22px;
+  }
+  .hero h3 { margin: 0; font-size: 15px; font-weight: 600; }
+  .hero p { margin: 6px 0 0; font-size: 13px; color: var(--text-2); max-width: 560px; }
+  .metrics { display: flex; gap: 22px; flex: 0 0 auto; }
+  .metric .n { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .metric .l { font-size: 11.5px; color: var(--text-3); margin-top: 1px; }
+
+  .sec-title { display: flex; align-items: baseline; gap: 10px; margin: 26px 0 12px; }
+  .sec-title .idx { font-family: var(--mono); font-size: 11.5px; color: var(--text-3); }
+  .sec-title h4 { margin: 0; font-size: 14px; font-weight: 600; }
+  .sec-title .desc { font-size: 12.5px; color: var(--text-3); }
+
+  .grid { display: grid; gap: 12px; }
+  .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 1000px) { .grid.two, .grid.three { grid-template-columns: 1fr; } }
+
+  .card {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--panel); padding: 16px;
+  }
+  .card h5 { margin: 0 0 4px; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card .en { font-family: var(--mono); font-size: 11px; color: var(--text-3); font-weight: 400; }
+  .card dl { margin: 10px 0 0; display: grid; grid-template-columns: 66px 1fr; gap: 6px 10px; font-size: 12.5px; }
+  .card dt { color: var(--text-3); }
+  .card dd { margin: 0; color: var(--text-2); }
+  .card .avoid { color: var(--danger); }
+
+  .chip {
+    display: inline-flex; align-items: center; height: 20px; padding: 0 7px;
+    border-radius: 5px; font-size: 11.5px; font-weight: 500;
+    background: var(--panel-2); color: var(--text-2); border: 1px solid var(--border-soft);
+  }
+  .chip.pri { background: var(--primary-bg); color: var(--primary); border-color: transparent; }
+  .chip.warn { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+  .chip.danger { background: var(--danger-bg); color: var(--danger); border-color: transparent; }
+  .chip.must { background: var(--danger-bg); color: var(--danger); border-color: transparent; }
+  .chip.should { background: var(--panel-2); color: var(--text-3); }
+
+  .rule-list { display: flex; flex-direction: column; gap: 8px; }
+  .rule {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--panel); padding: 13px 16px;
+    display: grid; grid-template-columns: 62px 1fr auto; gap: 12px; align-items: start;
+  }
+  .rule .rid { font-family: var(--mono); font-size: 12px; color: var(--text-3); padding-top: 2px; }
+  .rule .rt { font-size: 13.5px; font-weight: 500; }
+  .rule .rs { font-size: 12.5px; color: var(--text-2); margin-top: 3px; }
+  .rule .src { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-top: 6px; }
+  html[data-mode="prod"] .src { display: none; }
+
+  .alert {
+    border: 1px solid var(--warn); border-radius: var(--radius);
+    background: var(--warn-bg); padding: 12px 16px; margin-bottom: 18px;
+  }
+  .alert p { margin: 0; font-size: 13px; color: var(--warn); font-weight: 500; }
+  .alert code { font-family: var(--mono); font-size: 11.5px; display: block; margin-top: 4px; color: var(--warn); opacity: .85; }
+  html[data-mode="prod"] .dev-only { display: none !important; }
+
+  .comp {
+    border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--panel); overflow: hidden; display: flex; flex-direction: column;
+  }
+  .comp .stage {
+    min-height: 92px; display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 14px; background: var(--panel-2); border-bottom: 1px solid var(--border-soft);
+    flex-wrap: wrap;
+  }
+  .comp .meta { padding: 12px 14px 14px; }
+  .comp .meta .row1 { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .comp .name { font-size: 13.5px; font-weight: 600; }
+  .comp .exp { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
+  .comp .sum { font-size: 12.5px; color: var(--text-2); margin: 7px 0 0; }
+  .comp .path { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-top: 8px; }
+  .comp .uses { font-size: 11.5px; color: var(--primary); margin-top: 8px; }
+
+  .btn {
+    all: unset; cursor: pointer; font-size: 13px; padding: 5px 13px; border-radius: 7px;
+    background: var(--primary); color: #fff; font-weight: 500;
+  }
+  html[data-theme="dark"] .btn { color: #05130c; }
+  .btn.sec { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+
+  .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 5px; font-size: 12px; font-weight: 500; }
+  .tag.n { background: var(--panel-2); color: var(--text-2); }
+  .tag.i { background: #e8f0fd; color: #1d4ed8; }
+  .tag.s { background: var(--primary-bg); color: var(--primary); }
+  .tag.w { background: var(--warn-bg); color: var(--warn); }
+  .tag.d { background: var(--danger-bg); color: var(--danger); }
+  html[data-theme="dark"] .tag.i { background: #17243d; color: #8fb4ff; }
+
+  .entity {
+    width: 100%; max-width: 260px; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--panel); padding: 10px 12px; display: flex; gap: 10px; align-items: center;
+  }
+  .entity .ico { width: 26px; height: 26px; border-radius: 6px; background: var(--primary-bg); color: var(--primary); display: grid; place-items: center; font-size: 12px; font-weight: 600; }
+  .entity .nm { font-size: 12.5px; font-weight: 500; }
+  .entity .mt { font-size: 11px; color: var(--text-3); }
+
+  .empty { text-align: center; color: var(--text-3); font-size: 12px; }
+  .empty .box { width: 34px; height: 26px; border: 1px dashed var(--border); border-radius: 5px; margin: 0 auto 6px; }
+
+  .searchbox {
+    display: flex; align-items: center; gap: 7px; width: 100%; max-width: 240px;
+    border: 1px solid var(--border); border-radius: 7px; padding: 6px 10px; background: var(--panel);
+    font-size: 12.5px; color: var(--text-3);
+  }
+
+  .api-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    border: 1px solid var(--border); border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0; background: var(--panel-2);
+    padding: 9px 14px; font-size: 12.5px; color: var(--text-2);
+  }
+  .api-list { border: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); background: var(--panel); overflow: hidden; }
+  .api {
+    display: flex; align-items: center; gap: 12px; padding: 11px 14px;
+    border-bottom: 1px solid var(--border-soft); font-size: 13px;
+  }
+  .api:last-child { border-bottom: none; }
+  .m { font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: .4px; padding: 3px 7px; border-radius: 5px; min-width: 52px; text-align: center; }
+  .m.get { background: #e6f4ec; color: #0f6b45; }
+  .m.post { background: #e8f0fd; color: #1d4ed8; }
+  .m.del { background: var(--danger-bg); color: var(--danger); }
+  html[data-theme="dark"] .m.get { background: #14301f; color: #58d39c; }
+  html[data-theme="dark"] .m.post { background: #17243d; color: #8fb4ff; }
+  .api .p { font-family: var(--mono); font-size: 12.5px; }
+  .api .s { color: var(--text-3); font-size: 12px; margin-left: auto; }
+
+  .locked {
+    display: none; border: 1px dashed var(--border); border-radius: var(--radius);
+    padding: 34px; text-align: center; color: var(--text-3); font-size: 13px; background: var(--panel);
+  }
+  html[data-mode="prod"] .locked { display: block; }
+  html[data-mode="prod"] .api-wrap { display: none; }
+
+  .wiki { display: grid; grid-template-columns: 190px 1fr; gap: 20px; }
+  .wiki nav { border-right: 1px solid var(--border-soft); padding-right: 10px; }
+  .wiki nav button {
+    all: unset; cursor: pointer; display: block; width: 100%;
+    padding: 7px 10px; border-radius: 6px; font-size: 12.5px; color: var(--text-2);
+  }
+  .wiki nav button.on { background: var(--primary-bg); color: var(--primary); font-weight: 500; }
+  .wiki article { font-size: 13.5px; color: var(--text-2); max-width: 620px; }
+  .wiki article h3 { margin: 0 0 10px; font-size: 17px; color: var(--text); font-weight: 600; }
+  .wiki article h4 { margin: 20px 0 6px; font-size: 13.5px; color: var(--text); font-weight: 600; }
+  .wiki article code { font-family: var(--mono); font-size: 12px; background: var(--panel-2); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border-soft); }
+  .wiki article table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12.5px; }
+  .wiki article th, .wiki article td { border: 1px solid var(--border-soft); padding: 6px 9px; text-align: left; }
+  .wiki article th { background: var(--panel-2); font-weight: 500; color: var(--text); }
+
+  .foot-note {
+    margin-top: 34px; padding-top: 14px; border-top: 1px solid var(--border-soft);
+    font-size: 12px; color: var(--text-3);
+  }
+  .toast {
+    position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 12px);
+    background: var(--text); color: var(--bg); font-size: 12.5px;
+    padding: 8px 16px; border-radius: 999px; opacity: 0; pointer-events: none;
+    transition: opacity .18s, transform .18s;
+  }
+  .toast.on { opacity: .92; transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <h1>系统设置</h1>
+      <p>Keel · 龙骨 · 四件套演示<br>全部内容来自仓库源文件</p>
+    </div>
+    <nav class="nav" id="nav">
+      <button class="on" data-view="rules"><span class="dot"></span>规则</button>
+      <button data-view="components"><span class="dot"></span>组件</button>
+      <button data-view="api"><span class="dot"></span>接口文档</button>
+      <button data-view="wiki"><span class="dot"></span>Wiki 文档</button>
+    </nav>
+    <div class="rail-foot">
+      <button class="mode-badge" id="modeBtn" title="点击切换开发 / 线上模式">开发模式</button>
+      <button class="ghost-btn" id="themeBtn">切换深色</button>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <h2 id="vTitle">规则</h2>
+        <p class="sub" id="vSub">项目规则与页面形态术语的唯一真相源。改 rules.json，刷新即变，页面里没有任何手写副本。</p>
+      </div>
+      <div class="hint">左下角可切换 <b>开发 / 线上模式</b><br>注意告警条与源码路径的变化</div>
+    </header>
+
+    <section class="view on" id="view-rules">
+      <div class="hero">
+        <div>
+          <h3>规则版本 2026-10-25</h3>
+          <p>2 个页面形态 · 9 条规则 · 其中 7 条 must。导出成 Markdown 就是给下一个 agent 的上下文，不用重复口头解释。</p>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="n">2</div><div class="l">页面形态</div></div>
+          <div class="metric"><div class="n">9</div><div class="l">规则</div></div>
+          <div class="metric"><div class="n">7</div><div class="l">必须</div></div>
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="idx">01</span><h4>页面形态</h4><span class="desc">同一件事只有一个叫法，说"用主从模式"所有人画得出同一个骨架</span></div>
+      <div class="grid two">
+        <div class="card">
+          <h5>专注模式 <span class="en">Focus Mode</span> <span class="chip pri">默认</span></h5>
+          <dl>
+            <dt>定义</dt><dd>全局菜单常驻左侧，右侧单一内容区，随时可切模块。</dd>
+            <dt>识别</dt><dd>240px 菜单一直在 + 右侧内容区滚动</dd>
+            <dt>代码落点</dt><dd>普通路由，不声明 immersive</dd>
+            <dt>旧称</dt><dd>常规页、主菜单模式</dd>
+            <dt>避免</dt><dd class="avoid">不要叫「二级菜单」；不要把全屏画布塞进来</dd>
+          </dl>
+        </div>
+        <div class="card">
+          <h5>沉浸模式 <span class="en">Immersive Mode</span></h5>
+          <dl>
+            <dt>定义</dt><dd>隐藏全局菜单，模块自持整屏，画布或编辑区是主角。</dd>
+            <dt>识别</dt><dd>全局菜单消失 + 左上「返回主站」</dd>
+            <dt>代码落点</dt><dd>meta.immersive = shell / inline</dd>
+            <dt>旧称</dt><dd>沉浸式工作区、<b>旧注释里的「专注模式」</b></dd>
+            <dt>避免</dt><dd class="avoid">不要叫「弹窗 / 抽屉」——它是可深链的整屏路由态</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="idx">02</span><h4>规则清单</h4><span class="desc">每条都带出处，没有出处的规则一个月后没人敢执行</span></div>
+      <div class="rule-list">
+        <div class="rule">
+          <div class="rid">P-01</div>
+          <div>
+            <div class="rt">设计优雅原则</div>
+            <div class="rs">优雅不是好看，是「少了它会觉得不方便」。十条判定问题答不上来的，就是没做到。</div>
+            <div class="src">references/elegance.md</div>
+          </div>
+          <span class="chip must">必须</span>
+        </div>
+        <div class="rule">
+          <div class="rid">S-01</div>
+          <div>
+            <div class="rt">上线前必须通过漏洞扫描</div>
+            <div class="rs">四件套体检 → 静态漏洞 → 依赖审计 → 人工五项 → 产物扫描 → 切线上模式。顺序不可颠倒。</div>
+            <div class="src">references/preflight.md · scripts/preflight-scan.mjs</div>
+          </div>
+          <span class="chip must">必须</span>
+        </div>
+        <div class="rule">
+          <div class="rid">C-05</div>
+          <div>
+            <div class="rt">新增共享组件先登记</div>
+            <div class="rs">目录里有、注册表没有 = 页面告警 + 脚本报错。注册表是准入名单，不是说明书。</div>
+            <div class="src">keel/components.json · scripts/console-check.mjs</div>
+          </div>
+          <span class="chip must">必须</span>
+        </div>
+        <div class="rule">
+          <div class="rid">E-05</div>
+          <div>
+            <div class="rt">规则、组件、接口文档、Wiki 必须自动更新</div>
+            <div class="rs">改动后无需「同步文档」步骤即可见。任何手写副本都视为违规。</div>
+            <div class="src">keel/*.json · docs/wiki/</div>
+          </div>
+          <span class="chip must">必须</span>
+        </div>
+        <div class="rule">
+          <div class="rid">V-01</div>
+          <div>
+            <div class="rt">字号、圆角、行高只用令牌</div>
+            <div class="rs">禁止裸写 px。调对比度只改令牌层，不逐组件改样式。</div>
+            <div class="src">src/theme/tokens.css</div>
+          </div>
+          <span class="chip must">必须</span>
+        </div>
+      </div>
+      <div class="foot-note">线上模式下，每条规则右下角的出处路径会消失——内部结构不给外人看。</div>
+    </section>
+
+    <section class="view" id="view-components">
+      <div class="hero">
+        <div>
+          <h3>组件统一化管理</h3>
+          <p>卡片里渲染的是真实组件，不是截图。改组件样式，这里同步变。新增组件只要同目录放一个 demo 文件，不用改任何已存在的文件。</p>
+        </div>
+        <div class="metrics">
+          <div class="metric"><div class="n">5</div><div class="l">已登记</div></div>
+          <div class="metric"><div class="n">6</div><div class="l">实际</div></div>
+          <div class="metric"><div class="n">83%</div><div class="l">覆盖率</div></div>
+          <div class="metric"><div class="n">1</div><div class="l">未登记</div></div>
+        </div>
+      </div>
+
+      <div class="alert dev-only">
+        <p>有 1 个共享组件尚未登记，请补充到 components.json：</p>
+        <code>src/components/patterns/NewThing.vue</code>
+      </div>
+
+      <div class="grid three">
+        <div class="comp">
+          <div class="stage"><button class="btn">保存</button><button class="btn sec">取消</button></div>
+          <div class="meta">
+            <div class="row1"><span class="name">按钮</span><span class="exp">Button</span><span class="chip">基础控件</span></div>
+            <p class="sum">操作按钮统一出口；页面禁止直接 import UI 库。</p>
+            <div class="path dev-only">components/ui/index.ts</div>
+            <div class="uses">被 34 处引用</div>
+          </div>
+        </div>
+        <div class="comp">
+          <div class="stage"><span class="tag n">中性</span><span class="tag i">信息</span><span class="tag s">成功</span><span class="tag w">警告</span><span class="tag d">危险</span></div>
+          <div class="meta">
+            <div class="row1"><span class="name">业务标签</span><span class="exp">AppTag</span><span class="chip">自研语义件</span></div>
+            <p class="sum">业务语义标签的唯一出口：页面只声明 tone，不写死颜色。</p>
+            <div class="path dev-only">components/ui/AppTag.vue</div>
+            <div class="uses">被 21 处引用</div>
+          </div>
+        </div>
+        <div class="comp">
+          <div class="stage"><span class="tag s">运行中</span><span class="tag n">等待中</span><span class="tag d">失败</span></div>
+          <div class="meta">
+            <div class="row1"><span class="name">状态标签</span><span class="exp">StatusTag</span><span class="chip">自研语义件</span></div>
+            <p class="sum">业务状态到语义 tone 的唯一映射，状态文案走 shared/statusLabels。</p>
+            <div class="path dev-only">components/ui/StatusTag.vue</div>
+            <div class="uses">被 17 处引用</div>
+          </div>
+        </div>
+        <div class="comp">
+          <div class="stage">
+            <div class="entity">
+              <div class="ico">DS</div>
+              <div><div class="nm">dwh_prod</div><div class="mt">MySQL · 3 个任务</div></div>
+            </div>
+          </div>
+          <div class="meta">
+            <div class="row1"><span class="name">资源实体卡</span><span class="exp">EntityCard</span><span class="chip">跨域结构件</span></div>
+            <p class="sum">资源列表的唯一卡片形态：图标+名称+状态 / 标签行 / 元数据 / 悬停操作条。</p>
+            <div class="path dev-only">components/patterns/EntityCard.vue</div>
+            <div class="uses">被 12 处引用</div>
+          </div>
+        </div>
+        <div class="comp">
+          <div class="stage"><div class="empty"><div class="box"></div>还没有数据源<br>新建一个开始</div></div>
+          <div class="meta">
+            <div class="row1"><span class="name">空态</span><span class="exp">EmptyState</span><span class="chip">跨域结构件</span></div>
+            <p class="sum">整页与区块两档密度的空态，统一操作区。</p>
+            <div class="path dev-only">components/patterns/EmptyState.vue</div>
+            <div class="uses">被 9 处引用</div>
+          </div>
+        </div>
+        <div class="comp">
+          <div class="stage"><div class="searchbox">⌕ 搜索名称或路径</div></div>
+          <div class="meta">
+            <div class="row1"><span class="name">搜索框</span><span class="exp">SearchInput</span><span class="chip">跨域结构件</span></div>
+            <p class="sum">带搜索图标的输入框，列表检索统一使用。</p>
+            <div class="path dev-only">components/patterns/SearchInput.vue</div>
+            <div class="uses">被 8 处引用</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dev-only">
+        <div class="sec-title"><span class="idx">03</span><h4>待下架</h4><span class="desc">已登记但 0 处引用，观察一个迭代周期后再删</span></div>
+        <div class="rule-list">
+          <div class="rule">
+            <div class="rid">—</div>
+            <div>
+              <div class="rt">网格画布 <span class="en" style="color:var(--text-3)">GridCanvas</span></div>
+              <div class="rs">0 处引用。动态 import 可能漏扫，所以标为候选下架而不是直接删。</div>
+              <div class="src">components/visualization/GridCanvas.vue</div>
+            </div>
+            <span class="chip warn">候选下架</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-api">
+      <div class="api-wrap">
+        <div class="api-bar">
+          <span>由 OpenAPI 自动生成，接口改动实时生效</span>
+          <span class="chip">Bearer 已授权</span>
+        </div>
+        <div class="api-list">
+          <div class="api"><span class="m get">GET</span><span class="p">/api/datasources</span><span class="s">列出数据源（分页）</span></div>
+          <div class="api"><span class="m post">POST</span><span class="p">/api/datasources</span><span class="s">新建数据源并测试连接</span></div>
+          <div class="api"><span class="m get">GET</span><span class="p">/api/datasources/{id}</span><span class="s">数据源详情</span></div>
+          <div class="api"><span class="m del">DELETE</span><span class="p">/api/datasources/{id}</span><span class="s">删除（需二次确认）</span></div>
+        </div>
+        <div class="foot-note">这里内嵌的是真实 Swagger UI。判定「有接口文档」的标准是能填 token 试调，不是页面上有字。</div>
+      </div>
+      <div class="locked">线上模式已关闭接口文档<br><span style="font-size:12px">/docs 返回 404，/openapi.json 仅内网可达</span></div>
+      <div class="foot-note">线上模式刻意关掉它：文档页是最容易被外部扫到的内部结构入口。</div>
+    </section>
+
+    <section class="view" id="view-wiki">
+      <div class="wiki">
+        <nav id="wikiNav">
+          <button class="on">总览与导航</button>
+          <button>整体架构</button>
+          <button>后端代码地图</button>
+          <button>前端代码地图</button>
+          <button>运行、验证与扩展</button>
+        </nav>
+        <article>
+          <h3>整体架构</h3>
+          <p>文档内容直接读仓库里的 <code>docs/wiki/*.md</code>，后端以无缓存方式挂载，前端 <code>cache: 'no-store'</code> 拉取。改一个错别字，刷新页面就变了，不需要重新构建、不需要重启服务。</p>
+          <h4>三条管道</h4>
+          <table>
+            <tr><th>内容</th><th>真相源</th><th>为什么不会过期</th></tr>
+            <tr><td>规则</td><td>rules.json</td><td>页面直接读同一份数据</td></tr>
+            <tr><td>组件</td><td>目录扫描</td><td>多出来的文件自动告警</td></tr>
+            <tr><td>文档</td><td>docs/wiki/*.md</td><td>无缓存挂载，改文件即生效</td></tr>
+          </table>
+          <h4>为什么不用文档站</h4>
+          <p>因为两份必然分叉。文档站一旦独立部署，它就再也跟不上代码了——不是没人维护，是维护它的人看不到代码变更。</p>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  var META = {
+    rules: ['规则', '项目规则与页面形态术语的唯一真相源。改 rules.json，刷新即变，页面里没有任何手写副本。'],
+    components: ['组件', '共享组件的统一登记与验收。卡片是真实渲染，新增组件只要同目录放 demo，不用改任何已存在的文件。'],
+    api: ['接口文档', '由后端路由与模型自动生成的 OpenAPI，内嵌可试调。手写接口清单必然与代码分叉。'],
+    wiki: ['Wiki 文档', '仓库里的 Markdown，无缓存挂载。改文件刷新即生效，不需要重新构建。']
+  };
+
+  var nav = document.getElementById('nav');
+  nav.addEventListener('click', function (e) {
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    var key = btn.dataset.view;
+    nav.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+    document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('on'); });
+    document.getElementById('view-' + key).classList.add('on');
+    document.getElementById('vTitle').textContent = META[key][0];
+    document.getElementById('vSub').textContent = META[key][1];
+  });
+
+  var modeBtn = document.getElementById('modeBtn');
+  modeBtn.addEventListener('click', function () {
+    var prod = document.documentElement.dataset.mode === 'prod';
+    document.documentElement.dataset.mode = prod ? 'dev' : 'prod';
+    modeBtn.textContent = prod ? '开发模式' : '线上模式';
+    toast(prod ? '已切回开发模式：告警条与源码路径恢复' : '已切到线上模式：内部债与源码路径全部隐藏');
+  });
+
+  var themeBtn = document.getElementById('themeBtn');
+  themeBtn.addEventListener('click', function () {
+    var dark = document.documentElement.dataset.theme === 'dark';
+    document.documentElement.dataset.theme = dark ? 'light' : 'dark';
+    themeBtn.textContent = dark ? '切换深色' : '切换浅色';
+  });
+
+  var wikiNav = document.getElementById('wikiNav');
+  wikiNav.addEventListener('click', function (e) {
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    wikiNav.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+  });
+
+  if (document.documentElement.dataset.mode === 'prod') modeBtn.textContent = '线上模式';
+  if (document.documentElement.dataset.theme === 'dark') themeBtn.textContent = '切换浅色';
+
+  var toastEl = document.getElementById('toast');
+  var toastTimer;
+  function toast(text) {
+    toastEl.textContent = text;
+    toastEl.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('on'); }, 2200);
+  }
+</script>
+</body>
+</html>

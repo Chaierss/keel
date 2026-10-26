@@ -1,0 +1,32 @@
+{
+  "name": "keel-skill",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A self-updating console for software projects: rules, a component registry, API docs and a wiki generated from repo sources, plus dev/prod visibility modes and a pre-release security gate.",
+  "keywords": [
+    "agent-skill",
+    "claude-code",
+    "cursor",
+    "trae",
+    "workbuddy",
+    "design-system",
+    "component-registry",
+    "preflight"
+  ],
+  "license": "MIT",
+  "author": "chaierss",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Chaierss/keel.git"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node tests/run-tests.mjs",
+    "pack": "node tools/package-skill.mjs",
+    "pack:list": "node tools/package-skill.mjs --list",
+    "install:local": "node tools/install-local.mjs --target workbuddy"
+  }
+}
