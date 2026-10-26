@@ -106,7 +106,8 @@ Read this before installing any third-party skill; every skill should publish it
 - **No install hooks.** No `postinstall`, no `preinstall`, no `node_modules`. The skill itself has zero dependencies.
 
 There is a test in this repo that asserts the read-only guarantee **byte for byte** — every file's size and mtime is
-compared before and after both scripts run ([`tests/run-tests.mjs`](tests/run-tests.mjs)).
+compared before and after both scripts run ([`tests/run-tests.mjs`](tests/run-tests.mjs)). If any of these four stops
+holding, it is a vulnerability: see [SECURITY.md](SECURITY.md).
 
 ## When not to use it
 

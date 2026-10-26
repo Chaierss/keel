@@ -94,7 +94,7 @@ node keel/preflight-scan.mjs --strict    # 17 条代码模式规则 + 文件级�
 - **不读凭证。** 只做文本模式匹配，命中的内容原样打在终端上，不外传。
 - **无安装钩子。** 没有 `postinstall`，没有 `preinstall`，没有 `node_modules`——技能本体零依赖。
 
-仓库里有一条用例**逐字节**验证这个承诺：两个脚本各跑一遍，比对每个文件的大小与 mtime（[`tests/run-tests.mjs`](tests/run-tests.mjs)）。
+仓库里有一条用例**逐字节**验证这个承诺：两个脚本各跑一遍，比对每个文件的大小与 mtime（[`tests/run-tests.mjs`](tests/run-tests.mjs)）。这四条有一条不成立就是漏洞，披露方式见 [SECURITY.md](SECURITY.md)。
 
 ## 什么时候不该装
 

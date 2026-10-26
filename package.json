@@ -6,13 +6,20 @@
   "description": "A self-updating console for software projects: rules, a component registry, API docs and a wiki generated from repo sources, plus dev/prod visibility modes and a pre-release security gate.",
   "keywords": [
     "agent-skill",
+    "ai-agents",
     "claude-code",
     "cursor",
+    "codex",
     "trae",
     "workbuddy",
+    "developer-tools",
+    "documentation",
+    "docs-as-code",
     "design-system",
     "component-registry",
-    "preflight"
+    "code-quality",
+    "security-scanner",
+    "single-source-of-truth"
   ],
   "license": "MIT",
   "author": {

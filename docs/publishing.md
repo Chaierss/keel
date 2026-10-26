@@ -111,6 +111,43 @@ Trae 认两种位置：
 
 README 里给三条命令就够了：`npx skills add`、`tools/install-local.mjs`、`tools/package-skill.mjs`。**不要列十种安装方式**——选择成本比安装成本高。
 
+## 6. 可发现性：让别人搜得到
+
+流量不来自「写得好」，来自「被搜到」。前两处决定 GitHub 站内能不能找到你。
+
+### Topics（GitHub 搜索与推荐的主入口）
+
+仓库首页右侧 ⚙️ → Topics，粘贴这一串（逗号分隔）：
+
+```
+agent-skill, ai-agents, claude-code, cursor, codex, trae, workbuddy, developer-tools, documentation, docs-as-code, design-system, component-registry, code-quality, security-scanner, single-source-of-truth
+```
+
+选词是三层结构，缺一层就少一类入口：
+
+| 层 | 词 | 吃什么样的搜索 |
+|---|---|---|
+| 平台名 | `claude-code` `cursor` `codex` `trae` `workbuddy` | 「我在用 X，有没有好用的技能」 |
+| 问题词 | `docs-as-code` `component-registry` `documentation` `code-quality` | 「我在解决什么问题」 |
+| 品类词 | `agent-skill` `ai-agents` `single-source-of-truth` `developer-tools` | 逛分类页的人 |
+
+不要为凑数塞无关热词——GitHub 会判滥用，而且点进来的人立刻划走，反而拉低推荐权重。
+
+### Description 与 Website
+
+一句话里要有「是什么 + 治什么病 + 关键约束」，不要只写名词。现成文案在 [launch.md](launch.md) 第一节，直接粘。
+
+Website 填 `https://www.chaierss.fun`——它是所有卡片上的署名落点，也是审核时判断「这人是不是真的在做东西」的依据。
+
+### npm keywords
+
+`package.json` 的 `keywords` 与 Topics 保持同一套词。本包不发 npm，但 `npx skills`、各类市场爬虫与编辑器插件都读它做索引。
+
+### 站外
+
+- 给 `awesome-*` 列表提 PR（搜 `awesome ai agents`、`awesome claude code`），一次合并带来的长期流量高于一条推文
+- 写文章时**主题是问题，不是项目**：「我为什么不再手写第二份文档」，末尾附仓库
+
 ## 版本与更新
 
 - 改完代码 → 改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → `node tools/package-skill.mjs`。
