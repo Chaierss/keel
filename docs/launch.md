@@ -1,5 +1,7 @@
 # 发布文案包
 
+**作者：chaierss · 主页：[www.chaierss.fun](https://www.chaierss.fun) · 仓库：[github.com/Chaierss/keel](https://github.com/Chaierss/keel)**
+
 改完代码别急着发链接。**发布的第一屏是仓库卡片，不是 README**——很多人只看到标题 + 一句话 + 社交预览图就决定了要不要点。
 
 这份文件里所有文案都可以直接粘，不用改。原则只有三条：
@@ -15,6 +17,7 @@
 ```
 A settings console that can't go stale: rules, a component registry, API reference and a wiki, each read straight
 from the repo. Adds dev/prod visibility modes and a release gate. Zero dependencies, read-only, no network.
+By chaierss — https://www.chaierss.fun
 ```
 
 **Topics**（8–12 个，决定能不能被搜到）
@@ -26,7 +29,7 @@ design-system  component-registry  documentation  developer-tools  preflight  co
 
 **Social preview**
 
-上传 [`assets/social-preview.png`](assets/social-preview.png)（1280×640）。
+上传 [`docs/assets/social-preview.png`](docs/assets/social-preview.png)（1280×640，含 `chaierss / www.chaierss.fun` 署名）。
 设置位置：仓库 → Settings → General → Social preview → Upload image。
 
 > 这一步很多人跳过，结果是分享到任何地方都显示 GitHub 默认灰图。**它是所有转发场景的唯一视觉。**
@@ -34,7 +37,7 @@ design-system  component-registry  documentation  developer-tools  preflight  co
 **仓库简介（中文版，发国内平台时用）**
 
 ```
-一个不会过期的设置页：规则、组件注册表、接口文档、Wiki 各读一份仓库源文件；附开发/线上模式与上线前漏洞扫描门禁。零依赖、只读、不联网。
+一个不会过期的设置页：规则、组件注册表、接口文档、Wiki 各读一份仓库源文件；附开发/线上模式与上线前漏洞扫描门禁。零依赖、只读、不联网。作者 chaierss · chaierss.fun
 ```
 
 ## 二、WorkBuddy 市场卡片
@@ -83,7 +86,7 @@ Keel 换了个做法：让这四页直接读仓库里的那一份源文件。
 
 **服务类目**：开发工具 / 代码质量 / 文档与知识管理（选 1–3 个，别把 5 个都占满）
 
-**头像**：512×512。目前 `assets/` 下没有正式图标，上架前需要单独设计一张（不要用截图裁，小尺寸下会糊）。
+**头像**：直接用 [`docs/assets/icon-512.png`](docs/assets/icon-512.png)（512×512，深底龙骨符号，圆形裁切不会切到主体）。不要拿界面截图裁——小尺寸下会糊成一片。
 
 ## 三、Trae
 

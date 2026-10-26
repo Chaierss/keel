@@ -7,7 +7,7 @@
 ## 0. 发布前自检
 
 ```bash
-node tests/run-tests.mjs                 # 27 个用例全绿
+node tests/run-tests.mjs                 # 29 个用例全绿
 node tools/package-skill.mjs --out dist/keel.zip
 node skills/keel/scripts/preflight-scan.mjs --root . --dirs skills,tools,tests --strict
 git tag v1.0.0 && git push --tags
@@ -34,10 +34,21 @@ keel/
 
 - **About**：描述一行 + Topics（`agent-skill` `claude-code` `cursor` `trae` `workbuddy` `design-system` `code-quality`）。
   现成的文案在 [launch.md](launch.md)，直接粘。
-- **Social preview 图**：1280×640，用 [`assets/social-preview.png`](assets/social-preview.png)，上传位置在
+- **Social preview 图**：1280×640，用 [`docs/assets/social-preview.png`](docs/assets/social-preview.png)，上传位置在
   Settings → General → Social preview。**跳过这步，所有转发场景都显示 GitHub 默认灰图。**
 - **Releases**：每个 tag 附上 `dist/keel-<version>.zip`，让不会用命令行的人也能下载。
 - **README 首屏**：一句话定位 + "30 秒演示" + 安装命令。**不要以"背景与动机"开头**。
+
+### 在线演示（转化率最高的一步，5 分钟）
+
+仓库里的 `.html` 点开只显示源码，所以「30 秒看效果」在 GitHub 上是断的。开一次 Pages 就补上了，**不用复制任何文件**：
+
+1. Settings → Pages → Source 选 **Deploy from a branch**，分支 `main`、目录 `/ (root)`。
+2. 等 1–2 分钟，演示地址形如
+   `https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html`。
+3. 把这个地址换进 README 的「看它长什么样」那一行。
+
+Pages 直接服务仓库根目录，所以这个路径不存在第二份副本——改了 `console-demo.html`，线上演示跟着变，仍然只有一份真相源。
 
 ## 2. `npx skills`（覆盖 79 个 agent）
 
@@ -69,7 +80,8 @@ npx skills add Chaierss/keel --list
 ### 要发布到市场（开放平台）
 
 1. 实名认证（个人或企业）。
-2. 建开发者主页：头像 512×512、昵称 2–20 字、简介 20–120 字。
+2. 建开发者主页：头像用 [`docs/assets/icon-512.png`](docs/assets/icon-512.png)（512×512）、昵称 2–20 字、简介 20–120 字，**个人网站填 `https://www.chaierss.fun`**（审核会看
+   主页是否真实存在，也是所有卡片上的署名落点）。
 3. 发布管理 → 新建 → 上传技能包 → 选服务类目（1–5 个）。
 4. 过三道审核：**安全扫描 → AI 审核 → 人工抽检**。
 
