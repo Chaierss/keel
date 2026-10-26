@@ -1,0 +1,49 @@
+name: pages
+
+# 把演示页部署到 GitHub Pages。
+# enablement: true 让 configure-pages 在 Pages 尚未启用时尝试自动开启，
+# 不依赖任何人给 PAT。若这一步被权限拒绝，就只能在 Settings → Pages 手动选一次来源。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # 只搬运演示需要的那部分。_site 是每次部署重新生成的产物，
+      # 不是仓库里的第二份副本——源文件仍然只有一份。
+      - name: 组装静态站点
+        run: |
+          mkdir -p _site
+          cp -r skills _site/skills
+          printf '%s\n' '<!doctype html><meta charset="utf-8"><title>Keel · 龙骨</title>' \
+            '<meta http-equiv="refresh" content="0; url=skills/keel/templates/preview/console-demo.html">' \
+            > _site/index.html
+          find _site -type f | head -20
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
