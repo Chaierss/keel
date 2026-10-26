@@ -3,6 +3,27 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 这里的「破坏性变更」指**接入方已经拷贝走的文件**：改了 `rules.json` 字段结构、改了脚本退出码语义、删了模板文件，都算 major。
 
+## [1.0.1] — 2026-10-26
+
+门面版本。脚本行为一行未改，只解决一件事：第一次点进来的人，会不会装。
+
+### 新增
+
+- **`README.en.md`**：英文版独立成文件；`README.md` 改为**中文主版**。首屏顺序改成「标语 → 产品图 → 三种零安装入口」，完整版另加常见问题、目录结构、作者与 Star 引导。
+- **`docs/assets/icon-512.png`**：512×512 技能图标（深底 + 龙骨符号），WorkBuddy / Trae 上架可直接用，圆形裁切不会切到主体。
+- **全仓署名**：作者 `chaierss`、主页 `www.chaierss.fun` 写进 `package.json`（`author` / `homepage`）、两份 `LICENSE`、`SKILL.md` frontmatter、两份 README、市场与社交文案模板。
+
+### 变更
+
+- `docs/assets/social-preview.png` 重做为标准 **1280×640**，中文标语 + 产品截图 + 署名落款。原先是 1088×546，上传后会被平台二次裁切。
+- 中文 README 与 English README 顶部互链，替代原先的 `README.md`（英）+ `README.zh-CN.md`（中）双文件方案。
+- 用例数表述统一为 29（`CONTRIBUTING.md`、`docs/publishing.md` 原写 27）。
+
+### 修复
+
+- `docs/launch.md`、`docs/publishing.md` 里的社交预览图路径写成 `assets/social-preview.png`，实际文件在 `docs/assets/`——照文档操作会找不到图。
+- `docs/launch.md` 的头像项原写「上架前需要单独设计一张」，等于发布流程缺一个必交物料；现已提供成品文件。
+
 ## [1.0.0] — 2026-10-26
 
 首个可用版本。目标不是「一个文档页」，而是给项目装一副**可执行的门禁骨架**。

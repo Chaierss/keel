@@ -7,7 +7,7 @@
 ```bash
 git clone https://github.com/Chaierss/keel.git
 cd keel
-node tests/run-tests.mjs      # 27 个用例，零依赖，几秒
+node tests/run-tests.mjs      # 29 个用例，零依赖，几秒
 ```
 
 不需要 `npm install`，这个仓库没有依赖，也请保持没有依赖。
