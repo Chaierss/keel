@@ -26,8 +26,8 @@ One file, double-click, works offline. Click the mode badge in the bottom-left c
 **Measure your own project.** Read-only — it prints what's missing and changes nothing:
 
 ```bash
-git clone --depth=1 https://github.com/Chaierss/keel /tmp/keel
-node /tmp/keel/skills/keel/scripts/console-check.mjs --root .
+git clone --depth=1 https://github.com/Chaierss/keel keel-tmp
+node keel-tmp/skills/keel/scripts/console-check.mjs --root .
 ```
 
 **Install it.**

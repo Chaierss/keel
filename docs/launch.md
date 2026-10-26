@@ -130,8 +130,8 @@ wiki ← the repo itself
 ```
 没打算说服你，先量一下你自己的项目（只读，不改任何文件）：
 
-git clone --depth=1 https://github.com/Chaierss/keel /tmp/keel
-node /tmp/keel/skills/keel/scripts/console-check.mjs --root .
+git clone --depth=1 https://github.com/Chaierss/keel keel-tmp
+node keel-tmp/skills/keel/scripts/console-check.mjs --root .
 
 它会告诉你：规则文件在不在、组件注册表有没有指向空文件、目录里有多少组件没登记、wiki 清单和实际文档差几篇。
 看完再决定要不要装。

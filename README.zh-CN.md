@@ -22,8 +22,8 @@
 **量一下你自己的项目。** 只读，只告诉你缺什么，一个字节都不改：
 
 ```bash
-git clone --depth=1 https://github.com/Chaierss/keel /tmp/keel
-node /tmp/keel/skills/keel/scripts/console-check.mjs --root .
+git clone --depth=1 https://github.com/Chaierss/keel keel-tmp
+node keel-tmp/skills/keel/scripts/console-check.mjs --root .
 ```
 
 **装上。**
