@@ -23,9 +23,9 @@ in the corner and the internal debt disappears — same page, same code.</sub>
 
 ## Try it in 30 seconds, nothing to install
 
-**See it.** Save [`console-demo.html`](skills/keel/templates/preview/console-demo.html) locally and double-click it — one
-file, works offline. Clicking it on GitHub only shows the source; use **Raw** and save. Then click the mode badge in the
-bottom-left corner.
+**See it.** Open the [live demo](https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html) and click
+the mode badge in the bottom-left corner to switch dev / prod. Prefer offline? [Download the single
+file](skills/keel/templates/preview/console-demo.html) and double-click it — no network needed.
 
 **Measure your own project.** Read-only — it prints what's missing and changes nothing:
 

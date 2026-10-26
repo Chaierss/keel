@@ -22,7 +22,7 @@ Keel 换了个做法：这四页直接读仓库里的那一份源文件——没
 
 ## 30 秒看懂，什么都不用装
 
-**看它长什么样。** 把 [`console-demo.html`](skills/keel/templates/preview/console-demo.html) 下的文件存到本地，双击打开——单文件、断网也能跑。GitHub 上直接点只会看到源码，记得点 **Raw** 再另存。打开后点左下角的模式徽章。
+**看它长什么样。** 打开 [在线演示](https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html)，点左下角的模式徽章切换开发 / 线上。想离线看也行：[下载单文件](skills/keel/templates/preview/console-demo.html) 双击即开，断网可用。
 
 **量一下你自己的项目。** 只读，只告诉你缺什么，一个字节都不改：
 

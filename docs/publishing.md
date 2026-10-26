@@ -39,18 +39,19 @@ keel/
 - **Releases**：每个 tag 附上 `dist/keel-<version>.zip`，让不会用命令行的人也能下载。
 - **README 首屏**：一句话定位 + "30 秒演示" + 安装命令。**不要以"背景与动机"开头**。
 
-### 在线演示（转化率最高的一步，5 分钟）
+### 在线演示（已启用）
 
-仓库里的 `.html` 点开只显示源码，所以「30 秒看效果」在 GitHub 上是断的。开一次 Pages 就补上了，**不用复制任何文件**：
+```
+https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html
+```
 
-1. Settings → Pages → Source 选 **Deploy from a branch**，分支 `main`、目录 `/ (root)`。
-2. 等 1–2 分钟，演示地址形如
-   `https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html`。
-3. 把这个地址换进 README 的「看它长什么样」那一行。
+仓库里的 `.html` 点开只显示源码，所以「30 秒看效果」在仓库里是断的。Pages 直接静态服务整仓，路径与仓库一致，**不存在第二份副本**——改了 `console-demo.html`，线上演示跟着变。
+
+**开启方式**：Settings → Pages → Source 选 `Deploy from a branch`，分支 `main`、目录 `/ (root)`。
+
+**为什么不能自动开**：试过 `actions/configure-pages@v5` 的 `enablement: true`，它在 `configure-pages` 那一步失败——该参数需要 `administration` 权限，而 `GITHUB_TOKEN` 拿不到（只有 PAT 或 GitHub App 能给）。所以首次启用必须人工一次，之后永久不用管。
 
 根目录那个 `.nojekyll` 不要删：它让 Pages 跳过 Jekyll 直接静态服务。没有它，Jekyll 会尝试处理整仓并可能把带下划线的路径吞掉，构建还会慢一倍。
-
-Pages 直接服务仓库根目录，所以这个路径不存在第二份副本——改了 `console-demo.html`，线上演示跟着变，仍然只有一份真相源。
 
 ## 2. `npx skills`（覆盖 79 个 agent）
 
