@@ -1,0 +1,43 @@
+name: release
+
+# 推 tag 就自动出 Release 并附上技能包。
+# 用仓库自带的 GITHUB_TOKEN，不需要任何人提供 PAT。
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 先跑测试：打不出绿灯的 tag 不该产出 Release 包
+      - name: 测试
+        run: node tests/run-tests.mjs
+
+      - name: 打包
+        run: node tools/package-skill.mjs
+
+      # zip 的根目录必须是 SKILL.md，否则各平台装不上；这一步在工具里有自检，
+      # 这里再核对一次文件名，避免 tag 与实际版本号不一致时悄悄传错包
+      - name: 核对包名与 tag 一致
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          ls dist/*.zip
+          test -f "dist/keel-${TAG#v}.zip" || { echo "包名与 tag 不一致：期望 dist/keel-${TAG#v}.zip"; exit 1; }
+
+      - name: 发布
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/*.zip \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes
