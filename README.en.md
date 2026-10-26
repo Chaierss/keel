@@ -1,6 +1,10 @@
 # Keel · 龙骨
 
-### Internal docs that can't go stale — because they aren't a second copy.
+### Your internal docs won't survive three months.
+
+Not because you're lazy. Because they're a **second copy** — change the code once and they have to change too, and nobody remembers.
+
+Keel makes all four read the single source of truth inside the repo. **No copy, nothing to go stale.**
 
 [中文](README.md) · English
 
@@ -12,49 +16,55 @@
   <a href="https://www.chaierss.fun"><img src="https://img.shields.io/badge/website-chaierss.fun-16a34a" alt="website"></a>
 </p>
 
-Every project ends up needing four pages: **rules, a component registry, API reference, a wiki**. They're almost always a hand-copied second copy of the truth — so three months later they diverge from the code, and nobody trusts them.
-
-Keel takes the other route: all four read their own single source of truth inside the repo. No copy, so there's no "sync the docs" step to forget. Two dependency-free scripts turn that into a release gate.
-
 <p><img src="docs/assets/console.png" width="800" alt="The console's component page in development mode: registry metrics, an unregistered-component warning, and each card's source path"></p>
 
-<sub>One page, two audiences. In development mode you see the unregistered component and where it lives. Flip the badge
-in the corner and the internal debt disappears — same page, same code.</sub>
+<sub>One page, two audiences. In development mode you see the unregistered component and where it lives. Flip the badge in the corner and the internal debt disappears — same page, same code.</sub>
 
-## Try it in 30 seconds, nothing to install
+## 30 seconds, nothing to install
 
-**See it.** Open the [live demo](https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html) and click
-the mode badge in the bottom-left corner to switch dev / prod. Prefer offline? [Download the single
-file](skills/keel/templates/preview/console-demo.html) and double-click it — no network needed.
+**See it** → [open the live demo](https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html) and click the badge in the bottom-left corner. Prefer offline? [Download the single file](skills/keel/templates/preview/console-demo.html) and double-click it.
 
-**Measure your own project.** Read-only — it prints what's missing and changes nothing:
+**Measure your project** → read-only, it prints what's missing and changes nothing:
 
 ```bash
 git clone --depth=1 https://github.com/Chaierss/keel keel-tmp
 node keel-tmp/skills/keel/scripts/console-check.mjs --root .
 ```
 
-**Install it.**
+**Install** →
 
 ```bash
 npx skills add Chaierss/keel -g
 ```
 
-Works with any agent that reads `SKILL.md` — Claude Code, Cursor, Codex, Windsurf, Trae, WorkBuddy. Manual install paths
-and a zip for the upload dialogs are in [docs/publishing.md](docs/publishing.md).
+Works with any agent that reads `SKILL.md` — Claude Code, Cursor, Codex, Windsurf, Trae, WorkBuddy. Manual paths and the upload zip are in [docs/publishing.md](docs/publishing.md).
 
-## Three failures it prevents
+---
 
-| Symptom | What it costs |
-|---|---|
-| Every new agent or teammate needs the terminology and the bans re-explained | Half a day each time, and the retelling drifts further from the truth |
-| The same card was written three times, nobody knows which one is canonical | One change in three places, and the one you miss is what ships |
-| Docs go stale three months after they're written, so nobody trusts them | You no longer have docs; newcomers read the source instead |
+## What you're probably living with
 
-## "Can't go stale" is a testable claim
+> "Is `AppTag` still used anywhere? Can we delete it?"
+>
+> You open `components.md`. Last updated four months ago. The author left last month.
+> You say: let me check.
 
-A surface only counts as self-updating when three things hold: **the source lives in the repo**, **the UI only reads
-it**, **changing it takes no second step**. Miss any one and you have written another document that expires.
+---
+
+> Someone else's AI picks up the codebase. It reads "focus mode" as "fullscreen, no distractions". In your team that term means "show only the current task".
+>
+> You explain it. It gets it right. Next session, wrong again.
+
+---
+
+> Before a release, security asks: "any hardcoded secrets?"
+>
+> You say no. Then `git log` shows a `.env`.
+
+Three very different incidents, one root cause: **the truth lives in someone's memory, not in the repo.**
+
+## Four pages, four sources of truth, zero copies
+
+A surface only counts as self-updating when three things hold: **the source lives in the repo**, **the UI only reads it**, **changing it takes no second step**. Miss any one and you have written another document that expires.
 
 | Surface | Single source of truth | Why it can't lag |
 |---|---|---|
@@ -65,22 +75,34 @@ it**, **changing it takes no second step**. Miss any one and you have written an
 
 ![Data flow: repo sources → settings console → mode switch → release gate](docs/assets/architecture.svg)
 
-## The gate
+## How to use it after installing
+
+Say "set up keel in this project" and the agent reads `SKILL.md` and follows five steps. Or do them yourself:
+
+| # | What | Output |
+|---|---|---|
+| 1 | **Define the mode**: one resolver, one badge, one visibility matrix | `keel/devMode.ts` |
+| 2 | **Build the skeleton**: decide which file each page reads *before* writing the page | `rules.json` / `components.json` / `wiki.json` |
+| 3 | **Implement page by page**: rules → components → API → wiki (rules come first, they define the vocabulary) | four tabs |
+| 4 | **Wire the gate**: scripts into CI | one workflow |
+| 5 | **Pre-release check**: scan first, switch the mode last | green light before prod |
+
+Day to day it's two commands:
 
 ```bash
 node keel/console-check.mjs --strict     # 12 checks: four surfaces complete, nothing unregistered
 node keel/preflight-scan.mjs --strict    # 17 code-pattern rules + file and build-artifact checks
 ```
 
-`console-check` grades by what a machine can actually prove. A missing file, a duplicate rule id, a registry entry
-pointing at nothing: `error`. A component with no references, a doc that is too short: `warn`. It will not pretend to
-know what it can't — and it treats **"scanned 0 files" as an error**, because a green light on an empty scan is worse
-than a red one.
+Don't want to do it all at once? [`references/quickstart.md`](skills/keel/references/quickstart.md) is a 15-minute minimum: rules plus components, with API reference left to your existing Swagger. Half a skeleton beats a diverging copy.
 
-`preflight-scan` covers private keys, hardcoded credentials, cloud key formats, dynamic execution, command injection,
-unsafe deserialization, disabled certificate checks, XSS sinks, debug leftovers, wildcard CORS, SQL concatenation,
-default passwords, auth bypasses, path traversal and SSRF — plus a `.preflightignore` that **requires a reason on every
-exemption**.
+> **On upgrades**: re-running `npx skills add` updates the skill itself. The `keel/` data and templates in your project are **copies** and will not sync automatically. What changed is in [CHANGELOG](CHANGELOG.md).
+
+## The gate only reports what a machine can prove
+
+`console-check` grades by evidence: a missing file, a duplicate rule id, a registry entry pointing at nothing — `error`. A component with no references, a doc that's too short — `warn`. It won't pretend to know what it can't, and it treats **"scanned 0 files" as an error**, because a green light on an empty scan is worse than a red one.
+
+`preflight-scan` covers private keys, hardcoded credentials, cloud key formats, dynamic execution, command injection, unsafe deserialization, disabled certificate checks, XSS sinks, debug leftovers, wildcard CORS, SQL concatenation, default passwords, auth bypasses, path traversal and SSRF — plus a `.preflightignore` that **requires a reason on every exemption**.
 
 Neither script replaces a pentest. Both exist so the cheap 80% never reaches production.
 
@@ -98,16 +120,14 @@ It is not a UI kit, not a docs site generator, not a linter.
 
 ## Read-only by design
 
-Read this before installing any third-party skill; every skill should publish it.
+Read this before installing any third-party skill.
 
 - **Read-only.** Both scripts only read. They never write, move, or delete anything in your project.
 - **No network.** No telemetry, no callbacks, usable offline and inside an air-gapped CI.
 - **No credential reads.** Pattern matching only; matches print to your terminal and go nowhere else.
-- **No install hooks.** No `postinstall`, no `preinstall`, no `node_modules`. The skill itself has zero dependencies.
+- **No install hooks.** No `postinstall`, no `preinstall`, no `node_modules`.
 
-There is a test in this repo that asserts the read-only guarantee **byte for byte** — every file's size and mtime is
-compared before and after both scripts run ([`tests/run-tests.mjs`](tests/run-tests.mjs)). If any of these four stops
-holding, it is a vulnerability: see [SECURITY.md](SECURITY.md).
+There is a test in this repo that asserts the read-only guarantee **byte for byte** — every file's size and mtime is compared before and after both scripts run ([`tests/run-tests.mjs`](tests/run-tests.mjs)). If any of these four stops holding, it is a vulnerability: see [SECURITY.md](SECURITY.md).
 
 ## When not to use it
 
@@ -120,22 +140,19 @@ holding, it is a vulnerability: see [SECURITY.md](SECURITY.md).
 <details>
 <summary><b>My stack isn't Vue. Does it still apply?</b></summary>
 
-The constraints are stack-agnostic; the samples and templates lean Vue 3 + Arco + FastAPI. Swap the directory scan's
-extensions for React, swap the OpenAPI entry point for your framework's generator.
+The constraints are stack-agnostic; the samples and templates lean Vue 3 + Arco + FastAPI. Swap the directory scan's extensions for React, swap the OpenAPI entry point for your framework's generator.
 </details>
 
 <details>
-<summary><b>Do I have to build all four surfaces at once?</b></summary>
+<summary><b>The template only gives me a shell — why do I still write four pages?</b></summary>
 
-No. [`references/quickstart.md`](skills/keel/references/quickstart.md) is a 15-minute minimum: rules plus components,
-with API reference left to your existing Swagger. Half a skeleton beats a diverging copy.
+Because the shape of those four tabs depends on your component library and permission model; a generic implementation would just become another second copy. The template gives you the shell and the criteria ([`SettingsConsole.skeleton.vue`](skills/keel/templates/SettingsConsole.skeleton.vue)); each page is specified in `references/`. The demo shows what it looks like **when done right**.
 </details>
 
 <details>
 <summary><b>Does it modify my files or read my secrets?</b></summary>
 
-Neither. Both scripts are read-only; a matched secret is reported by location, never printed or transmitted. A
-byte-for-byte test enforces this.
+Neither. Both scripts are read-only; a matched secret is reported by location, never printed or transmitted. A byte-for-byte test enforces this.
 </details>
 
 <details>
@@ -147,8 +164,7 @@ It would break the one trust foundation: read-only. Better to print a command yo
 <details>
 <summary><b>Why no SaaS version?</b></summary>
 
-It directly contradicts "no network requests". If it ever exists, it has to be an entirely separate product that never
-pollutes the skill.
+It directly contradicts "no network requests". If it ever exists, it has to be an entirely separate product that never pollutes the skill.
 </details>
 
 ## Repository layout
@@ -174,14 +190,11 @@ node tools/package-skill.mjs    # dist/keel-<version>.zip, root contains SKILL.m
 node tools/install-local.mjs --list
 ```
 
-Contributions: [CONTRIBUTING.md](CONTRIBUTING.md) explains where each kind of change belongs, and why every new scan rule
-needs a failing fixture. Design decisions — including what was rejected — are in
-[docs/architecture.md](docs/architecture.md).
+Contributions: [CONTRIBUTING.md](CONTRIBUTING.md) explains where each kind of change belongs, and why every new scan rule needs a failing fixture. Design decisions — including what was rejected — are in [docs/architecture.md](docs/architecture.md).
 
 ## Known limits
 
-- **One source case.** Distilled from a Vue 3 + Arco + FastAPI project. The constraints are stack-agnostic; the samples
-  lean Vue.
+- **One source case.** Distilled from a Vue 3 + Arco + FastAPI project. The constraints are stack-agnostic; the samples lean Vue.
 - **No measured effect.** No before/after numbers from real teams yet. Treat the claims as design arguments, not results.
 - **Static scanning.** `console-check` misses dynamic imports and string-built paths; expect false negatives.
 - **Demand unvalidated.** Built to scratch a real itch, not against interviews.
@@ -190,8 +203,7 @@ needs a failing fixture. Design decisions — including what was rejected — ar
 
 **chaierss** · architecture / full-stack
 
-Homepage [www.chaierss.fun](https://www.chaierss.fun) · GitHub [@Chaierss](https://github.com/Chaierss) · Feedback
-[Issues](https://github.com/Chaierss/keel/issues)
+Homepage [www.chaierss.fun](https://www.chaierss.fun) · GitHub [@Chaierss](https://github.com/Chaierss) · Feedback [Issues](https://github.com/Chaierss/keel/issues)
 
 ## License
 
