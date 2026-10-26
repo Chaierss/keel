@@ -1,7 +1,10 @@
 ---
 name: keel
-version: 1.0.0
+version: 1.0.1
 author: chaierss
+homepage: https://www.chaierss.fun
+repository: https://github.com/Chaierss/keel
+license: MIT
 agent_created: true
 description: 给项目补一套不会过期的内部文档——规则、组件注册表、接口文档、Wiki 四件套收进同一个设置页，四页各读一份仓库源文件、禁止手写副本；再用开发模式/线上模式划分信息边界，两个零依赖脚本（四件套体检 + 上线前漏洞扫描）把它钉成 CI 门禁。用在项目开荒、接手陌生代码、多个 AI 接力开发、组件统一管理、发版前自查。触发词：keel、龙骨、开发模式、线上模式、设置页、系统设置、规则页、术语表、命名约定、设计模式、专注模式、沉浸模式、主从模式、组件统一管理、组件未使用、接口文档、wiki文档、自动更新、单一真相源、漏洞扫描、上线检查、项目体检。
 description_zh: 让项目的规则、组件、接口文档、Wiki 不再靠手抄第二份：四页各读一份仓库源文件，用开发/线上模式决定内部事实给谁看，两个零依赖脚本钉成 CI 门禁。

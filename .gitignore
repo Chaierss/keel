@@ -8,3 +8,6 @@ Thumbs.db
 .vscode/
 tmp/
 .tmp/
+
+# 本地 AI 工作记录，不进开源仓库
+.workbuddy/

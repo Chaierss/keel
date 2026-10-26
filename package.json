@@ -1,6 +1,6 @@
 {
   "name": "keel-skill",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "description": "A self-updating console for software projects: rules, a component registry, API docs and a wiki generated from repo sources, plus dev/prod visibility modes and a pre-release security gate.",
@@ -15,7 +15,11 @@
     "preflight"
   ],
   "license": "MIT",
-  "author": "chaierss",
+  "author": {
+    "name": "chaierss",
+    "url": "https://www.chaierss.fun"
+  },
+  "homepage": "https://www.chaierss.fun",
   "repository": {
     "type": "git",
     "url": "https://github.com/Chaierss/keel.git"

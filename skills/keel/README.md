@@ -30,7 +30,7 @@
 
 ```bash
 # 任何支持 Agent Skills 规范的 agent（Claude Code / Cursor / Codex / Trae / Windsurf…）
-npx skills add chaierss/keel -g
+npx skills add Chaierss/keel -g
 
 # Trae
 # 设置 → 技能与命令 → 创建 → 上传含 SKILL.md 的 zip
@@ -95,7 +95,11 @@ keel/
 
 ## 来源
 
-模式提炼自 [chaierss](https://github.com/chaierss)（Vue3 + Arco + FastAPI）的系统设置实现，但技能**不绑定该仓库、不绑定 Vue、不绑定 Python**。它约束"什么算合格"，落地手法按目标栈替换。
+模式提炼自作者 [chaierss](https://www.chaierss.fun) 的系统设置实现（Vue3 + Arco + FastAPI），但技能**不绑定该仓库、不绑定 Vue、不绑定 Python**。它约束"什么算合格"，落地手法按目标栈替换。
+
+- 主页：[www.chaierss.fun](https://www.chaierss.fun)
+- 仓库：[github.com/Chaierss/keel](https://github.com/Chaierss/keel)
+- 问题反馈：[Issues](https://github.com/Chaierss/keel/issues)
 
 ---
 
