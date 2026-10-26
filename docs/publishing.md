@@ -48,6 +48,8 @@ keel/
    `https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html`。
 3. 把这个地址换进 README 的「看它长什么样」那一行。
 
+根目录那个 `.nojekyll` 不要删：它让 Pages 跳过 Jekyll 直接静态服务。没有它，Jekyll 会尝试处理整仓并可能把带下划线的路径吞掉，构建还会慢一倍。
+
 Pages 直接服务仓库根目录，所以这个路径不存在第二份副本——改了 `console-demo.html`，线上演示跟着变，仍然只有一份真相源。
 
 ## 2. `npx skills`（覆盖 79 个 agent）
