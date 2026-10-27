@@ -4,6 +4,8 @@
 
 Not because you're lazy. Because they're a **second copy** — change the code once and they have to change too, and nobody remembers.
 
+The problem was never that writing docs is slow. It's that **the same thing gets written twice** — once in the code, once in a to-do list nobody reads.
+
 Keel makes all four read the single source of truth inside the repo. **No copy, nothing to go stale.**
 
 [中文](README.md) · English
