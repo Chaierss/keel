@@ -120,6 +120,7 @@ node keel/console-check.mjs --root ../proj     # 指定项目根
 | ID | 级别 | 内容 |
 |---|---|---|
 | CFG-01 | error | `keel/console.config.json` 存在且合法（查的是配置就位，不是可见性边界） |
+| VER-01 | warn | `console.config.json` 的 `keelVersion` 与当前技能版本比对，提示有无模板更新（见 [`upgrading.md`](upgrading.md)） |
 | RULE-01 | error | `rules.json` 可解析，含 `version` 与 `pageModes`/`rules` |
 | RULE-02 | error | 规则 `id` 唯一、必填字段齐全、`category`/`severity` 合法 |
 | RULE-03 | error | 术语词条含 `definition` / `signal` / `avoid`（缺 `avoid` 记 warn） |

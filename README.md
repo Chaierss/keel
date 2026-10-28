@@ -92,13 +92,15 @@ npx skills add Chaierss/keel -g
 日常只有两条命令：
 
 ```bash
-node keel/console-check.mjs --strict     # 12 项检查：四件套齐、没有未登记组件
+node keel/console-check.mjs --strict     # 13 项检查：四件套齐、没有未登记组件
 node keel/preflight-scan.mjs --strict    # 17 条代码模式规则 + 文件级与产物级检查
 ```
 
 不想一次做完？[`references/quickstart.md`](skills/keel/references/quickstart.md) 是 15 分钟最小版，只装规则 + 组件，接口文档先用现成的 Swagger 顶。半套也比分叉强。
 
-> **关于升级**：技能本体重新 `npx skills add` 会覆盖更新；你项目里的 `keel/` 数据和模板是**拷贝制**，不会自动同步。改了什么看 [CHANGELOG](CHANGELOG.md)。
+> **关于升级**：不能自动升级，这是设计不是偷懒。技能本体重新 `npx skills add` 会覆盖更新；你项目里的 `keel/` 是**拷贝制**——里面的 `rules.json`、组件登记、目录配置都是你的项目事实，整目录覆盖等于把它们冲掉。
+>
+> 所以改成对账：`console-check` 的 **`VER-01`** 每次都告诉你「模板版本 1.0.1，当前技能 2.0.0」，然后你照 [`references/upgrading.md`](skills/keel/references/upgrading.md) 的版本区间逐条改。它是 warn 不是 error——升级提醒不该让 CI 变红。
 
 ## 门禁只报机器能确定的事
 
@@ -191,7 +193,7 @@ tools/  tests/  docs/     ← 本仓库的工具链，不随技能分发
 ## 参与开发
 
 ```bash
-node tests/run-tests.mjs        # 30 个用例，零依赖，几秒
+node tests/run-tests.mjs        # 32 个用例，零依赖，几秒
 node tools/package-skill.mjs    # dist/keel-<version>.zip，根目录就是 SKILL.md
 node tools/install-local.mjs --list
 ```

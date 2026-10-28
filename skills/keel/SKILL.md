@@ -137,6 +137,9 @@ node keel/preflight-scan.mjs --include-dist # 5 产物无密钥、无内部页�
 **发布**
 - `references/preflight.md` — 四层机器扫描 + 五项人工检查
 
+**维护**
+- `references/upgrading.md` — 版本对照表 / 怎么知道有新版（`VER-01`）/ 升级的三种姿势。**没有自动升级**：`keel/` 是拷贝制，覆盖率会冲掉项目事实
+
 **模板（`templates/`，拷进项目 `keel/`）**
 `console.config.json` · `rules.json` · `components.json` · `wiki.json` · `README.md` · `SettingsConsole.skeleton.vue`
 

@@ -15,6 +15,8 @@
 
 ### 新增
 
+- **自动对账式升级提示 `VER-01`**：`console.config.json` 记一个 `keelVersion`，体检时与脚本版本比对，落后 / 缺失 / 超前都提示，级别是 **warn**——升级提醒不该让 CI 变红。配套 `references/upgrading.md` 给出版本区间与逐条迁移步骤。
+- **`console-check --version`**：打印脚本版本，方便确认项目里跑的是哪一版脚本。脚本、`package.json`、`SKILL.md`、模板四处版本号一致性有测试守着，任一处漂移就红。
 - **可见性边界模型**：三层（产物 / 身份 / 字段）、四问（哪些产物、谁能开、哪些字段、最坏后果），力度由第 4 问决定——不好看只动前端、泄露内部必须动服务端、收不回来必须动构建期。
 - 三种典型项目（桌面端 + web 双产物、纯 web 带 RBAC、纯内网）各自的边界写法示例，以及每种该修在哪一层。
 - 「从 1.x 迁过来」对照表：角标删掉、`canElevate` 与 `?mode=dev` 删掉、`MODE_VISIBILITY` 按后果重新分三列。
@@ -26,6 +28,7 @@
 - `SettingsConsole.skeleton.vue` 去掉角标与 `canElevate` 属性，改为「容器不挂权限、权限下沉到每个 tab」的注释说明。
 - 发版流程措辞从「切线上模式 / 打 tag」改为「打 tag / 发版」，并把人工项从五项扩到「五项 + 边界四问」。
 - `docs/assets/architecture.svg` 第三列整列重画（模式开关 → 三层）。README 两份、`docs/architecture.md`、`docs/launch.md`、`references/` 全部换口径。
+- 用例 29 → 32：新增「visibility.md 覆盖三层」「模板里不再有 devMode.ts」「`VER-01` 三种状态」「版本号四处一致」。
 
 ### 修复
 

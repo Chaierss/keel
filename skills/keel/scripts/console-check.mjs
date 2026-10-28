@@ -8,6 +8,7 @@
  *   node keel/console-check.mjs --json          机器可读（给设置页 / dashboard）
  *   node keel/console-check.mjs --fail-on-unused 未使用组件也算失败（默认只 warn）
  *   node keel/console-check.mjs --root ../proj  指定项目根
+ *   node keel/console-check.mjs --version       打印脚本版本（与 package.json 必须一致，有测试守着）
  *
  * 设计原则：只有"机器能确定错了"的项才是 error。未使用组件需要人判断，永远是 warn。
  */
@@ -15,11 +16,15 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs'
 import { join, resolve, relative, extname, basename, dirname } from 'node:path'
 import process from 'node:process'
 
+/** 技能版本。改这里必须同步改 package.json / SKILL.md frontmatter，测试会校验三者一致。 */
+const KEEL_VERSION = '2.0.0'
+
 const HELP = `keel 体检
   --root <dir>       项目根（默认 cwd）
   --strict           error 级问题导致退出码 1
   --fail-on-unused   未使用组件也导致退出码 1（隐含 --strict，别以为不写 --strict 就没门禁）
   --json             输出 JSON
+  --version          打印脚本版本
   -h, --help         显示帮助`
 
 const DEFAULT_CONFIG = {
@@ -42,6 +47,10 @@ function parseArgs(argv) {
     else if (arg === '--strict') out.strict = true
     else if (arg === '--json') out.json = true
     else if (arg === '--fail-on-unused') out.failOnUnused = true
+    else if (arg === '--version') {
+      console.log(`keel ${KEEL_VERSION}`)
+      process.exit(0)
+    }
     else if (arg === '-h' || arg === '--help') {
       console.log(HELP)
       process.exit(0)
@@ -52,6 +61,17 @@ function parseArgs(argv) {
 }
 
 const posix = (p) => p.split('\\').join('/')
+
+/** 三段式版本比较，够用即可（本技能不会出现 prerelease）。返回 -1 / 0 / 1 */
+function compareVersion(a, b) {
+  const pa = String(a).split('.').map((n) => parseInt(n, 10) || 0)
+  const pb = String(b).split('.').map((n) => parseInt(n, 10) || 0)
+  for (let i = 0; i < 3; i += 1) {
+    const diff = (pa[i] || 0) - (pb[i] || 0)
+    if (diff !== 0) return diff < 0 ? -1 : 1
+  }
+  return 0
+}
 
 function readJson(path) {
   try {
@@ -107,15 +127,33 @@ function main() {
   const consoleDir = resolve(root, DEFAULT_CONFIG.consoleDir)
   const configPath = join(consoleDir, 'console.config.json')
   let config = { ...DEFAULT_CONFIG }
+  let configReady = false
   if (!existsSync(consoleDir)) {
     push('CFG-01', 'error', `缺少 ${DEFAULT_CONFIG.consoleDir}/ 目录（唯一真相源应集中在此）`)
   } else {
     const loaded = readJson(configPath)
     if (loaded.ok) {
       config = { ...DEFAULT_CONFIG, ...loaded.data }
+      configReady = true
       push('CFG-01', 'ok', 'console.config.json 已就位')
     } else {
       push('CFG-01', 'error', `console.config.json ${existsSync(configPath) ? '解析失败：' + loaded.error : '不存在，使用默认扫描范围'}`)
+    }
+  }
+
+  // ---------- 模板版本（提醒升级，不阻断） ----------
+  // 拷贝制的代价：技能更新了，项目里的 keel/ 不会自动变。这里只负责"告诉你现在差多少"，
+  // 不替用户改文件——模板只是起点，用户可能已经改过一半，自动合并的风险远大于收益。
+  if (configReady) {
+    const declared = typeof config.keelVersion === 'string' ? config.keelVersion.trim() : ''
+    if (!declared) {
+      push('VER-01', 'warn', `未声明模板版本（当前技能 ${KEEL_VERSION}），无法判断是否需要迁移；在 console.config.json 加 "keelVersion": "${KEEL_VERSION}"`)
+    } else if (compareVersion(declared, KEEL_VERSION) === 0) {
+      push('VER-01', 'ok', `模板版本 ${declared}（最新）`)
+    } else if (compareVersion(declared, KEEL_VERSION) < 0) {
+      push('VER-01', 'warn', `模板版本 ${declared}，当前技能 ${KEEL_VERSION}：有更新，先看 references/upgrading.md 再改，别整目录覆盖`)
+    } else {
+      push('VER-01', 'warn', `模板版本 ${declared} 比本脚本 ${KEEL_VERSION} 新：脚本该更新了，否则会漏检新增检查项`)
     }
   }
 

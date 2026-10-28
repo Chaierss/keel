@@ -161,6 +161,39 @@ test('CFG-01：console.config.json 缺失时是 error（查的是配置就位，
   assert.equal(checkJson(root, ['--strict']).code, 1)
 })
 
+test('VER-01：模板版本落后 / 缺失 / 超前都只是 warn，不阻断 CI', () => {
+  const root = healthyProject('ver-stale')
+  const cfgPath = join(root, 'keel/console.config.json')
+  const cfg = JSON.parse(readFileSync(cfgPath, 'utf8'))
+  const stamp = (next) => {
+    if (next === undefined) delete cfg.keelVersion
+    else cfg.keelVersion = next
+    write(root, 'keel/console.config.json', JSON.stringify(cfg, null, 2))
+    return checkJson(root)
+  }
+
+  assert.equal(find(stamp('1.0.1').issues, 'VER-01').level, 'warn', '模板落后应提示升级')
+  assert.equal(find(stamp(undefined).issues, 'VER-01').level, 'warn', '缺 keelVersion 应提示补上')
+  assert.equal(find(stamp('99.0.0').issues, 'VER-01').level, 'warn', '模板比脚本新也该提示（脚本会漏检）')
+  assert.equal(checkJson(root, ['--strict']).code, 0, '版本提醒不该让 --strict 失败 —— 升级不该挡发版')
+})
+
+test('版本号四处一致：脚本 / package.json / SKILL.md / 模板', () => {
+  const src = readFileSync(join(SKILL, 'scripts', 'console-check.mjs'), 'utf8')
+  const scriptVer = /const KEEL_VERSION = '([^']+)'/.exec(src)?.[1]
+  assert.ok(scriptVer, 'console-check.mjs 里找不到 KEEL_VERSION')
+
+  const pkg = JSON.parse(readFileSync(join(REPO, 'package.json'), 'utf8'))
+  assert.equal(pkg.version, scriptVer, 'package.json 版本与脚本不一致')
+
+  const md = readFileSync(join(SKILL, 'SKILL.md'), 'utf8')
+  const fmVer = /^version:\s*(.+)$/m.exec(md)?.[1]?.trim()
+  assert.equal(fmVer, scriptVer, 'SKILL.md frontmatter 版本与脚本不一致')
+
+  const tpl = JSON.parse(readFileSync(join(TMPL, 'console.config.json'), 'utf8'))
+  assert.equal(tpl.keelVersion, scriptVer, '模板 keelVersion 与脚本不一致')
+})
+
 test('COMP-02：目录里有、注册表没有的组件 → error 并点名文件', () => {
   const root = healthyProject('unregistered')
   write(root, 'src/components/ui/StrayButton.vue', '<template><button /></template>\n')

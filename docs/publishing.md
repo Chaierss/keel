@@ -7,7 +7,7 @@
 ## 0. 发布前自检
 
 ```bash
-node tests/run-tests.mjs                 # 30 个用例全绿
+node tests/run-tests.mjs                 # 32 个用例全绿
 node tools/package-skill.mjs --out dist/keel.zip
 node skills/keel/scripts/preflight-scan.mjs --root . --dirs skills,tools,tests --strict
 git tag v2.0.0 && git push --tags
