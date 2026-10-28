@@ -34,10 +34,27 @@ jobs:
           ls dist/*.zip
           test -f "dist/keel-${TAG#v}.zip" || { echo "包名与 tag 不一致：期望 dist/keel-${TAG#v}.zip"; exit 1; }
 
+      # 发版页是很多人第一次看到项目的地方。gh 的 --generate-notes 在纯本地
+      # 直推、没有 PR 的仓库里只会输出一句 compare 链接，等于没写，所以正文
+      # 一律从 CHANGELOG.md 抽。抽不到就退回自动生成——宁可正文稀薄，
+      # 也不要因为说明写不出来而卡住发版。
+      - name: 生成发版说明
+        run: |
+          node tools/release-notes.mjs "${GITHUB_REF_NAME#v}" > release-notes.md || true
+          if [ -s release-notes.md ] && grep -q '[^[:space:]]' release-notes.md; then
+            echo "NOTES_FLAG=--notes-file release-notes.md" >> "$GITHUB_ENV"
+            echo "已从 CHANGELOG 抽出 $(wc -l < release-notes.md) 行说明"
+          else
+            echo "NOTES_FLAG=--generate-notes" >> "$GITHUB_ENV"
+            echo "::warning::CHANGELOG.md 里没有 ${GITHUB_REF_NAME#v} 的段落，退回自动生成"
+          fi
+
+      # NOTES_FLAG 拼成参数而不是整条命令，避免 --notes-file / --generate-notes
+      # 两个分支各写一遍 gh release create 而慢慢走偏
       - name: 发布
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$GITHUB_REF_NAME" dist/*.zip \
             --title "$GITHUB_REF_NAME" \
-            --generate-notes
+            $NOTES_FLAG

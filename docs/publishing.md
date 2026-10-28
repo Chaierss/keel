@@ -7,7 +7,7 @@
 ## 0. 发布前自检
 
 ```bash
-node tests/run-tests.mjs                 # 34 个用例全绿
+node tests/run-tests.mjs                 # 35 个用例全绿
 node tools/package-skill.mjs --out dist/keel.zip
 node skills/keel/scripts/preflight-scan.mjs --root . --dirs skills,tools,tests --strict
 git tag v2.0.0 && git push --tags
@@ -155,6 +155,8 @@ Website 填 `https://www.chaierss.fun`——它是所有卡片上的署名落点
 
 - 改完代码 → 改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → `node tools/package-skill.mjs`。
 - 打 tag（`v2.0.0`），Release 附 zip。
+- **Release 正文也由 `CHANGELOG.md` 决定**：`.github/workflows/release.yml` 调 `tools/release-notes.mjs`，按 tag 版本号抽出对应段落，再加上安装命令与破坏性变更警示。`--generate-notes` 在纯本地直推、没有 PR 的仓库里只会输出一句 compare 链接，所以只作为兜底——CHANGELOG 里漏写当前版本时 workflow 会打一条 warning 并退回自动生成，不会卡住发版。
+- 想本地先看正文长什么样：`node tools/release-notes.mjs 2.1.0 2.0.0`（可一次带多个版本，第一段用 `##`，后面的标「更早」）。跨大版本发版时把中间版本一起传进去，读的人才知道要不要迁移。
 - 平台上的包需要**重新上传**才会更新，没有自动同步。
 
 ## 分发渠道一览

@@ -7,7 +7,7 @@
 ```bash
 git clone https://github.com/Chaierss/keel.git
 cd keel
-node tests/run-tests.mjs      # 34 个用例，零依赖，几秒
+node tests/run-tests.mjs      # 35 个用例，零依赖，几秒
 ```
 
 不需要 `npm install`，这个仓库没有依赖，也请保持没有依赖。
@@ -95,6 +95,9 @@ test: 补 SEC-00 空目录用例
 
 发布步骤：改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → `node tools/package-skill.mjs` →
 打 tag（`v2.0.0`）→ 上传 zip 到各平台（见 `docs/publishing.md`）。
+
+**`CHANGELOG.md` 不是可选项**：推 tag 后 workflow 会用 `tools/release-notes.mjs` 按版本号抽段落，拼成 Release 正文。
+忘了写就只剩一句 compare 链接（`--generate-notes` 在无 PR 的仓库里没有素材），发版页等于空着。
 
 ---
 

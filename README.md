@@ -202,7 +202,7 @@ tools/  tests/  docs/     ← 本仓库的工具链，不随技能分发
 ## 参与开发
 
 ```bash
-node tests/run-tests.mjs        # 34 个用例，零依赖，几秒
+node tests/run-tests.mjs        # 35 个用例，零依赖，几秒
 node tools/package-skill.mjs    # dist/keel-<version>.zip，根目录就是 SKILL.md
 node tools/install-local.mjs --list
 ```

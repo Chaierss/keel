@@ -545,6 +545,42 @@ test('tools/package-skill.mjs：产出的 zip 根目录就是 SKILL.md', () => {
   assert.ok(!names.some((n) => n.startsWith('keel/')), 'zip 里不能多套一层目录，WorkBuddy 会认不出技能')
 })
 
+// ---------------------------------------------------------------- 发版说明
+// 发版页正文是从 CHANGELOG 抽的，抽不到就只剩一句 compare 链接。
+// 最常见的坏法不是脚本写错，而是版本号改了 CHANGELOG 忘了加段落——tag 已经推上去、
+// Release 已经生成，才发现页面是空的。这条用例把这种事故前移到 push 之前。
+test('tools/release-notes.mjs：当前版本在 CHANGELOG 有段落，且每个版本都抽得出正文', () => {
+  const changelog = readFileSync(join(REPO, 'CHANGELOG.md'), 'utf8')
+  // 只认语义化版本号：`## [未发布]` 这类待发段落不参与发版说明，也不该被当成版本
+  const versions = [...changelog.matchAll(/^## \[([^\]]+)\]/gm)]
+    .map((m) => m[1].trim())
+    .filter((v) => /^\d+\.\d+\.\d+$/.test(v))
+  assert.ok(versions.length >= 2, `CHANGELOG 里只认出 ${versions.length} 个版本，标题格式可能变了`)
+
+  const pkg = JSON.parse(readFileSync(join(REPO, 'package.json'), 'utf8'))
+  assert.ok(
+    versions.includes(pkg.version),
+    `package.json 是 ${pkg.version}，但 CHANGELOG 里没有这个版本的段落（发版页会是空的）`,
+  )
+
+  // 版本列表顺序应与 CHANGELOG 一致（新的在上），否则多处版本会插错位置
+  assert.equal(versions[0], pkg.version, `CHANGELOG 第一条应是当前版本 ${pkg.version}，实际 ${versions[0]}`)
+
+  for (const version of versions) {
+    const r = run(join(REPO, 'tools', 'release-notes.mjs'), [version])
+    assert.equal(r.code, 0, `${version} 生成失败：${r.stderr}`)
+    const body = r.stdout
+    assert.ok(body.length > 200, `${version} 抽出的正文只有 ${body.length} 字，基本等于空`)
+    assert.ok(body.includes('npx skills add'), '正文开头必须给安装命令，否则读者不知道下一步做什么')
+    assert.ok(
+      body.includes(`## ${version}`),
+      `正文里没有 "${version}" 标题，标题拼装逻辑可能坏了`,
+    )
+    // 段落必须带实际改动条目，只剩一句介绍说明 CHANGELOG 写得敷衍
+    assert.ok(/^### /m.test(body), `${version} 的段落没有三级小标题（新增 / 变更 / 修复）`)
+  }
+})
+
 // ---------------------------------------------------------------- 门面（断图会直接毁掉转化）
 test('README 与 docs 里引用的本地图片都存在（不留断图）', () => {
   const files = ['README.md', 'README.en.md', 'docs/architecture.md', 'docs/launch.md', 'docs/publishing.md']

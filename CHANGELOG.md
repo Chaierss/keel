@@ -3,6 +3,13 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 这里的「破坏性变更」指**接入方已经拷贝走的文件**：改了 `rules.json` 字段结构、改了脚本退出码语义、删了模板文件，都算 major。
 
+## [未发布]
+
+### 变更
+
+- **发版说明改由 `CHANGELOG.md` 生成**：新增 `tools/release-notes.mjs`，按 tag 版本号抽出对应段落，加上安装命令与破坏性变更警示，拼成 Release 正文。`.github/workflows/release.yml` 里替换掉 `--generate-notes`——本仓库全走本地直推、没有 PR，自动生成的正文只有一句 compare 链接，发版页等于空着。CHANGELOG 漏写当前版本时打 warning 并退回自动生成，不卡发版。
+- 用例 34 → 35：新增一条守住「当前版本在 CHANGELOG 有段落、且每个版本都抽得出正文」。版本号改了忘记写 CHANGELOG 是最常见的坏法，此时 tag 已推、Release 已生成，只能在发版页上看到空白。
+
 ## [2.1.0] — 2026-10-28
 
 四件套的「内容密度」版本。2.0 定的是边界在哪，这一版定的是页面到底要展示到什么程度。
