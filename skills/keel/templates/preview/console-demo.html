@@ -181,6 +181,17 @@
     flex-wrap: wrap;
   }
   .comp .meta { padding: 12px 14px 14px; }
+  /* 变体×状态矩阵：只摆 props 能表达的状态，hover/focus 靠真实交互看 */
+  .comp .mx {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;
+    padding: 10px; border-bottom: 1px solid var(--border-soft); background: var(--panel);
+  }
+  .comp .mx-cell {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+    min-height: 54px; padding: 8px 4px 5px;
+    border: 1px solid var(--border-soft); border-radius: 7px; background: var(--bg);
+  }
+  .comp .mx-l { font-size: 10.5px; color: var(--text-3); text-align: center; line-height: 1.4; word-break: break-word; }
   .comp .meta .row1 { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
   .comp .name { font-size: 13.5px; font-weight: 600; }
   .comp .exp { font-family: var(--mono); font-size: 11px; color: var(--text-3); }
@@ -194,6 +205,8 @@
   }
   html[data-theme="dark"] .btn { color: #05130c; }
   .btn.sec { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+  .btn.sm { font-size: 11.5px; padding: 3px 9px; }
+  .btn.dis { opacity: .45; cursor: not-allowed; }
 
   .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 5px; font-size: 12px; font-weight: 500; }
   .tag.n { background: var(--panel-2); color: var(--text-2); }
@@ -227,6 +240,45 @@
     padding: 9px 14px; font-size: 12.5px; color: var(--text-2);
   }
   .api-list { border: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); background: var(--panel); overflow: hidden; }
+  /* 接口文档：左分组 / 右详情 + 试调。列表只解决"有哪些"，详情才解决"怎么调" */
+  .api-grid {
+    display: grid; grid-template-columns: 210px 1fr;
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    background: var(--panel); overflow: hidden;
+  }
+  .api-nav { border-right: 1px solid var(--border-soft); padding: 10px 0; }
+  .api-nav .grp {
+    display: flex; justify-content: space-between;
+    padding: 6px 14px 4px; font-size: 11px; font-weight: 600; color: var(--text-3);
+  }
+  .api-nav button {
+    all: unset; cursor: pointer; display: flex; align-items: center; gap: 8px;
+    padding: 7px 14px; font-family: var(--mono); font-size: 11.5px; color: var(--text-2);
+    width: 100%; box-sizing: border-box;
+  }
+  .api-nav button.on { background: var(--primary-bg); color: var(--primary); font-weight: 500; }
+  .api-doc { padding: 16px 18px; min-width: 0; }
+  .doc-head { display: flex; align-items: center; gap: 10px; }
+  .doc-head code { font-family: var(--mono); font-size: 13px; color: var(--text); }
+  .doc-sum { font-size: 12.5px; color: var(--text-2); margin: 8px 0 0; line-height: 1.65; }
+  .api-doc h5 { margin: 16px 0 6px; font-size: 12px; font-weight: 600; color: var(--text); }
+  .params { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .params th { text-align: left; font-weight: 500; color: var(--text-3); font-size: 11px; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--border-soft); }
+  .params td { padding: 5px 8px 5px 0; color: var(--text-2); border-bottom: 1px solid var(--border-soft); }
+  .params td:first-child { font-family: var(--mono); color: var(--text); }
+  .resp {
+    margin: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border-soft);
+    background: var(--panel-2); font-family: var(--mono); font-size: 11.5px;
+    line-height: 1.75; color: var(--text-2); overflow-x: auto;
+  }
+  .tryit {
+    display: flex; align-items: center; gap: 10px; margin-top: 6px;
+    padding: 8px 10px; border: 1px dashed var(--border); border-radius: 8px;
+    font-size: 11.5px; color: var(--text-3);
+  }
+  .tryit .go { all: unset; cursor: pointer; margin-left: auto; padding: 3px 12px; border-radius: 6px; background: var(--primary); color: #fff; font-size: 11.5px; }
+  html[data-theme="dark"] .tryit .go { color: #05130c; }
   .api {
     display: flex; align-items: center; gap: 12px; padding: 11px 14px;
     border-bottom: 1px solid var(--border-soft); font-size: 13px;
@@ -260,6 +312,17 @@
   .wiki article h4 { margin: 20px 0 6px; font-size: 13.5px; color: var(--text); font-weight: 600; }
   .wiki article code { font-family: var(--mono); font-size: 12px; background: var(--panel-2); padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border-soft); }
   .wiki article table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 12.5px; }
+  /* 引用式内联：真实实现的唯一贴法，手粘贴的副本一定过期 */
+  .code-ref { margin: 10px 0 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .code-ref figcaption {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px; background: var(--panel-2); border-bottom: 1px solid var(--border-soft);
+  }
+  .code-ref .src { font-family: var(--mono); font-size: 11px; color: var(--text-2); }
+  .code-ref .badge { font-size: 10.5px; padding: 1px 6px; border-radius: 999px; background: var(--primary-bg); color: var(--primary); }
+  .code-ref .cp { all: unset; cursor: pointer; margin-left: auto; font-size: 11px; color: var(--text-3); }
+  .code-ref pre { margin: 0; padding: 10px 12px; overflow-x: auto; font-family: var(--mono); font-size: 11.5px; line-height: 1.8; color: var(--text-2); }
+  .code-ref .ln { display: inline-block; width: 20px; color: var(--text-3); user-select: none; }
   .wiki article th, .wiki article td { border: 1px solid var(--border-soft); padding: 6px 9px; text-align: left; }
   .wiki article th { background: var(--panel-2); font-weight: 500; color: var(--text); }
 
@@ -306,13 +369,13 @@
     <section class="view on" id="view-rules">
       <div class="hero">
         <div>
-          <h3>规则版本 2026-10-25</h3>
-          <p>2 个页面形态 · 9 条规则 · 其中 7 条 must。导出成 Markdown 就是给下一个 agent 的上下文，不用重复口头解释。</p>
+          <h3>规则版本 2026-10-28</h3>
+          <p>4 个页面形态 · 8 条术语 · 15 条规则，其中 14 条 must。导出成 Markdown 就是给下一个 agent 的上下文，不用重复口头解释。</p>
         </div>
         <div class="metrics">
-          <div class="metric"><div class="n">2</div><div class="l">页面形态</div></div>
-          <div class="metric"><div class="n">9</div><div class="l">规则</div></div>
-          <div class="metric"><div class="n">7</div><div class="l">必须</div></div>
+          <div class="metric"><div class="n">4</div><div class="l">页面形态</div></div>
+          <div class="metric"><div class="n">8</div><div class="l">术语</div></div>
+          <div class="metric"><div class="n">15</div><div class="l">规则</div></div>
         </div>
       </div>
 
@@ -340,7 +403,43 @@
         </div>
       </div>
 
-      <div class="sec-title"><span class="idx">02</span><h4>规则清单</h4><span class="desc">每条都带出处，没有出处的规则一个月后没人敢执行</span></div>
+      <div class="sec-title"><span class="idx">02</span><h4>术语表</h4><span class="desc">同一个词被理解成两个意思，比没人定义更糟</span></div>
+      <div class="grid two">
+        <div class="card">
+          <h5>单一真相源 <span class="en">Single Source of Truth</span></h5>
+          <dl>
+            <dt>定义</dt><dd>每条事实只有一个权威位置，其他出现的地方都只是它的投影。</dd>
+            <dt>识别</dt><dd>页面每条内容都能追到一个仓库文件；改它刷新即变</dd>
+            <dt>避免</dt><dd class="avoid">不要叫「主数据」——那说的是数据，不是事实的来源</dd>
+          </dl>
+        </div>
+        <div class="card">
+          <h5>可见性边界 <span class="en">Visibility Boundary</span></h5>
+          <dl>
+            <dt>定义</dt><dd>哪些产物带上它、谁能打开、哪些字段不能给。不是运行时状态。</dd>
+            <dt>识别</dt><dd>每条「不给看」都能说出最坏后果，且修法与后果同层</dd>
+            <dt>避免</dt><dd class="avoid">不要叫「开发模式 / 线上模式」——同一个包不该有两种形态</dd>
+          </dl>
+        </div>
+        <div class="card">
+          <h5>响应信封 <span class="en">Response Envelope</span></h5>
+          <dl>
+            <dt>定义</dt><dd>所有接口共用的外层：业务码 / 消息 / 数据 / 请求 ID。业务失败也用 HTTP 200。</dd>
+            <dt>识别</dt><dd>打开任意响应，最外层永远是同一组键</dd>
+            <dt>避免</dt><dd class="avoid">不要用 HTTP 状态码表达业务错误，网关会改写它</dd>
+          </dl>
+        </div>
+        <div class="card">
+          <h5>空态 <span class="en">Empty State</span></h5>
+          <dl>
+            <dt>定义</dt><dd>请求成功但没有数据：说明为什么空、下一步做什么。</dd>
+            <dt>识别</dt><dd>文案能区分「还没创建」和「筛选后为空」</dd>
+            <dt>避免</dt><dd class="avoid">不要叫「无数据页」——它和「加载失败」是两件事</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="sec-title"><span class="idx">03</span><h4>规则清单</h4><span class="desc">每条都带出处，没有出处的规则一个月后没人敢执行</span></div>
       <div class="rule-list">
         <div class="rule">
           <div class="rid">P-01</div>
@@ -413,6 +512,12 @@
       <div class="grid three">
         <div class="comp">
           <div class="stage"><button class="btn">保存</button><button class="btn sec">取消</button></div>
+          <div class="mx">
+            <div class="mx-cell"><button class="btn">确定</button><span class="mx-l">type=primary</span></div>
+            <div class="mx-cell"><button class="btn sec">取消</button><span class="mx-l">type=secondary</span></div>
+            <div class="mx-cell"><button class="btn sm">详情</button><span class="mx-l">size=small</span></div>
+            <div class="mx-cell"><button class="btn dis">保存</button><span class="mx-l">disabled</span></div>
+          </div>
           <div class="meta">
             <div class="row1"><span class="name">按钮</span><span class="exp">Button</span><span class="chip">基础控件</span></div>
             <p class="sum">操作按钮统一出口；页面禁止直接 import UI 库。</p>
@@ -494,13 +599,42 @@
           <span>由 OpenAPI 自动生成，接口改动实时生效</span>
           <span class="chip">Bearer 已授权</span>
         </div>
-        <div class="api-list">
-          <div class="api"><span class="m get">GET</span><span class="p">/api/datasources</span><span class="s">列出数据源（分页）</span></div>
-          <div class="api"><span class="m post">POST</span><span class="p">/api/datasources</span><span class="s">新建数据源并测试连接</span></div>
-          <div class="api"><span class="m get">GET</span><span class="p">/api/datasources/{id}</span><span class="s">数据源详情</span></div>
-          <div class="api"><span class="m del">DELETE</span><span class="p">/api/datasources/{id}</span><span class="s">删除（需二次确认）</span></div>
+        <div class="api-grid">
+          <nav class="api-nav">
+            <div class="grp"><span>数据源</span><span>4</span></div>
+            <button><span class="m get">GET</span>/api/datasources</button>
+            <button class="on"><span class="m post">POST</span>/api/datasources</button>
+            <button><span class="m get">GET</span>/api/datasources/{id}</button>
+            <button><span class="m del">DEL</span>/api/datasources/{id}</button>
+            <div class="grp"><span>采集任务</span><span>3</span></div>
+            <button><span class="m get">GET</span>/api/jobs</button>
+            <button><span class="m post">POST</span>/api/jobs/{id}/run</button>
+          </nav>
+          <div class="api-doc">
+            <div class="doc-head"><span class="m post">POST</span><code>/api/datasources</code></div>
+            <p class="doc-sum">新建数据源并测试连接。连接测试失败时返回业务码而<b>不落库</b>——这是这个接口唯一容易踩的点。</p>
+            <h5>请求体</h5>
+            <table class="params">
+              <tr><th>字段</th><th>类型</th><th>说明</th></tr>
+              <tr><td>name</td><td>string</td><td>唯一，1–64 字符</td></tr>
+              <tr><td>kind</td><td>enum</td><td>mysql / postgres / clickhouse</td></tr>
+              <tr><td>dsn</td><td>string</td><td>只写不读，响应里永不回显</td></tr>
+            </table>
+            <h5>响应 200 · 统一信封</h5>
+            <pre class="resp">{
+  "code": 0,
+  "message": "ok",
+  "requestId": "b1f0c7e2",
+  "data": { "id": "ds_18", "status": "connected" }
+}</pre>
+            <h5>试调</h5>
+            <div class="tryit">
+              <span>Bearer 已注入（当前账号 scopes: datasource:write）</span>
+              <button class="go">发送</button>
+            </div>
+          </div>
         </div>
-        <div class="foot-note">这里内嵌的是真实 Swagger UI。判定「有接口文档」的标准是能填 token 试调，不是页面上有字。</div>
+        <div class="foot-note">三件事让它不是摆设：<b>分组</b>让人找得到、<b>详情</b>说明踩坑点而不是复述字段名、<b>试调</b>能真的调通。判定「有接口文档」的标准是能填 token 调通，不是页面上有字。</div>
       </div>
       <div class="locked">这一页对外不可达<br><span style="font-size:12px">/docs 返回 404，/openapi.json 需鉴权</span></div>
       <div class="foot-note">接口文档必须落在<b>身份层</b>：前端藏起来没用，数据已经在浏览器里了。文档页是最容易被外部扫到的内部结构入口。</div>
@@ -525,6 +659,22 @@
             <tr><td>组件</td><td>目录扫描</td><td>多出来的文件自动告警</td></tr>
             <tr><td>文档</td><td>docs/wiki/*.md</td><td>无缓存挂载，改文件即生效</td></tr>
           </table>
+          <h4>核心算法：引用式内联</h4>
+          <p>这一段不是粘进来的，是引用仓库里的真实文件。粘贴的副本三个月后一定是错的，而且没有任何东西会报错——它只是安静地骗下一个人。</p>
+          <figure class="code-ref">
+            <figcaption>
+              <span class="src">src/core/rank.ts:12-17</span>
+              <span class="badge">引用自仓库 · 实时</span>
+              <button class="cp">复制</button>
+            </figcaption>
+            <pre><code><span class="ln">12</span>export function rank(items: Item[], w: Weight) {
+<span class="ln">13</span>  return items
+<span class="ln">14</span>    .map((it) =&gt; ({ it, score: score(it, w) }))
+<span class="ln">15</span>    .sort((a, b) =&gt; b.score - a.score)
+<span class="ln">16</span>    .slice(0, LIMIT)
+<span class="ln">17</span>}</code></pre>
+          </figure>
+          <p class="foot-note">行号用源文件的真实行号。引用失效时页面明确报错（例如「该文件只有 88 行」），不留空白——静默失败比报错危险得多。</p>
           <h4>为什么不用文档站</h4>
           <p>因为两份必然分叉。文档站一旦独立部署，它就再也跟不上代码了——不是没人维护，是维护它的人看不到代码变更。</p>
         </article>

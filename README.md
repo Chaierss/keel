@@ -75,7 +75,16 @@ npx skills add Chaierss/keel -g
 | 接口文档 | 框架生成的 OpenAPI | 不存在手写接口清单，也就没有可落后的东西 |
 | Wiki | `docs/wiki/*.md` | 直接挂仓库文件，无缓存、无搬运 |
 
-![数据流：仓库源文件 → 设置页 → 模式开关 → 发版门禁](docs/assets/architecture.svg)
+![数据流：仓库源文件 → 设置页 → 可见性边界 → 发版门禁](docs/assets/architecture.svg)
+
+**每一页做到什么程度才算完**（这不是装饰，是四页的分工）：
+
+| 页面 | 只有一句话不行 | 做到这个程度 |
+|---|---|---|
+| 规则 | 模板只给两条示例 | 15 条规则 + 4 个页面形态 + 8 条术语，每条带「识别信号 / 代码落点 / 不要怎么叫」；agent 还能扫代码归纳出候选，人点头才入档 |
+| 组件 | 一个默认态截图 | 真实渲染 + **变体 × 状态矩阵**，每格标出生效的 props；未登记、零引用自动进告警与待下架 |
+| 接口文档 | 一列接口名 | 左分组 / 右详情（写踩坑点，不复述字段名）/ 下试调（显示当前身份与 scopes） |
+| Wiki | 一篇概述 | 代码地图 + **引用式内联**核心实现，按源文件真实行号渲染，源码改了页面跟着变 |
 
 ## 装完之后怎么用
 
@@ -92,7 +101,7 @@ npx skills add Chaierss/keel -g
 日常只有两条命令：
 
 ```bash
-node keel/console-check.mjs --strict     # 13 项检查：四件套齐、没有未登记组件
+node keel/console-check.mjs --strict     # 15 项检查：四件套齐、没有未登记组件
 node keel/preflight-scan.mjs --strict    # 17 条代码模式规则 + 文件级与产物级检查
 ```
 
@@ -193,7 +202,7 @@ tools/  tests/  docs/     ← 本仓库的工具链，不随技能分发
 ## 参与开发
 
 ```bash
-node tests/run-tests.mjs        # 32 个用例，零依赖，几秒
+node tests/run-tests.mjs        # 34 个用例，零依赖，几秒
 node tools/package-skill.mjs    # dist/keel-<version>.zip，根目录就是 SKILL.md
 node tools/install-local.mjs --list
 ```

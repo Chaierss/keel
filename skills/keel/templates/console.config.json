@@ -1,7 +1,7 @@
 {
   "$comment": "keel 扫描范围。只用相对项目根的路径，正斜杠。version = 本文件的结构版本；keelVersion = 这份模板来自哪个技能版本，升级体检靠它比对（见 references/upgrading.md）。",
   "version": 1,
-  "keelVersion": "2.0.0",
+  "keelVersion": "2.1.0",
   "consoleDir": "keel",
   "srcDir": "src",
   "scanDirs": ["src", "backend", "frontend"],

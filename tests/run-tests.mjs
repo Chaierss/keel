@@ -259,6 +259,41 @@ test('WIKI-01 / WIKI-02：清单指向不存在的文档是 error，目录里有
   assert.equal(find(checkJson(orphan).issues, 'WIKI-02').level, 'warn')
 })
 
+test('WIKI-03：代码引用指向不存在的文件或越界行号 → error', () => {
+  const root = healthyProject('wiki-ref')
+  write(root, 'src/core/rank.ts', Array.from({ length: 30 }, (_, i) => `// 第 ${i + 1} 行`).join('\n'))
+
+  // 引用的文档要登记，否则 WIKI-02 会先报一条不相干的 warn
+  const list = JSON.parse(readFileSync(join(root, 'keel/wiki.json'), 'utf8'))
+  list.push({ name: 'algorithm.md', title: '核心算法' })
+  write(root, 'keel/wiki.json', JSON.stringify(list, null, 2))
+
+  const doc = (ref) => `# 核心算法\n\n这段实现是引用进来的，不是粘进来的：\n\n<!-- keel:code ${ref} -->\n\n改了源码这里跟着变。\n`
+  const check = (ref) => {
+    write(root, 'docs/wiki/algorithm.md', doc(ref))
+    return checkJson(root)
+  }
+
+  assert.equal(find(check('src/core/rank.ts 5-12').issues, 'WIKI-03').level, 'ok', '合法引用应通过')
+  assert.equal(find(check('src/core/rank.ts 5-999').issues, 'WIKI-03').level, 'error', '行号越界应报错')
+  assert.equal(find(check('src/core/none.ts 1-10').issues, 'WIKI-03').level, 'error', '文件不存在应报错')
+})
+
+test('RULE-05：AI 归纳的 draft 条目缺 evidence → warn', () => {
+  const root = healthyProject('rule-draft')
+  const rules = JSON.parse(readFileSync(join(root, 'keel/rules.json'), 'utf8'))
+  rules.rules.push({
+    id: 'C-99', category: 'component', severity: 'must',
+    title: '异步状态统一走 useAsync', summary: '候选规则', detail: '由代码归纳', source: 'src/shared/useAsync.ts', status: 'draft',
+  })
+  write(root, 'keel/rules.json', JSON.stringify(rules, null, 2))
+  assert.equal(find(checkJson(root).issues, 'RULE-05').level, 'warn', 'draft 无出处应提示')
+
+  rules.rules[rules.rules.length - 1].evidence = ['src/shared/useAsync.ts:1']
+  write(root, 'keel/rules.json', JSON.stringify(rules, null, 2))
+  assert.equal(find(checkJson(root).issues, 'RULE-05').level, 'ok', 'draft 带 evidence 应通过')
+})
+
 test('API-01：没检测到 OpenAPI 生成入口时是 info，不阻断', () => {
   const root = healthyProject('no-api')
   const r = checkJson(root, ['--strict'])

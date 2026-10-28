@@ -20,8 +20,8 @@ node keel/console-check.mjs
 
 | 输出 | 含义 |
 |---|---|
-| `ok 模板版本 2.0.0（最新）` | 对齐了，不用管 |
-| `warn 模板版本 1.0.1，当前技能 2.0.0` | 有更新，看下面「版本区间」对应那一节 |
+| `ok 模板版本 2.1.0（最新）` | 对齐了，不用管 |
+| `warn 模板版本 2.0.0，当前技能 2.1.0` | 有更新，看下面「版本区间」对应那一节 |
 | `warn 未声明模板版本` | 老文件没有这个字段，补 `"keelVersion"` 即可 |
 
 它是 **warn 不是 error**：升级提醒不该让 CI 变红。红的东西会被整体忽略，包括真正该看的那些。
@@ -31,7 +31,7 @@ node keel/console-check.mjs
 ```json
 {
   "version": 1,
-  "keelVersion": "2.0.0"
+  "keelVersion": "2.1.0"
 }
 ```
 
@@ -48,6 +48,18 @@ Trae / WorkBuddy 走各自的上传入口，传新 zip 覆盖即可。
 
 ## 版本区间
 
+### 2.0.x → 2.1.0（纯新增）
+
+不改任何已有字段的语义，老文件原样能跑。想用上新能力再做下面几件：
+
+| 变化 | 你要做什么 |
+|---|---|
+| `rules.json` 新增 `terms` 数组 | 不加也能过体检。加的话每条要 `name` + `definition` + `avoid` |
+| 默认库变厚（15 规则 / 4 形态 / 8 术语） | 别整份覆盖。挑你要的条目拷进自己的 `rules.json`，`source` 换成真实路径 |
+| 组件注册表新增 `matrix` | 给有变体的组件加；不写则退化为单格渲染，卡片会标「未声明变体」 |
+| Wiki 支持 `<!-- keel:code 路径 起-止 -->` | 把既有的手粘贴代码换成引用。`WIKI-03` 会校验行号，先跑一遍再提交 |
+| 新增 `templates/ComponentCard.skeleton.vue` | 可选。用得上就拷，注意改里面的 glob 前缀 |
+
 ### 1.0.x → 2.0.0（破坏性）
 
 | 变化 | 你要做什么 |
@@ -55,7 +67,7 @@ Trae / WorkBuddy 走各自的上传入口，传新 zip 覆盖即可。
 | `templates/devMode.ts` 删除 | 删掉 `keel/devMode.ts` 与所有 `isDev()` 调用，按 `visibility.md` 的三层重新落 |
 | `references/modes.md` → `visibility.md` | 改名 + 重写，不影响你的运行代码，只影响你读文档的路径 |
 | `console-check` 的 `MODE-01` → `CFG-01` | 若 CI 里按 ID 过滤输出，改这个 ID。检查逻辑与退出码语义未变 |
-| `console.config.json` 新增 `keelVersion` | 补 `"keelVersion": "2.0.0"` |
+| `console.config.json` 新增 `keelVersion` | 补 `"keelVersion": "2.1.0"` |
 | 页面里的模式角标 / 切换开关 | 删掉。迁移对照表在 `visibility.md` 末节 |
 
 ### 1.0.0 → 1.0.1（无破坏）

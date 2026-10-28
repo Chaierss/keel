@@ -10,6 +10,13 @@
     "summary": "操作按钮统一出口；页面禁止直接 import UI 库。",
     "variants": ["primary", "secondary", "outline", "text", "small"],
     "demo": "src/components/ui/Button.demo.vue",
+    "matrix": [
+      { "label": "主要", "props": { "type": "primary" } },
+      { "label": "次要", "props": { "type": "secondary" } },
+      { "label": "描边", "props": { "type": "outline" } },
+      { "label": "文字", "props": { "type": "text" } },
+      { "label": "禁用", "props": { "type": "primary", "disabled": true } }
+    ],
     "deprecated": false
   },
   {
@@ -22,6 +29,13 @@
     "summary": "业务语义标签的唯一出口：页面只声明 tone，不写死颜色。",
     "variants": ["neutral", "info", "success", "warning", "danger", "processing"],
     "demo": "auto",
+    "matrix": [
+      { "label": "中性", "props": { "tone": "neutral" } },
+      { "label": "信息", "props": { "tone": "info" } },
+      { "label": "成功", "props": { "tone": "success" } },
+      { "label": "警告", "props": { "tone": "warning" } },
+      { "label": "危险", "props": { "tone": "danger" } }
+    ],
     "deprecated": false
   },
   {

@@ -1,7 +1,7 @@
 {
-  "version": "2026-10-25",
+  "version": "2026-10-28",
   "projectName": "示例项目",
-  "$comment": "初始规则必须包含 P-01（设计优雅原则）与 S-01（上线前安全扫描），这两条是项目底色，缺了后面所有规则都是装饰。",
+  "$comment": "这是一套可直接用的起点，不是标准答案。三件事必须做：① source 全是示例路径，落地时逐条换成你项目里的真实文件，写不出真实路径的规则就别留；② pageModes 换成你项目里真实存在的页面形态，不是每种都留；③ 新增词条/规则时 status 先写 draft 并带 evidence，人确认后再改 confirmed —— draft 不进 AI 上下文导出。必带 P-01（设计优雅原则）与 S-01（上线前安全扫描），这两条是项目底色。",
   "pageModes": [
     {
       "key": "focus",
@@ -12,7 +12,8 @@
       "appliesTo": ["工作台", "数据源", "采集任务", "任务运维"],
       "signal": "240px 全局菜单常驻 + 右侧内容区滚动 + 顶栏「最近访问」",
       "codeHint": "普通路由：不声明 immersive，壳层保留全局菜单。",
-      "avoid": ["不要把全屏画布/编辑器塞进常规页", "不要把它叫「二级菜单」"]
+      "avoid": ["不要把全屏画布/编辑器塞进常规页", "不要把它叫「二级菜单」"],
+      "status": "confirmed"
     },
     {
       "key": "immersive",
@@ -23,7 +24,114 @@
       "appliesTo": ["工作流创建/编辑", "看板编辑", "智能问数", "系统设置"],
       "signal": "全局菜单隐藏 + 模块自持整屏 + 左上「返回主菜单」",
       "codeHint": "路由 meta.immersive：shell = 壳层渲染模块左栏；inline = 页面自持左栏。",
-      "avoid": ["不要叫「弹窗 / 抽屉 / 全屏弹窗」——它是可深链、可刷新的整屏路由态", "不要叫「二级菜单」"]
+      "avoid": ["不要叫「弹窗 / 抽屉 / 全屏弹窗」——它是可深链、可刷新的整屏路由态", "不要叫「二级菜单」"],
+      "status": "confirmed"
+    },
+    {
+      "key": "master-detail",
+      "name": "主从模式",
+      "english": "Master-Detail",
+      "aliases": ["左右分栏", "列表详情"],
+      "definition": "左侧是候选集合（列表/树），右侧是该集合里当前一项的详情。选择动作只换右栏，不换页面。",
+      "appliesTo": ["规则清单", "组件目录", "Wiki 文档", "日志检索"],
+      "signal": "左栏可选中的列表 + 右侧详情 + 选中项高亮且写进 URL",
+      "codeHint": "详情 id 进 query（?id=xxx 或 ?tab=xxx），刷新与分享后仍停在同一条。",
+      "avoid": ["不要叫「两栏布局」——两栏只是外观，主从的关键是「选择只换右栏」", "不要让选中态只存在组件内部状态里，刷新就丢"],
+      "status": "confirmed"
+    },
+    {
+      "key": "board",
+      "name": "看板模式",
+      "english": "Board",
+      "aliases": ["泳道视图", "Kanban"],
+      "definition": "横向若干列，每列是一个状态；卡片可在列间移动，移动即改状态。列的集合由数据决定，不写死在页面里。",
+      "appliesTo": ["任务看板", "审批流", "内容排期"],
+      "signal": "横向滚动的状态列 + 卡片可拖拽 + 列头显示计数",
+      "codeHint": "列由 status 枚举生成，不硬编码列数组；拖拽结束只发一个状态变更请求。",
+      "avoid": ["不要叫「列表视图」——列表是一维排序，看板是二维状态", "不要把列写死在模板里，否则新增状态要改代码"],
+      "status": "confirmed"
+    }
+  ],
+  "terms": [
+    {
+      "key": "ssot",
+      "name": "单一真相源",
+      "english": "Single Source of Truth",
+      "definition": "每条事实只有一个权威位置，其他出现的地方都只是它的投影，不能反向修改。",
+      "signal": "页面上每一条内容都能追到一个仓库文件；改那个文件，刷新就变，中间没有「同步」这一步。",
+      "codeHint": "四件套各读一份源：规则读 rules.json、组件读注册表 + 目录扫描、接口读 OpenAPI、Wiki 读 docs/wiki/*.md。",
+      "avoid": ["不要叫「主数据」「数据中心」——那说的是数据本身，不是事实的来源位置", "不要把「文档站」当真相源——它是投影，投影会过期"],
+      "status": "confirmed"
+    },
+    {
+      "key": "visibility-boundary",
+      "name": "可见性边界",
+      "english": "Visibility Boundary",
+      "definition": "回答三件事的一组声明：哪些产物带上它、谁能打开、哪些字段不能给。它不是运行时状态，不显示也不切换。",
+      "signal": "每条「不给看」都能说出最坏后果，且修法与后果同层——不好看改前端、泄露内部改服务端、收不回来改构建期。",
+      "codeHint": "产物层在构建配置里剔除；身份层在服务端鉴权中间件；字段层在响应组装处用白名单。",
+      "avoid": ["不要叫「开发模式 / 线上模式」——同一个包不该有两种形态，那个词会把人骗到前端写 v-if", "不要叫「权限开关」——权限只覆盖身份层，管不了产物和字段"],
+      "status": "confirmed"
+    },
+    {
+      "key": "envelope",
+      "name": "响应信封",
+      "english": "Response Envelope",
+      "definition": "所有接口共用的外层结构：业务码、人类可读消息、数据体、请求 ID。业务失败也用 HTTP 200 返回，由业务码表达。",
+      "signal": "打开任意接口响应，最外层永远是同一组键；前端只需一处解包逻辑。",
+      "codeHint": "统一的 response_model / 中间件封装；分页信息放在信封层，不塞进 data。",
+      "avoid": ["不要叫「返回体」「包装层」——叫法一散，新人就会以为有几个不同规范", "不要用 HTTP 状态码表达业务错误，代理和网关会改写它"],
+      "status": "confirmed"
+    },
+    {
+      "key": "empty-state",
+      "name": "空态",
+      "english": "Empty State",
+      "definition": "请求成功但没有数据时显示的状态：说明为什么空、下一步做什么。",
+      "signal": "有插图或一句话解释 + 一个主动作按钮，且文案能区分「还没创建」和「筛选后为空」。",
+      "codeHint": "三态分开渲染：loading / empty / error，禁止用一个 v-if 合并。",
+      "avoid": ["不要叫「无数据页」——它和「加载失败」是两件完全不同的事，混在一起会掩盖故障", "不要用演示数据填满空态，那是把空态问题藏起来"],
+      "status": "confirmed"
+    },
+    {
+      "key": "token",
+      "name": "令牌",
+      "english": "Design Token",
+      "definition": "颜色、字号、行高、圆角、间距的唯一数值来源。组件里只用令牌名，不出现裸数值。",
+      "signal": "全站调一次对比度只需改一个文件；组件里 grep 不到 px 字号。",
+      "codeHint": "CSS 变量 + 桥接组件库同名变量；主题切换只换令牌层。",
+      "avoid": ["不要叫「变量」「主题配置」——那是实现方式，令牌是契约", "不要在组件里裸写数值再用令牌覆盖，两套值必然分叉"],
+      "status": "confirmed"
+    },
+    {
+      "key": "shell",
+      "name": "壳层",
+      "english": "Shell",
+      "definition": "包裹所有页面的常驻框架：全局导航、顶栏、内容插槽。整个应用只有一层。",
+      "signal": "换页面时导航区不动，只有内容区重渲染。",
+      "codeHint": "路由级布局；沉浸模式下壳层按 meta 决定是否隐藏全局导航。",
+      "avoid": ["不要叫「布局组件」——布局可以嵌套很多层，壳层只有一层", "不要在模块内部再套一层壳，会出现双导航"],
+      "status": "confirmed"
+    },
+    {
+      "key": "unregistered",
+      "name": "未登记组件",
+      "english": "Unregistered Component",
+      "definition": "目录里真实存在、注册表里没有的组件。它是准入问题，不是质量问题。",
+      "signal": "组件页顶部出现告警条并点名文件；体检脚本 COMP-02 报 error。",
+      "codeHint": "注册表是准入名单：目录有、注册表没有 = 构建告警，不是「等有空再补」。",
+      "avoid": ["不要叫「野组件」「多余组件」——它可能只是还没登记，不该预设要删", "不要靠人工记忆维护名单，必须靠目录扫描"],
+      "status": "confirmed"
+    },
+    {
+      "key": "degrade",
+      "name": "降级",
+      "english": "Degrade",
+      "definition": "主路径不可用时，有意识地退到一个功能更少但仍然可用的形态。是设计决定，不是异常处理。",
+      "signal": "降级发生时用户知道自己在降级形态里，且核心任务仍能完成。",
+      "codeHint": "降级分支要显式命名并写日志，不能和「报错后什么都不显示」混为一谈。",
+      "avoid": ["不要叫「兜底」「fallback」——兜底多指异常捕获，降级是有意的功能裁剪", "不要把降级当成免责：降级态也必须能用"],
+      "status": "confirmed"
     }
   ],
   "categories": [
@@ -42,16 +150,18 @@
       "title": "设计优雅原则",
       "summary": "优雅不是好看，是「少了它会觉得不方便」。任何设计取舍必须能说清付出什么、换回什么。",
       "detail": "十条可判定条款（每条都要能回答是/否，答不上来就是没做到）：① 一处定义处处一致——改一处能全站生效吗；② 命名先于人——新同事听到这个词能 grep 到实现吗；③ 删除优先——这个开关 90% 的人会用默认值吗，是就别做；④ 默认值即最佳实践——没读过文档的人直接用会踩坑吗；⑤ 一步能完成不要两步——从看到目标到完成要几次点击；⑥ 渐进披露——首屏每个信息 80% 场景会用到吗；⑦ 状态永远可见——「没有数据」和「加载失败」用户分得清吗；⑧ 失败可恢复——误操作后 10 秒内能恢复吗；⑨ 一屏一个主动作——遮住其他元素能立刻知道该点哪吗；⑩ 装饰必须有职责——把它关掉用户会失去什么信息。三条不可越的线：不拿正确性、可访问性、可维护性去换「简洁」。说不出代价的取舍通常不成立，说不出收益的复杂度一定是浪费。",
-      "source": "references/elegance.md"
+      "source": "references/elegance.md",
+      "status": "confirmed"
     },
     {
-      "id": "S-01",
-      "category": "security",
+      "id": "P-02",
+      "category": "principle",
       "severity": "must",
-      "title": "上线前必须通过漏洞扫描",
-      "summary": "发版前必须跑完预检：四件套完整 + 静态扫描零 error + 依赖无 high 漏洞 + 五项人工检查 + 可见性边界四问。",
-      "detail": "顺序固定不可颠倒：① console-check.mjs --strict（四件套完整，先知道漏了什么）；② preflight-scan.mjs --strict（硬编码密钥、命令注入、反序列化、关闭证书校验、CORS 通配、调试残留、默认口令等，error 必须清零）；③ 依赖审计（npm audit --audit-level=high / pip-audit），high 及以上清零，禁止用 audit fix --force 蛮干；④ 人工五项（工具查不出，真实事故多在这里）：越权 IDOR（换 id 拿别人数据）、权限只做在前端、业务逻辑绕过、文件上传（类型/路径穿越/可执行）、SSRF（内网地址）；⑤ 可见性边界四问（见 references/visibility.md）：哪些产物带设置页、每种产物里谁能打开、哪些字段不能给、误展示的最坏后果——修法必须与后果同层（不好看改前端、泄露内部改服务端、收不回来改构建期）；⑥ 构建产物扫描（dist/ 里无密钥、无内部页面，前端打包的「密钥」等于公开）。全绿才允许打 tag 发版。产物一旦发出去就收不回来，所以扫描必须排在打包之前。扫描不是一次性仪式，必须挂在 CI 里，否则赶进度时第一个被跳过。豁免写进 .preflightignore 且必须注明原因，无原因的豁免等于关掉检测。",
-      "source": "references/preflight.md · references/visibility.md · keel/preflight-scan.mjs"
+      "title": "写不出判定方法的不算规则",
+      "summary": "任何规范必须能用是/否回答。只能靠「感觉」「尽量」「注意」表达的，是口号，不是规则。",
+      "detail": "判定方式：把规则交给一个没参与讨论的人，他能拿着它判断一段代码合不合规吗？不能就是没写完。补法是加可观测的信号——文件存在与否、字段有没有、次数是否超过阈值、grep 能不能命中。确实无法机器化的（如文案语气），标注为「人工评审项」并在评审清单里列出来，不要伪装成可自动检查的规则。",
+      "source": "references/elegance.md",
+      "status": "confirmed"
     },
     {
       "id": "V-01",
@@ -60,7 +170,18 @@
       "title": "字号、圆角、行高只用令牌",
       "summary": "禁止裸写 px 字号/圆角与行高数值，统一消费 CSS 变量令牌。",
       "detail": "调对比度只改令牌层，通过桥接同步组件库同名变量，不逐组件改样式。",
-      "source": "src/theme/tokens.css · scripts/check-theme-contract.mjs"
+      "source": "src/theme/tokens.css · scripts/check-theme-contract.mjs",
+      "status": "confirmed"
+    },
+    {
+      "id": "V-02",
+      "category": "visual",
+      "severity": "must",
+      "title": "颜色只从语义令牌取",
+      "summary": "业务代码里不出现十六进制色值，也不直接用第三方组件库的色板名。",
+      "detail": "语义令牌按用途命名（文字/背景/边框/主色/危险/成功），不按颜色命名（blue-500）。按颜色命名时，换主题就必须回来改业务代码。新增用途先加令牌，再写组件。",
+      "source": "src/theme/tokens.css",
+      "status": "confirmed"
     },
     {
       "id": "M-01",
@@ -69,7 +190,8 @@
       "title": "动效统一由全局层接管",
       "summary": "组件动效由全局 motion 样式统一接管，组件内不重复实现。",
       "detail": "只允许 transform / opacity / box-shadow；必须尊重 prefers-reduced-motion。",
-      "source": "src/theme/motion.css"
+      "source": "src/theme/motion.css",
+      "status": "confirmed"
     },
     {
       "id": "C-01",
@@ -78,7 +200,18 @@
       "title": "业务视图不直连组件库",
       "summary": "views 只能从 components/ui 与 components/patterns 取件。",
       "detail": "UI 库是 components/ui 的实现细节；直接 import 会被门禁拦截。",
-      "source": "scripts/check-architecture.mjs"
+      "source": "scripts/check-architecture.mjs",
+      "status": "confirmed"
+    },
+    {
+      "id": "C-02",
+      "category": "component",
+      "severity": "must",
+      "title": "每个共享组件必须带 demo",
+      "summary": "同目录放 Xxx.demo.*，组件页用它做真实渲染预览；没有 demo 的组件不算交付完成。",
+      "detail": "预览必须是真组件渲染，不是截图、不是巨型 v-if 列举。demo 文件同时是变体矩阵的来源：一个变体一种 props，一个状态一行，页面上按矩阵渲染出来。缺失时体检脚本 COMP-03 报 warn。",
+      "source": "keel/components.json · references/components.md",
+      "status": "confirmed"
     },
     {
       "id": "C-05",
@@ -87,7 +220,18 @@
       "title": "新增共享组件先登记",
       "summary": "新增共享组件必须登记到「系统设置 → 组件」注册表后才算完成。",
       "detail": "注册表会扫描真实目录，未登记的组件会在页面上直接标记并让体检脚本报错。",
-      "source": "keel/components.json · keel/console-check.mjs"
+      "source": "keel/components.json · keel/console-check.mjs",
+      "status": "confirmed"
+    },
+    {
+      "id": "E-01",
+      "category": "engineering",
+      "severity": "must",
+      "title": "接口响应统一信封",
+      "summary": "所有接口共用同一外层结构：业务码 + 消息 + 数据 + 请求 ID。业务失败不用 HTTP 状态码表达。",
+      "detail": "前端只写一处解包逻辑；请求 ID 必须回显在错误提示里，否则线上排障只能靠猜。分页元信息放信封层，不塞进 data，避免每个列表页各写一套。",
+      "source": "backend/app/core/envelope.py",
+      "status": "confirmed"
     },
     {
       "id": "E-02",
@@ -96,7 +240,18 @@
       "title": "禁止任何形式的演示数据",
       "summary": "不种演示数据、不造假运行、不用 demo 名占位；空态就展示空态。",
       "detail": "没有数据时显示说明性空态，而不是填几条假数据让页面好看。",
-      "source": "src/shared/"
+      "source": "src/shared/",
+      "status": "confirmed"
+    },
+    {
+      "id": "E-03",
+      "category": "engineering",
+      "severity": "must",
+      "title": "可见性边界写在一处，修在该在的那层",
+      "summary": "哪些产物带设置页、谁能打开、哪些字段不能给，三件事必须有一份可定位的声明；修法与后果同层。",
+      "detail": "不好看 → 前端不渲染；泄露内部结构 → 服务端鉴权；泄露后收不回来（进了别人磁盘、被搜索引擎收录）→ 构建期剔除。跨层修等于没修。界面上不允许出现「模式 / 形态」角标或切换开关——需要角标，说明这个决定被推到了运行时。四问与三种典型项目的写法见 references/visibility.md。",
+      "source": "references/visibility.md",
+      "status": "confirmed"
     },
     {
       "id": "E-05",
@@ -104,8 +259,9 @@
       "severity": "must",
       "title": "规则、组件、接口文档、Wiki 必须自动更新",
       "summary": "这四类文档不允许人肉另存一份：源文件一变，页面必须自动反映最新事实。",
-      "detail": "规则以 keel/rules.json 为唯一源；组件以 components.json + 目录扫描为准，未登记即告警；接口文档由框架生成 OpenAPI 并内嵌，禁止手写接口清单；Wiki 读仓库 docs/wiki/*.md 并无缓存挂载。验收标准：改动后在对应页面无需额外「同步文档」步骤即可见，任何手写副本都视为违规。",
-      "source": "keel/*.json · backend openapi · docs/wiki/"
+      "detail": "规则以 keel/rules.json 为唯一源；组件以 components.json + 目录扫描为准，未登记即告警；接口文档由框架生成 OpenAPI 并内嵌，禁止手写接口清单；Wiki 读仓库 docs/wiki/*.md 并无缓存挂载，贴代码一律用引用式内联（路径 + 行号范围），禁止手粘贴。验收标准：改动后在对应页面无需额外「同步文档」步骤即可见，任何手写副本都视为违规。",
+      "source": "keel/*.json · backend openapi · docs/wiki/",
+      "status": "confirmed"
     },
     {
       "id": "E-06",
@@ -114,7 +270,28 @@
       "title": "设置是页面不是弹窗",
       "summary": "四件套放在设置中枢的整屏路由页里，可深链、可刷新保持、可分享。",
       "detail": "容器本身不挂权限，权限下沉到每个 tab；入口放账号菜单，不占业务一级菜单。",
-      "source": "src/app/shell/SystemSettingsPanel.vue"
+      "source": "src/app/shell/SystemSettingsPanel.vue",
+      "status": "confirmed"
+    },
+    {
+      "id": "S-01",
+      "category": "security",
+      "severity": "must",
+      "title": "上线前必须通过漏洞扫描",
+      "summary": "发版前必须跑完预检：四件套完整 + 静态扫描零 error + 依赖无 high 漏洞 + 五项人工检查 + 可见性边界四问。",
+      "detail": "顺序固定不可颠倒：① console-check.mjs --strict（四件套完整，先知道漏了什么）；② preflight-scan.mjs --strict（硬编码密钥、命令注入、反序列化、关闭证书校验、CORS 通配、调试残留、默认口令等，error 必须清零）；③ 依赖审计（npm audit --audit-level=high / pip-audit），high 及以上清零，禁止用 audit fix --force 蛮干；④ 人工五项（工具查不出，真实事故多在这里）：越权 IDOR（换 id 拿别人数据）、权限只做在前端、业务逻辑绕过、文件上传（类型/路径穿越/可执行）、SSRF（内网地址）；⑤ 可见性边界四问（见 references/visibility.md）：哪些产物带设置页、每种产物里谁能打开、哪些字段不能给、误展示的最坏后果——修法必须与后果同层；⑥ 构建产物扫描（dist/ 里无密钥、无内部页面，前端打包的「密钥」等于公开）。全绿才允许打 tag 发版。产物一旦发出去就收不回来，所以扫描必须排在打包之前。扫描不是一次性仪式，必须挂在 CI 里，否则赶进度时第一个被跳过。豁免写进 .preflightignore 且必须注明原因，无原因的豁免等于关掉检测。",
+      "source": "references/preflight.md · references/visibility.md · keel/preflight-scan.mjs",
+      "status": "confirmed"
+    },
+    {
+      "id": "S-02",
+      "category": "security",
+      "severity": "must",
+      "title": "密钥只从环境注入",
+      "summary": "仓库里不出现任何真实密钥，构建产物里也不允许——前端打包进去的密钥等于公开。",
+      "detail": "本地用 .env（已被 .gitignore 忽略）+ .env.example 提供键名清单；CI 用平台密钥存储。发现密钥入库的处理顺序是：先吊销轮换，再清理历史，最后补检测——只删文件不轮换等于没处理，因为历史里还在。",
+      "source": "scripts/preflight-scan.mjs · .gitignore",
+      "status": "confirmed"
     }
   ]
 }

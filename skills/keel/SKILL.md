@@ -1,6 +1,6 @@
 ---
 name: keel
-version: 2.0.0
+version: 2.1.0
 author: chaierss
 homepage: https://www.chaierss.fun
 repository: https://github.com/Chaierss/keel
@@ -141,7 +141,7 @@ node keel/preflight-scan.mjs --include-dist # 5 产物无密钥、无内部页�
 - `references/upgrading.md` — 版本对照表 / 怎么知道有新版（`VER-01`）/ 升级的三种姿势。**没有自动升级**：`keel/` 是拷贝制，覆盖率会冲掉项目事实
 
 **模板（`templates/`，拷进项目 `keel/`）**
-`console.config.json` · `rules.json` · `components.json` · `wiki.json` · `README.md` · `SettingsConsole.skeleton.vue`
+`console.config.json` · `rules.json` · `components.json` · `wiki.json` · `README.md` · `SettingsConsole.skeleton.vue` · `ComponentCard.skeleton.vue`
 
 **脚本（`scripts/`，零依赖，Node ≥ 18）**
 - `console-check.mjs` — 四件套完整性体检（`--strict` / `--json`）

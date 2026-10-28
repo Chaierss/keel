@@ -17,7 +17,7 @@ import { join, resolve, relative, extname, basename, dirname } from 'node:path'
 import process from 'node:process'
 
 /** 技能版本。改这里必须同步改 package.json / SKILL.md frontmatter，测试会校验三者一致。 */
-const KEEL_VERSION = '2.0.0'
+const KEEL_VERSION = '2.1.0'
 
 const HELP = `keel 体检
   --root <dir>       项目根（默认 cwd）
@@ -172,10 +172,11 @@ function main() {
     } else {
       rules = loaded.data
       const modes = Array.isArray(rules.pageModes) ? rules.pageModes : []
+      const terms = Array.isArray(rules.terms) ? rules.terms : []
       const list = Array.isArray(rules.rules) ? rules.rules : []
       const missingVersion = !rules.version
       push('RULE-01', missingVersion ? 'warn' : 'ok',
-        `rules.json：${modes.length} 个页面形态 / ${list.length} 条规则${missingVersion ? '（缺 version，AI 上下文无法判断新旧）' : ` · 版本 ${rules.version}`}`)
+        `rules.json：${modes.length} 个页面形态 / ${terms.length} 条术语 / ${list.length} 条规则${missingVersion ? '（缺 version，AI 上下文无法判断新旧）' : ` · 版本 ${rules.version}`}`)
 
       const ids = new Set()
       const badIds = []
@@ -189,16 +190,27 @@ function main() {
         if (!rule.source) noSource.push(rule.id || '(空 id)')
         if (!['must', 'should'].includes(rule.severity)) badFields.push(`${rule.id}(severity=${rule.severity})`)
       }
-      for (const mode of modes) {
-        if (!mode.name || !mode.definition) badFields.push(`形态 ${mode.key || '?'}`)
-        if (!mode.avoid || !mode.avoid.length) missingAvoid.push(mode.name || mode.key || '?')
+      // 页面形态与术语是同一类东西（共同语言），字段要求一致：正名 + 定义 + 不要怎么叫
+      for (const entry of [...modes.map((m) => ({ ...m, kind: '形态' })), ...terms.map((t) => ({ ...t, kind: '术语' }))]) {
+        if (!entry.name || !entry.definition) badFields.push(`${entry.kind} ${entry.key || '?'}`)
+        if (!entry.avoid || !entry.avoid.length) missingAvoid.push(entry.name || entry.key || '?')
       }
       push('RULE-02', badIds.length || badFields.length ? 'error' : 'ok',
         badIds.length ? `规则 id 重复/缺失：${badIds.join('、')}` : badFields.length ? `规则字段不完整：${badFields.join('、')}` : '规则 id 唯一、必填字段齐全')
       push('RULE-03', missingAvoid.length ? 'warn' : 'ok',
-        missingAvoid.length ? `术语缺 avoid（最容易产生误解的字段）：${missingAvoid.join('、')}` : '术语均含 definition / signal / avoid')
+        missingAvoid.length ? `词条缺 avoid（最容易产生误解的字段）：${missingAvoid.join('、')}` : '词条均含 definition / signal / avoid')
       push('RULE-04', noSource.length ? 'warn' : 'ok',
         noSource.length ? `规则缺 source（无法核对出处）：${noSource.join('、')}` : '规则均带 source')
+
+      // AI 归纳出来的候选条目一律 status: draft —— 没有出处的候选就是幻觉，不能进 AI 上下文
+      const drafts = [...list, ...modes, ...terms].filter((e) => e.status === 'draft')
+      const noEvidence = drafts.filter((e) => !Array.isArray(e.evidence) || !e.evidence.length)
+      push('RULE-05', noEvidence.length ? 'warn' : 'ok',
+        noEvidence.length
+          ? `${noEvidence.length} 条 draft 缺 evidence（AI 归纳的条目必须能指回具体文件）：${noEvidence.map((e) => e.id || e.name || e.key || '?').join('、')}`
+          : drafts.length
+            ? `${drafts.length} 条待确认（draft），确认前不进 AI 上下文导出`
+            : '没有待确认条目')
     }
   }
 
@@ -322,6 +334,45 @@ function main() {
       }
     }
   }
+
+  // ---------- Wiki 代码引用（引用式内联） ----------
+  // 手粘贴的代码会过期，而且过期了没人发现。所以 wiki 里贴真实实现一律用引用：
+  //   <!-- keel:code src/core/rank.ts 12-40 -->
+  // 页面按行号内联渲染，源文件改了页面跟着变。这里只做一件事：确认引用还指得着。
+  const CODE_REF = /<!--\s*keel:code\s+([^\s>]+)(?:\s+(\d+)\s*-\s*(\d+))?\s*-->/g
+  const wikiFiles = walkFiles(root, [config.wikiDir], ['.md'], config.excludeDirs)
+  const badRefs = []
+  const longRefs = []
+  let refCount = 0
+  for (const file of wikiFiles) {
+    for (const match of safeRead(file.abs).matchAll(CODE_REF)) {
+      refCount += 1
+      const [, target, from, to] = match
+      const abs = resolve(root, target)
+      if (!existsSync(abs)) {
+        badRefs.push(`${file.rel} → ${target}（文件不存在）`)
+        continue
+      }
+      if (!from || !to) continue
+      const total = safeRead(abs).split('\n').length
+      const start = Number(from)
+      const end = Number(to)
+      if (start < 1 || end < start || end > total) {
+        badRefs.push(`${file.rel} → ${target}:${start}-${end}（行号越界，该文件共 ${total} 行）`)
+      } else if (end - start + 1 > 120) {
+        longRefs.push(`${file.rel} → ${target}:${start}-${end}（${end - start + 1} 行）`)
+      }
+    }
+  }
+  push('WIKI-03', badRefs.length ? 'error' : longRefs.length ? 'warn' : 'ok',
+    badRefs.length
+      ? `代码引用已失效（页面会显示空白或错行）：${badRefs.join('；')}`
+      : longRefs.length
+        ? `代码引用过长，读者会直接跳过：${longRefs.join('；')}`
+        : refCount
+          ? `${refCount} 处代码引用均指向真实文件与行号`
+          : '还没有代码引用（贴真实实现时用 <!-- keel:code 路径 起-止 -->，别手粘贴）',
+    badRefs)
 
   // ---------- 接口文档（仅探测） ----------
   const apiHints = []
