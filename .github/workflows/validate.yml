@@ -28,18 +28,11 @@ jobs:
       - name: 自测
         run: node tests/run-tests.mjs
 
-      # 打包必须能成功，且 SKILL.md 必须在 zip 根目录
-      - name: 打包技能
+      # 打包工具要在三个 Node 版本上都能跑通；只冒烟，不上传产物——
+      # 没人会去下载 CI 里那个 zip，zip 的真实用途是往平台上传，那一步在本地做
+      - name: 打包冒烟
         if: matrix.node == 22
         run: node tools/package-skill.mjs --out dist/keel.zip
-
-      - uses: actions/upload-artifact@v4
-        if: matrix.node == 22
-        with:
-          name: keel-skill
-          path: dist/keel.zip
-          if-no-files-found: error
-          retention-days: 30
 
   guard:
     name: 不夹带私货

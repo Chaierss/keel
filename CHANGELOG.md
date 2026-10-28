@@ -7,8 +7,9 @@
 
 ### 变更
 
+- **发版不再产生产物**：Release 页只留变更说明，不打包、不挂 zip 附件。装技能读的是仓库本身（`npx skills add`），多挂一个压缩包只会让人以为必须下载它。`tools/package-skill.mjs` 保留——往 WorkBuddy / Trae 这类「上传技能」的平台发布时，本地跑一次就够，那是人工动作，不该塞进每次发版。`validate.yml` 也去掉了 `upload-artifact`，CI 产物没人下载。
 - **发版说明改由 `CHANGELOG.md` 生成**：新增 `tools/release-notes.mjs`，按 tag 版本号抽出对应段落，加上安装命令与破坏性变更警示，拼成 Release 正文。`.github/workflows/release.yml` 里替换掉 `--generate-notes`——本仓库全走本地直推、没有 PR，自动生成的正文只有一句 compare 链接，发版页等于空着。CHANGELOG 漏写当前版本时打 warning 并退回自动生成，不卡发版。
-- 用例 34 → 35：新增一条守住「当前版本在 CHANGELOG 有段落、且每个版本都抽得出正文」。版本号改了忘记写 CHANGELOG 是最常见的坏法，此时 tag 已推、Release 已生成，只能在发版页上看到空白。
+- 用例 34 → 36：一条守住「当前版本在 CHANGELOG 有段落、且每个版本都抽得出正文」（版本号改了忘记写 CHANGELOG 时，tag 已推、Release 已生成，只能在发版页上看到空白）；一条守住「发版流程不碰 dist/ 与 zip」，防止以后顺手把附件加回去。
 
 ## [2.1.0] — 2026-10-28
 

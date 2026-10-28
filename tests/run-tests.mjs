@@ -581,6 +581,32 @@ test('tools/release-notes.mjs：当前版本在 CHANGELOG 有段落，且每个�
   }
 })
 
+// 发版不产生产物：装技能读的是仓库，Release 页只负责说清改了什么。
+// zip 只在往「上传技能」的平台发时才临时打一个，属于人工动作。
+// 这条用例是防回退——「顺手加个附件」看起来无害，却会让人以为必须下载它。
+test('发版流程不打包、不挂附件（zip 只服务于平台上传）', () => {
+  const release = readFileSync(join(REPO, '.github', 'workflows', 'release.yml'), 'utf8')
+  const validate = readFileSync(join(REPO, '.github', 'workflows', 'validate.yml'), 'utf8')
+  // 注释里明说了「不挂 zip」是设计决定，不该被判违规；只查真正会执行的指令
+  const commands = (yaml) =>
+    yaml
+      .split('\n')
+      .filter((line) => !/^\s*#/.test(line))
+      .join('\n')
+
+  assert.ok(/gh release create/.test(commands(release)), 'release.yml 里找不到 gh release create')
+  assert.ok(
+    !/dist\/|package-skill|\.zip/.test(commands(release)),
+    'release.yml 不该再碰 dist/ 或 zip：发版只推 tag + CHANGELOG 说明',
+  )
+  assert.ok(
+    !/upload-artifact/.test(commands(validate)),
+    'validate.yml 不该上传构建产物：那个 zip 没有人会去下载，测试已守过它的结构',
+  )
+  // 打包工具本身要留着，否则 WorkBuddy / Trae 没法上传
+  assert.ok(existsSync(join(REPO, 'tools', 'package-skill.mjs')), '打包工具被误删了，平台上传会没有包可用')
+})
+
 // ---------------------------------------------------------------- 门面（断图会直接毁掉转化）
 test('README 与 docs 里引用的本地图片都存在（不留断图）', () => {
   const files = ['README.md', 'README.en.md', 'docs/architecture.md', 'docs/launch.md', 'docs/publishing.md']

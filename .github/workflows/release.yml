@@ -1,7 +1,12 @@
 name: release
 
-# 推 tag 就自动出 Release 并附上技能包。
+# 推 tag 就自动出 Release 页。
 # 用仓库自带的 GITHUB_TOKEN，不需要任何人提供 PAT。
+#
+# 不挂 zip 附件：装技能是 `npx skills add Chaierss/keel`，直接读 git 仓库，
+# 没有人需要先下载一个压缩包。zip 只在往 WorkBuddy / Trae 这类要「上传技能」的
+# 平台发布时才用得上——那是人工动作，本地 `node tools/package-skill.mjs` 跑一次即可。
+# Release 页在这里的职责只有一件事：让读的人知道这一版改了什么、要不要迁移。
 on:
   push:
     tags: ['v*']
@@ -19,20 +24,9 @@ jobs:
         with:
           node-version: 20
 
-      # 先跑测试：打不出绿灯的 tag 不该产出 Release 包
+      # 先跑测试：打不出绿灯的 tag 不该出现在 Release 页上
       - name: 测试
         run: node tests/run-tests.mjs
-
-      - name: 打包
-        run: node tools/package-skill.mjs
-
-      # zip 的根目录必须是 SKILL.md，否则各平台装不上；这一步在工具里有自检，
-      # 这里再核对一次文件名，避免 tag 与实际版本号不一致时悄悄传错包
-      - name: 核对包名与 tag 一致
-        run: |
-          TAG="${GITHUB_REF_NAME}"
-          ls dist/*.zip
-          test -f "dist/keel-${TAG#v}.zip" || { echo "包名与 tag 不一致：期望 dist/keel-${TAG#v}.zip"; exit 1; }
 
       # 发版页是很多人第一次看到项目的地方。gh 的 --generate-notes 在纯本地
       # 直推、没有 PR 的仓库里只会输出一句 compare 链接，等于没写，所以正文
@@ -55,6 +49,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" dist/*.zip \
+          gh release create "$GITHUB_REF_NAME" \
             --title "$GITHUB_REF_NAME" \
             $NOTES_FLAG

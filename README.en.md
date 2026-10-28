@@ -39,7 +39,7 @@ node keel-tmp/skills/keel/scripts/console-check.mjs --root .
 npx skills add Chaierss/keel -g
 ```
 
-Works with any agent that reads `SKILL.md` — Claude Code, Cursor, Codex, Windsurf, Trae, WorkBuddy. Manual paths and the upload zip are in [docs/publishing.md](docs/publishing.md).
+Works with any agent that reads `SKILL.md` — Claude Code, Cursor, Codex, Windsurf, Trae, WorkBuddy. Manual paths are in [docs/publishing.md](docs/publishing.md).
 
 ---
 
@@ -187,8 +187,8 @@ tools/  tests/  docs/     ← toolchain for this repo, not shipped with the skil
 ## Development
 
 ```bash
-node tests/run-tests.mjs        # 29 cases, zero dependencies, a few seconds
-node tools/package-skill.mjs    # dist/keel-<version>.zip, root contains SKILL.md
+node tests/run-tests.mjs        # 36 cases, zero dependencies, a few seconds
+node tools/package-skill.mjs    # only for platform uploads: dist/keel-<version>.zip
 node tools/install-local.mjs --list
 ```
 

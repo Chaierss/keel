@@ -39,7 +39,7 @@ node keel-tmp/skills/keel/scripts/console-check.mjs --root .
 npx skills add Chaierss/keel -g
 ```
 
-任何认 `SKILL.md` 的 agent 都能用：Claude Code、Cursor、Codex、Windsurf、Trae、WorkBuddy。手动安装路径与上传用的 zip 见 [docs/publishing.md](docs/publishing.md)。
+任何认 `SKILL.md` 的 agent 都能用：Claude Code、Cursor、Codex、Windsurf、Trae、WorkBuddy。手动安装路径见 [docs/publishing.md](docs/publishing.md)。
 
 ---
 
@@ -202,8 +202,8 @@ tools/  tests/  docs/     ← 本仓库的工具链，不随技能分发
 ## 参与开发
 
 ```bash
-node tests/run-tests.mjs        # 35 个用例，零依赖，几秒
-node tools/package-skill.mjs    # dist/keel-<version>.zip，根目录就是 SKILL.md
+node tests/run-tests.mjs        # 36 个用例，零依赖，几秒
+node tools/package-skill.mjs    # 只在往平台上传时才用：dist/keel-<version>.zip
 node tools/install-local.mjs --list
 ```
 

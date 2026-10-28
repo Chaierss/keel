@@ -7,7 +7,7 @@
 ```bash
 git clone https://github.com/Chaierss/keel.git
 cd keel
-node tests/run-tests.mjs      # 35 个用例，零依赖，几秒
+node tests/run-tests.mjs      # 36 个用例，零依赖，几秒
 ```
 
 不需要 `npm install`，这个仓库没有依赖，也请保持没有依赖。
@@ -93,8 +93,9 @@ test: 补 SEC-00 空目录用例
 - `minor` —— 新增规则 / 新增形态 / 新增脚本参数，旧用法仍然有效。
 - `major` —— 改了 `rules.json` 字段结构、改了脚本退出码语义、删了模板文件。
 
-发布步骤：改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → `node tools/package-skill.mjs` →
-打 tag（`v2.0.0`）→ 上传 zip 到各平台（见 `docs/publishing.md`）。
+发布步骤：改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → 打 tag（`v2.0.0`）。
+GitHub 这边到此结束：workflow 跑测试、抽 CHANGELOG 生成 Release 正文，**不打包、不挂附件**。
+只有要往明确要求「上传技能」的平台（WorkBuddy、Trae）发时，才 `node tools/package-skill.mjs` 临时打一个包（见 `docs/publishing.md`）。
 
 **`CHANGELOG.md` 不是可选项**：推 tag 后 workflow 会用 `tools/release-notes.mjs` 按版本号抽段落，拼成 Release 正文。
 忘了写就只剩一句 compare 链接（`--generate-notes` 在无 PR 的仓库里没有素材），发版页等于空着。

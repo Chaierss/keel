@@ -7,11 +7,18 @@
 ## 0. 发布前自检
 
 ```bash
-node tests/run-tests.mjs                 # 35 个用例全绿
-node tools/package-skill.mjs --out dist/keel.zip
+node tests/run-tests.mjs                 # 36 个用例全绿
 node skills/keel/scripts/preflight-scan.mjs --root . --dirs skills,tools,tests --strict
 git tag v2.0.0 && git push --tags
 ```
+
+只有在要往「上传技能」的平台（WorkBuddy、Trae）发布时，才需要 `node tools/package-skill.mjs` 打个包：
+
+```bash
+node tools/package-skill.mjs --out dist/keel.zip
+```
+
+GitHub 从来不需要这个包——`npx skills add` 读的是仓库本身。zip 只在没法从仓库直接装的地方才有意义。
 
 zip 的三条硬性要求，任何一条不满足都会导致"上传成功但用不了"：
 
@@ -36,7 +43,8 @@ keel/
   现成的文案在 [launch.md](launch.md)，直接粘。
 - **Social preview 图**：1280×640，用 [`docs/assets/social-preview.png`](docs/assets/social-preview.png)，上传位置在
   Settings → General → Social preview。**跳过这步，所有转发场景都显示 GitHub 默认灰图。**
-- **Releases**：每个 tag 附上 `dist/keel-<version>.zip`，让不会用命令行的人也能下载。
+- **Releases**：只放变更说明，**不挂 zip**。装技能走仓库，多挂一个压缩包只会让人以为必须下载它。
+  正文由 `.github/workflows/release.yml` 调 `tools/release-notes.mjs` 从 `CHANGELOG.md` 生成，推 tag 即完成。
 - **README 首屏**：一句话定位 + "30 秒演示" + 安装命令。**不要以"背景与动机"开头**。
 
 ### 在线演示（已启用）
@@ -153,11 +161,11 @@ Website 填 `https://www.chaierss.fun`——它是所有卡片上的署名落点
 
 ## 版本与更新
 
-- 改完代码 → 改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → `node tools/package-skill.mjs`。
-- 打 tag（`v2.0.0`），Release 附 zip。
-- **Release 正文也由 `CHANGELOG.md` 决定**：`.github/workflows/release.yml` 调 `tools/release-notes.mjs`，按 tag 版本号抽出对应段落，再加上安装命令与破坏性变更警示。`--generate-notes` 在纯本地直推、没有 PR 的仓库里只会输出一句 compare 链接，所以只作为兜底——CHANGELOG 里漏写当前版本时 workflow 会打一条 warning 并退回自动生成，不会卡住发版。
+- 改完代码 → 改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → 打 tag（`v2.0.0`）。GitHub 这边就结束了。
+- **发版不打包**。Release 页只有变更说明，没有附件：装技能读的是仓库，zip 只在往 WorkBuddy / Trae 上传时才临时跑一次 `node tools/package-skill.mjs`。
+- **Release 正文由 `CHANGELOG.md` 决定**：`.github/workflows/release.yml` 调 `tools/release-notes.mjs`，按 tag 版本号抽出对应段落，再加上安装命令与破坏性变更警示。`--generate-notes` 在纯本地直推、没有 PR 的仓库里只会输出一句 compare 链接，所以只作为兜底——CHANGELOG 里漏写当前版本时 workflow 会打一条 warning 并退回自动生成，不会卡住发版。
 - 想本地先看正文长什么样：`node tools/release-notes.mjs 2.1.0 2.0.0`（可一次带多个版本，第一段用 `##`，后面的标「更早」）。跨大版本发版时把中间版本一起传进去，读的人才知道要不要迁移。
-- 平台上的包需要**重新上传**才会更新，没有自动同步。
+- 平台上的包需要**重新上传**才会更新，没有自动同步。也就是说：GitHub 一次推 tag 就完事，但平台上那份要人手动传。
 
 ## 分发渠道一览
 
