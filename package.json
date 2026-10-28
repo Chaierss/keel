@@ -1,9 +1,9 @@
 {
   "name": "keel-skill",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "A self-updating console for software projects: rules, a component registry, API docs and a wiki generated from repo sources, plus dev/prod visibility modes and a pre-release security gate.",
+  "description": "A self-updating console for software projects: rules, a component registry, API docs and a wiki generated from repo sources, plus a visibility-boundary model (artifact / identity / field) and a pre-release security gate.",
   "keywords": [
     "agent-skill",
     "ai-agents",
@@ -19,7 +19,8 @@
     "component-registry",
     "code-quality",
     "security-scanner",
-    "single-source-of-truth"
+    "single-source-of-truth",
+    "visibility-boundary"
   ],
   "license": "MIT",
   "author": {

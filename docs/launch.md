@@ -16,7 +16,7 @@
 
 ```
 A settings console that can't go stale: rules, a component registry, API reference and a wiki, each read straight
-from the repo. Adds dev/prod visibility modes and a release gate. Zero dependencies, read-only, no network.
+from the repo. Adds a visibility-boundary model and a release gate. Zero dependencies, read-only, no network.
 By chaierss — https://www.chaierss.fun
 ```
 
@@ -37,7 +37,7 @@ design-system  component-registry  documentation  developer-tools  preflight  co
 **仓库简介（中文版，发国内平台时用）**
 
 ```
-一个不会过期的设置页：规则、组件注册表、接口文档、Wiki 各读一份仓库源文件；附开发/线上模式与上线前漏洞扫描门禁。零依赖、只读、不联网。作者 chaierss · chaierss.fun
+一个不会过期的设置页：规则、组件注册表、接口文档、Wiki 各读一份仓库源文件；附可见性边界三层模型与上线前漏洞扫描门禁。零依赖、只读、不联网。作者 chaierss · chaierss.fun
 ```
 
 ## 二、WorkBuddy 市场卡片
@@ -53,7 +53,7 @@ Keel 龙骨
 **一句话简介**（20–120 字，卡片上只显示这一句，最重要）
 
 ```
-一个不会过期的设置页：规则、组件、接口文档、Wiki 各读一份仓库源文件，附开发/线上模式切换与上线前漏洞扫描门禁。
+一个不会过期的设置页：规则、组件、接口文档、Wiki 各读一份仓库源文件，附可见性边界三层模型与上线前漏洞扫描门禁。
 ```
 
 备选（更强调痛点，适合 A/B）：
@@ -74,8 +74,8 @@ Keel 换了个做法：让这四页直接读仓库里的那一份源文件。
 · 接口文档 ← 框架生成的 OpenAPI，不手抄
 · Wiki ← docs/wiki/*.md，无缓存挂载
 
-再配一个开发/线上模式开关：未登记组件、源码路径、待下架清单这些内部事实，开发模式全可见，切线上自动消失。
-判定只在一个函数里，不散落读 NODE_ENV。
+再定一份可见性边界：未登记组件、源码路径、待下架清单这些内部事实，哪些产物该带它们、谁能打开、哪些字段不能给。
+按后果分三层修——不好看就前端不渲染，泄露内部就服务端鉴权，收不回来就构建期剔除。不做模式开关，也没有角标。
 
 两个脚本把上述约定变成门禁，零依赖、只读、不发任何网络请求，可以直接挂进 CI：
 · console-check.mjs —— 12 项检查，四件套是否齐、有没有未登记组件
@@ -93,7 +93,7 @@ Keel 换了个做法：让这四页直接读仓库里的那一份源文件。
 **简介**
 
 ```
-Keel 龙骨 —— 让项目的规则、组件、接口文档、Wiki 各读一份源文件，不再手抄第二份；附开发/线上模式与发版门禁。
+Keel 龙骨 —— 让项目的规则、组件、接口文档、Wiki 各读一份源文件，不再手抄第二份；附可见性边界三层模型与发版门禁。
 ```
 
 安装：上传 `dist/keel-<version>.zip`，或放到 `.trae/skills/keel`。
@@ -111,7 +111,7 @@ components ← registry + dir scan
 API ← OpenAPI
 wiki ← the repo itself
 
-+ dev/prod modes and a release gate.
++ a visibility boundary (artifact / identity / field) and a release gate.
 0 deps, read-only, no network calls.
 ```
 
@@ -122,7 +122,7 @@ wiki ← the repo itself
 
 这是我做 keel 的起因：让「组件清单」这类内部页面直接读仓库，而不是维护第二份副本。
 · 注册表说批准了哪些，目录说实际有哪些，对不上直接报错
-· 未登记组件、源码路径这些内部债，只在开发模式可见，切线上自动消失
+· 未登记组件、源码路径这些内部债，只有该看的人看得到——靠构建期剔除和服务端鉴权，不是靠一个容易被忘掉的开关
 · 两个零依赖脚本挂进 CI，只读、不联网
 
 双击一个 HTML 就能看效果，不用装任何东西 👇

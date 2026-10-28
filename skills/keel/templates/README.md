@@ -33,7 +33,7 @@ node keel/preflight-scan.mjs --strict # 发布前：error 必须为零
 node keel/preflight-scan.mjs --include-dist  # 连 dist/ 一起扫，查前端泄露密钥
 ```
 
-**发布顺序**：四件套体检 → 漏洞扫描 → 依赖审计 → 人工五项（越权/权限/逻辑/上传/SSRF）→ 产物扫描 → 切线上模式。顺序不可颠倒，详见 `references/preflight.md`。
+**发布顺序**：四件套体检 → 漏洞扫描 → 依赖审计 → 人工五项（越权/权限/逻辑/上传/SSRF）+ 边界四问 → 产物扫描 → 打 tag。顺序不可颠倒：产物发出去就收不回来。详见 `references/preflight.md` 与 `references/visibility.md`。
 
 ## 加东西的流程
 

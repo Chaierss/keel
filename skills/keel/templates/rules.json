@@ -49,9 +49,9 @@
       "category": "security",
       "severity": "must",
       "title": "上线前必须通过漏洞扫描",
-      "summary": "切线上模式前必须跑完预检：四件套完整 + 静态扫描零 error + 依赖无 high 漏洞 + 五项人工检查。",
-      "detail": "顺序固定不可颠倒：① console-check.mjs --strict（四件套完整，先知道漏了什么）；② preflight-scan.mjs --strict（硬编码密钥、命令注入、反序列化、关闭证书校验、CORS 通配、调试残留、默认口令等，error 必须清零）；③ 依赖审计（npm audit --audit-level=high / pip-audit），high 及以上清零，禁止用 audit fix --force 蛮干；④ 人工五项（工具查不出，真实事故多在这里）：越权 IDOR（换 id 拿别人数据）、权限只做在前端、业务逻辑绕过、文件上传（类型/路径穿越/可执行）、SSRF（内网地址）；⑤ 构建产物扫描（dist/ 里无密钥，前端打包的「密钥」等于公开）。六步全绿才允许切线上模式。扫描不是一次性仪式，必须挂在 CI 里，否则赶进度时第一个被跳过。豁免写进 .preflightignore 且必须注明原因，无原因的豁免等于关掉检测。",
-      "source": "references/preflight.md · keel/preflight-scan.mjs"
+      "summary": "发版前必须跑完预检：四件套完整 + 静态扫描零 error + 依赖无 high 漏洞 + 五项人工检查 + 可见性边界四问。",
+      "detail": "顺序固定不可颠倒：① console-check.mjs --strict（四件套完整，先知道漏了什么）；② preflight-scan.mjs --strict（硬编码密钥、命令注入、反序列化、关闭证书校验、CORS 通配、调试残留、默认口令等，error 必须清零）；③ 依赖审计（npm audit --audit-level=high / pip-audit），high 及以上清零，禁止用 audit fix --force 蛮干；④ 人工五项（工具查不出，真实事故多在这里）：越权 IDOR（换 id 拿别人数据）、权限只做在前端、业务逻辑绕过、文件上传（类型/路径穿越/可执行）、SSRF（内网地址）；⑤ 可见性边界四问（见 references/visibility.md）：哪些产物带设置页、每种产物里谁能打开、哪些字段不能给、误展示的最坏后果——修法必须与后果同层（不好看改前端、泄露内部改服务端、收不回来改构建期）；⑥ 构建产物扫描（dist/ 里无密钥、无内部页面，前端打包的「密钥」等于公开）。全绿才允许打 tag 发版。产物一旦发出去就收不回来，所以扫描必须排在打包之前。扫描不是一次性仪式，必须挂在 CI 里，否则赶进度时第一个被跳过。豁免写进 .preflightignore 且必须注明原因，无原因的豁免等于关掉检测。",
+      "source": "references/preflight.md · references/visibility.md · keel/preflight-scan.mjs"
     },
     {
       "id": "V-01",

@@ -6,15 +6,14 @@
  *   1. 是整屏路由页，不是弹窗；tab 由 URL ?tab= 驱动，可深链、可刷新保持。
  *   2. 容器不挂权限，权限下沉到每个 tab（permission 字段）。
  *   3. 同一容器内切换，状态不丢 —— 用 KeepAlive 而不是重新挂载。
- *   4. 模式角标常驻：让人随时知道自己看到的是开发形态还是线上形态。
+ *   4. 不做形态开关：本页出现在哪个产物里由构建配置决定，谁能打开由服务端决定。
+ *      界面上不要放"模式/形态"角标 —— 见 references/visibility.md 的三层模型。
  *
  * React 移植：把 <KeepAlive> 换成「保留已访问面板的状态提升」或路由缓存方案；
  * 其余结构（tabs 元数据 + URL query 解析 + 权限过滤）一一对应。
  */
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
-import { useModeBadge } from '../../keel/devMode'
 
 export interface SettingsTab {
   key: string
@@ -42,9 +41,8 @@ const TABS: SettingsTab[] = [
 const DEFAULT_KEY = 'rules'
 
 const props = defineProps<{
-  /** 当前账号权限键集合；线上包里还决定能否升权到开发模式 */
+  /** 当前账号权限键集合；来自服务端，前端只用来决定"不渲染什么"，不作为防线 */
   permissions?: string[]
-  canElevate?: boolean
 }>()
 
 const route = useRoute()
@@ -70,7 +68,6 @@ const activeKey = computed({
 })
 
 const activeTab = computed(() => visibleTabs.value.find((t) => t.key === activeKey.value))
-const badge = computed(() => useModeBadge({ canElevate: props.canElevate }))
 
 /** tab 切换时给内容区一个独立滚动复位点，避免上一个 tab 的滚动位置残留 */
 const scrollHost = ref<HTMLElement | null>(null)
@@ -116,20 +113,8 @@ function backToMain(): void {
         </li>
       </ul>
 
-      <!-- 模式角标：常驻，hover 说明判定来源。忘了自己在哪个模式是最高频事故 -->
-      <footer class="border-t border-[var(--color-border)] px-4 py-3">
-        <span
-          class="inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs"
-          :class="{
-            'bg-[var(--color-danger-bg)] text-[var(--color-danger)]': badge.tone === 'danger',
-            'bg-[var(--color-warning-bg)] text-[var(--color-warning)]': badge.tone === 'warning',
-            'bg-[var(--color-bg-hover)] text-[var(--color-text-muted)]': badge.tone === 'neutral',
-          }"
-          :title="badge.hint"
-        >
-          {{ badge.text }}
-        </span>
-      </footer>
+      <!-- 这里原本放"模式角标"，2.0 删掉了：本页出现在哪个产物里是构建期的事，
+           谁能打开是服务端的事，都不该变成一个页面上的小开关。 -->
     </nav>
 
     <!-- 内容区：容器不滚，让每个 tab 自己决定滚动边界 -->

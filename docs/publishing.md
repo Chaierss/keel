@@ -7,10 +7,10 @@
 ## 0. 发布前自检
 
 ```bash
-node tests/run-tests.mjs                 # 29 个用例全绿
+node tests/run-tests.mjs                 # 30 个用例全绿
 node tools/package-skill.mjs --out dist/keel.zip
 node skills/keel/scripts/preflight-scan.mjs --root . --dirs skills,tools,tests --strict
-git tag v1.0.0 && git push --tags
+git tag v2.0.0 && git push --tags
 ```
 
 zip 的三条硬性要求，任何一条不满足都会导致"上传成功但用不了"：
@@ -154,7 +154,7 @@ Website 填 `https://www.chaierss.fun`——它是所有卡片上的署名落点
 ## 版本与更新
 
 - 改完代码 → 改 `skills/keel/SKILL.md` 的 `version` → 更新 `CHANGELOG.md` → `node tools/package-skill.mjs`。
-- 打 tag（`v1.0.1`），Release 附 zip。
+- 打 tag（`v2.0.0`），Release 附 zip。
 - 平台上的包需要**重新上传**才会更新，没有自动同步。
 
 ## 分发渠道一览

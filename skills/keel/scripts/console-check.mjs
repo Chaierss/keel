@@ -101,18 +101,21 @@ function main() {
   const push = (id, level, message, items = []) => issues.push({ id, level, message, items })
 
   // ---------- 配置 ----------
+  // 叫 CFG-01 而不是 MODE-01：这里查的是"配置就位且可解析"，与可见性边界无关。
+  // 边界（哪些产物 / 谁能开 / 哪些字段）是人的判断，机器判定不了内容对错，所以不设门禁项，
+  // 只把它写进 references/visibility.md 的验收清单，由人工逐条过。
   const consoleDir = resolve(root, DEFAULT_CONFIG.consoleDir)
   const configPath = join(consoleDir, 'console.config.json')
   let config = { ...DEFAULT_CONFIG }
   if (!existsSync(consoleDir)) {
-    push('MODE-01', 'error', `缺少 ${DEFAULT_CONFIG.consoleDir}/ 目录（唯一真相源应集中在此）`)
+    push('CFG-01', 'error', `缺少 ${DEFAULT_CONFIG.consoleDir}/ 目录（唯一真相源应集中在此）`)
   } else {
     const loaded = readJson(configPath)
     if (loaded.ok) {
       config = { ...DEFAULT_CONFIG, ...loaded.data }
-      push('MODE-01', 'ok', 'console.config.json 已就位')
+      push('CFG-01', 'ok', 'console.config.json 已就位')
     } else {
-      push('MODE-01', 'error', `console.config.json ${existsSync(configPath) ? '解析失败：' + loaded.error : '不存在，使用默认扫描范围'}`)
+      push('CFG-01', 'error', `console.config.json ${existsSync(configPath) ? '解析失败：' + loaded.error : '不存在，使用默认扫描范围'}`)
     }
   }
 

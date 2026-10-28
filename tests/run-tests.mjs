@@ -85,7 +85,7 @@ function del(root, rel) {
 
 /** 模板文件原样拷进 keel/ —— 夹具与模板同源，模板一坏测试就红 */
 function seedConsole(root, skip = []) {
-  for (const f of ['console.config.json', 'rules.json', 'components.json', 'wiki.json', 'devMode.ts']) {
+  for (const f of ['console.config.json', 'rules.json', 'components.json', 'wiki.json']) {
     if (skip.includes(f)) continue
     write(root, `keel/${f}`, readFileSync(join(TMPL, f), 'utf8'))
   }
@@ -153,11 +153,11 @@ test('healthy：四件套齐全时零 error 零 warn，--strict 退出码 0', ()
   assert.equal(run(CHECK, ['--root', root, '--strict']).code, 0)
 })
 
-test('MODE-01：缺少 keel/ 目录（console.config.json）时是 error', () => {
+test('CFG-01：console.config.json 缺失时是 error（查的是配置就位，不是可见性边界）', () => {
   const root = healthyProject('no-config')
   del(root, 'keel/console.config.json')
   const r = checkJson(root)
-  assert.equal(find(r.issues, 'MODE-01').level, 'error')
+  assert.equal(find(r.issues, 'CFG-01').level, 'error')
   assert.equal(checkJson(root, ['--strict']).code, 1)
 })
 
@@ -429,7 +429,22 @@ test('console-demo.html：不加载任何外部资源（断网双击必须能看
   for (const label of ['规则', '组件', '接口文档', 'Wiki']) {
     assert.ok(html.includes(label), `演示页缺少「${label}」页签，四个页签是核心主张`)
   }
-  assert.ok(/data-mode|模式/.test(html), '演示页必须有模式切换')
+  // 演示对照必须有，且必须写明它不是产品功能；页内不许再出现模式角标/切换
+  assert.ok(/data-vis=/.test(html), '演示页缺少对照控件（data-vis）')
+  assert.ok(html.includes('真实项目里没有这个开关'), '演示页必须写明对照开关不是产品功能')
+  assert.ok(!/data-mode|modeBtn|mode-badge/.test(html), '演示页里不该再有模式角标或切换按钮（2.0 已删除该概念）')
+})
+
+test('可见性边界：references/visibility.md 覆盖三层，且模板里不再有 devMode.ts', () => {
+  const doc = readFileSync(join(SKILL, 'references', 'visibility.md'), 'utf8')
+  for (const layer of ['产物层', '身份层', '字段层']) {
+    assert.ok(doc.includes(layer), `visibility.md 缺少「${layer}」`)
+  }
+  assert.ok(doc.includes('四问'), 'visibility.md 必须给出可照抄的四问')
+  assert.ok(!existsSync(join(TMPL, 'devMode.ts')), '2.0 已删除 devMode.ts（模式开关），不该再出现')
+  const skill = readFileSync(join(SKILL, 'SKILL.md'), 'utf8')
+  assert.ok(skill.includes('references/visibility.md'), 'SKILL.md 没有指向可见性边界文档')
+  assert.ok(!skill.includes('resolveMode'), 'SKILL.md 里不该再出现 resolveMode')
 })
 
 // ---------------------------------------------------------------- 打包工具

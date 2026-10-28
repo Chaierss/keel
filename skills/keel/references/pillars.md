@@ -45,7 +45,7 @@ docs/wiki/*.md  ──mount──▶  Wiki  页（no-store fetch）
 | 接口文档 | 内嵌后端 `/docs` | 同左 | `FastAPI` 自带 `/openapi.json` `/docs` | `@nestjs/swagger` | `swag` / `humago` |
 | Wiki 挂载 | 静态服务器 | 静态服务器 | `StaticFiles(directory=...)` + 禁缓存 | `ServeStaticModule` | `http.FileServer` |
 | 禁缓存手法 | `fetch(url, { cache: 'no-store' })` | 同左 | 中间件覆写 `Cache-Control: no-store` | 同左 | 同左 |
-| 模式判定 | `import.meta.env.VITE_APP_MODE` | `NEXT_PUBLIC_APP_MODE`（构建期） | `settings.APP_MODE` | 环境变量 + 启动日志 | `ldflags` 注入 |
+| 产物层剔除 | 多入口 `build.rollupOptions.input` | 独立入口，不挂载到目标路由组 | 打包脚本排除目录 | 多 target 构建 | `go:build` 标签 |
 
 > 只有"Vue/Vite"这一列写了 `import.meta.glob`——**其他框架不要硬套**。扫描逻辑应该放在构建脚本或体检脚本里，用 `fs` 读目录，框架无关。
 
@@ -65,6 +65,6 @@ docs/wiki/*.md  ──mount──▶  Wiki  页（no-store fetch）
 1. 换了技术栈，这四条管道还成立吗？（只换实现手法 = 成立；要重写设计 = 你做成了框架特性）
 2. 新人只读四件套，能不能不问你就能加一个组件？
 3. 三个月后代码大改，四件套会不会自动跟着变？
-4. 线上形态下，四件套会不会泄露内部结构？
+4. 对外交付的那份产物里，四件套会不会泄露内部结构？（该剔除的剔除了吗，该鉴权的鉴权了吗）
 
 四个都是"能"，才算装完。

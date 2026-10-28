@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light" data-mode="dev">
+<html lang="zh-CN" data-theme="light" data-vis="full">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,12 +73,20 @@
   .nav button.on .dot { opacity: 1; }
 
   .rail-foot { padding: 12px; border-top: 1px solid var(--border-soft); display: flex; flex-direction: column; gap: 8px; }
-  .mode-badge {
-    all: unset; cursor: pointer; text-align: center;
-    font-size: 12px; padding: 6px 10px; border-radius: 999px;
-    background: var(--danger-bg); color: var(--danger); font-weight: 500;
+  /* 演示对照控件：故意留在页面框外，并写明它不是产品功能 —— 产品里不该有这种开关 */
+  .demo-bar {
+    position: fixed; right: 16px; bottom: 16px; z-index: 60;
+    display: flex; align-items: center; gap: 8px;
+    background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+    padding: 8px 8px 8px 12px; box-shadow: 0 10px 28px rgba(15, 23, 42, .14);
   }
-  html[data-mode="prod"] .mode-badge { background: var(--panel-2); color: var(--text-3); }
+  .demo-bar .cap { font-size: 11px; line-height: 1.4; color: var(--text-3); }
+  .demo-bar .cap i { font-style: normal; opacity: .8; }
+  .demo-bar button {
+    all: unset; cursor: pointer; padding: 5px 11px; border-radius: 999px;
+    background: var(--panel-2); color: var(--text-2); font-size: 12px;
+  }
+  .demo-bar button.on { background: var(--text); color: var(--bg); font-weight: 500; }
   .ghost-btn {
     all: unset; cursor: pointer; text-align: center;
     font-size: 12px; padding: 5px; border-radius: var(--radius-sm);
@@ -153,7 +161,7 @@
   .rule .rt { font-size: 13.5px; font-weight: 500; }
   .rule .rs { font-size: 12.5px; color: var(--text-2); margin-top: 3px; }
   .rule .src { font-family: var(--mono); font-size: 11px; color: var(--text-3); margin-top: 6px; }
-  html[data-mode="prod"] .src { display: none; }
+  html[data-vis="public"] .src { display: none; }
 
   .alert {
     border: 1px solid var(--warn); border-radius: var(--radius);
@@ -161,7 +169,7 @@
   }
   .alert p { margin: 0; font-size: 13px; color: var(--warn); font-weight: 500; }
   .alert code { font-family: var(--mono); font-size: 11.5px; display: block; margin-top: 4px; color: var(--warn); opacity: .85; }
-  html[data-mode="prod"] .dev-only { display: none !important; }
+  html[data-vis="public"] .dev-only { display: none !important; }
 
   .comp {
     border: 1px solid var(--border); border-radius: var(--radius);
@@ -237,8 +245,8 @@
     display: none; border: 1px dashed var(--border); border-radius: var(--radius);
     padding: 34px; text-align: center; color: var(--text-3); font-size: 13px; background: var(--panel);
   }
-  html[data-mode="prod"] .locked { display: block; }
-  html[data-mode="prod"] .api-wrap { display: none; }
+  html[data-vis="public"] .locked { display: block; }
+  html[data-vis="public"] .api-wrap { display: none; }
 
   .wiki { display: grid; grid-template-columns: 190px 1fr; gap: 20px; }
   .wiki nav { border-right: 1px solid var(--border-soft); padding-right: 10px; }
@@ -282,7 +290,6 @@
       <button data-view="wiki"><span class="dot"></span>Wiki 文档</button>
     </nav>
     <div class="rail-foot">
-      <button class="mode-badge" id="modeBtn" title="点击切换开发 / 线上模式">开发模式</button>
       <button class="ghost-btn" id="themeBtn">切换深色</button>
     </div>
   </aside>
@@ -293,7 +300,7 @@
         <h2 id="vTitle">规则</h2>
         <p class="sub" id="vSub">项目规则与页面形态术语的唯一真相源。改 rules.json，刷新即变，页面里没有任何手写副本。</p>
       </div>
-      <div class="hint">左下角可切换 <b>开发 / 线上模式</b><br>注意告警条与源码路径的变化</div>
+      <div class="hint">右下角是 <b>演示对照</b>，不是产品功能<br>真实项目靠构建期剔除与鉴权</div>
     </header>
 
     <section class="view on" id="view-rules">
@@ -348,7 +355,7 @@
           <div class="rid">S-01</div>
           <div>
             <div class="rt">上线前必须通过漏洞扫描</div>
-            <div class="rs">四件套体检 → 静态漏洞 → 依赖审计 → 人工五项 → 产物扫描 → 切线上模式。顺序不可颠倒。</div>
+            <div class="rs">四件套体检 → 静态漏洞 → 依赖审计 → 人工五项 → 产物扫描 → 发版打 tag。顺序不可颠倒。</div>
             <div class="src">references/preflight.md · scripts/preflight-scan.mjs</div>
           </div>
           <span class="chip must">必须</span>
@@ -381,7 +388,7 @@
           <span class="chip must">必须</span>
         </div>
       </div>
-      <div class="foot-note">线上模式下，每条规则右下角的出处路径会消失——内部结构不给外人看。</div>
+      <div class="foot-note">对外视角下，每条规则右下角的出处路径会消失——这是字段层的修法：前端不渲染就够了。</div>
     </section>
 
     <section class="view" id="view-components">
@@ -495,8 +502,8 @@
         </div>
         <div class="foot-note">这里内嵌的是真实 Swagger UI。判定「有接口文档」的标准是能填 token 试调，不是页面上有字。</div>
       </div>
-      <div class="locked">线上模式已关闭接口文档<br><span style="font-size:12px">/docs 返回 404，/openapi.json 仅内网可达</span></div>
-      <div class="foot-note">线上模式刻意关掉它：文档页是最容易被外部扫到的内部结构入口。</div>
+      <div class="locked">这一页对外不可达<br><span style="font-size:12px">/docs 返回 404，/openapi.json 需鉴权</span></div>
+      <div class="foot-note">接口文档必须落在<b>身份层</b>：前端藏起来没用，数据已经在浏览器里了。文档页是最容易被外部扫到的内部结构入口。</div>
     </section>
 
     <section class="view" id="view-wiki">
@@ -525,6 +532,11 @@
     </section>
   </main>
 </div>
+<div class="demo-bar" role="group" aria-label="演示对照">
+  <span class="cap">演示对照<br><i>真实项目里没有这个开关</i></span>
+  <button class="on" data-vis="full">完整视角</button>
+  <button data-vis="public">对外视角</button>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -547,12 +559,22 @@
     document.getElementById('vSub').textContent = META[key][1];
   });
 
-  var modeBtn = document.getElementById('modeBtn');
-  modeBtn.addEventListener('click', function () {
-    var prod = document.documentElement.dataset.mode === 'prod';
-    document.documentElement.dataset.mode = prod ? 'dev' : 'prod';
-    modeBtn.textContent = prod ? '开发模式' : '线上模式';
-    toast(prod ? '已切回开发模式：告警条与源码路径恢复' : '已切到线上模式：内部债与源码路径全部隐藏');
+  var demoBar = document.querySelector('.demo-bar');
+  demoBar.addEventListener('click', function (e) {
+    var btn = e.target.closest('button');
+    if (!btn) return;
+    var vis = btn.dataset.vis;
+    document.documentElement.dataset.vis = vis;
+    demoBar.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+    toast(vis === 'public'
+      ? '对外视角：告警条、源码路径、接口文档都不再出现'
+      : '完整视角：内部债与源码路径恢复');
+  });
+
+  // 初始态同步：当前 data-vis 决定哪个按钮高亮
+  var currentVis = document.documentElement.dataset.vis || 'full';
+  demoBar.querySelectorAll('button').forEach(function (b) {
+    b.classList.toggle('on', b.dataset.vis === currentVis);
   });
 
   var themeBtn = document.getElementById('themeBtn');
@@ -569,7 +591,6 @@
     wikiNav.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
   });
 
-  if (document.documentElement.dataset.mode === 'prod') modeBtn.textContent = '线上模式';
   if (document.documentElement.dataset.theme === 'dark') themeBtn.textContent = '切换浅色';
 
   var toastEl = document.getElementById('toast');

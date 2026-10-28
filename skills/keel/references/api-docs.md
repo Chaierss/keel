@@ -16,7 +16,7 @@
 
 | 栈 | 自动产出 | 注意 |
 |---|---|---|
-| FastAPI | 自带 `/openapi.json` + `/docs`（Swagger UI） | 用 `openapi_url=None` 才能在线上模式彻底关掉 |
+| FastAPI | 自带 `/openapi.json` + `/docs`（Swagger UI） | 用 `openapi_url=None` 才能在对外产物里彻底关掉 |
 | NestJS | `@nestjs/swagger` + `SwaggerModule.setup` | 装饰器要写全，否则 schema 是空的 |
 | Express/Koa | `swagger-jsdoc` 扫注释 | 注释会漂，优先用 zod→openapi 方案 |
 | Go | `swag init` 生成 swagger.json | 需要 CI 里跑生成，否则忘记更新 |
@@ -70,13 +70,15 @@ Swagger UI 默认从 CDN 拉 JS/CSS。内网、离线、或 CDN 抖动时整页�
 
 **所以：不要因为"线上不给人看"就把 `openapi.json` 一起关掉。** 正确做法是它挂在内网/受权限保护的路径上，Swagger UI 才关。
 
-## 线上模式
+## 按边界决定它们给谁看
 
-| 项 | 开发模式 | 线上模式 |
+接口文档是**身份层**的典型：数据一旦发到浏览器，前端藏起来就没意义了。
+
+| 项 | 内部（有权限） | 对外 |
 |---|---|---|
 | `/docs` Swagger UI | 开 | 关（`DISABLE_DOCS=1` → `openapi_url=None`） |
 | `/openapi.json` | 开 | 内网可达 / 需鉴权 |
-| 设置页「接口文档」tab | 显示 | 隐藏（或显示"仅内网可用"提示） |
+| 设置页「接口文档」tab | 显示 | 这个产物里不存在（构建期剔除）或返回 401 |
 
 关掉的方式要**一个开关控两处**（路由 + schema），不要只关页面还留着 json。
 
@@ -96,4 +98,4 @@ Swagger UI 默认从 CDN 拉 JS/CSS。内网、离线、或 CDN 抖动时整页�
 - [ ] 点 Authorize 填 token，能真实调通一个带鉴权的接口
 - [ ] 主应用切深色，iframe 里的文档跟着变，没有白边
 - [ ] 断网/CDN 挂掉，文档页仍能打开（资源已自托管）
-- [ ] 线上模式下 `/docs` 返回 404，且 `/openapi.json` 不对外
+- [ ] 无权限身份请求 `/docs` 返回 404/401，且 `/openapi.json` 同样挡住（不是前端看不见）

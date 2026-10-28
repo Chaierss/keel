@@ -1,14 +1,14 @@
 ---
 name: keel
-version: 1.0.1
+version: 2.0.0
 author: chaierss
 homepage: https://www.chaierss.fun
 repository: https://github.com/Chaierss/keel
 license: MIT
 agent_created: true
-description: 给项目补一套不会过期的内部文档——规则、组件注册表、接口文档、Wiki 四件套收进同一个设置页，四页各读一份仓库源文件、禁止手写副本；再用开发模式/线上模式划分信息边界，两个零依赖脚本（四件套体检 + 上线前漏洞扫描）把它钉成 CI 门禁。用在项目开荒、接手陌生代码、多个 AI 接力开发、组件统一管理、发版前自查。触发词：keel、龙骨、开发模式、线上模式、设置页、系统设置、规则页、术语表、命名约定、设计模式、专注模式、沉浸模式、主从模式、组件统一管理、组件未使用、接口文档、wiki文档、自动更新、单一真相源、漏洞扫描、上线检查、项目体检。
-description_zh: 让项目的规则、组件、接口文档、Wiki 不再靠手抄第二份：四页各读一份仓库源文件，用开发/线上模式决定内部事实给谁看，两个零依赖脚本钉成 CI 门禁。
-description_en: Internal docs that can't go stale — rules, a component registry, API reference and a wiki, each read straight from the repo. Adds dev/prod visibility modes, a page-mode vocabulary, testable elegance criteria and a pre-release security gate. Zero dependencies, read-only.
+description: 给项目补一套不会过期的内部文档——规则、组件注册表、接口文档、Wiki 四件套收进同一个设置页，四页各读一份仓库源文件、禁止手写副本；再用「可见性边界」定清三件事：哪些产物带上它、谁能打开、哪些字段不能给（产物/身份/字段三层三种修法，不做模式开关），两个零依赖脚本（四件套体检 + 上线前漏洞扫描）把它钉成 CI 门禁。用在项目开荒、接手陌生代码、多个 AI 接力开发、组件统一管理、发版前自查。触发词：keel、龙骨、可见性边界、开发模式、线上模式、设置页、系统设置、规则页、术语表、命名约定、设计模式、专注模式、沉浸模式、主从模式、组件统一管理、组件未使用、接口文档、wiki文档、自动更新、单一真相源、漏洞扫描、上线检查、项目体检、桌面端打包剔除、接口文档鉴权、内部页面外泄。
+description_zh: 让项目的规则、组件、接口文档、Wiki 不再靠手抄第二份：四页各读一份仓库源文件，用可见性边界定清哪些产物带它、谁能打开、哪些字段不能给，两个零依赖脚本钉成 CI 门禁。
+description_en: Internal docs that can't go stale — rules, a component registry, API reference and a wiki, each read straight from the repo. Adds a visibility-boundary model (artifact / identity / field) instead of dev-vs-prod modes, a page-mode vocabulary, testable elegance criteria and a pre-release security gate. Zero dependencies, read-only.
 ---
 
 # Keel · 龙骨
@@ -17,20 +17,20 @@ description_en: Internal docs that can't go stale — rules, a component registr
 >
 > 这个技能就是项目的龙骨：规则定对错、术语定叫法、注册表定准入、门禁定何时能发。没有一条会多出一个业务按钮，缺一条项目就散架。
 
-一个项目要能被**不同 AI、不同人**接力开发，必须先有三样东西：**模式边界、单一真相源、自更新骨架**。
+一个项目要能被**不同 AI、不同人**接力开发，必须先有三样东西：**边界定清楚、单一真相源、自更新骨架**。
 
-技能做的事很具体：先在设置页装齐**规则 / 组件 / 接口文档 / Wiki** 四件套，四者全部从仓库源文件自动反映最新事实；再用**开发模式 / 线上模式**决定这些内部事实给谁看；最后用两个脚本把它们钉成门禁。
+技能做的事很具体：先在设置页装齐**规则 / 组件 / 接口文档 / Wiki** 四件套，四者全部从仓库源文件自动反映最新事实；再用**可见性边界**定清这些东西该出现在哪个产物里、给谁看、哪些字段不能给；最后用两个脚本把它们钉成门禁。
 
 来源项目是 `chaierss`（Vue3 + Arco + FastAPI），但技能**不绑定该仓库、不绑定 Vue、不绑定 Python**。它约束"什么算合格"，落地手法按目标栈替换。
 
 ## 先看效果（30 秒，不用装）
 
-打开 `templates/preview/console-demo.html`，双击即可。**点左下角的模式徽章**：
+打开 `templates/preview/console-demo.html`，双击即可。右下角有个**演示对照**——它故意做在页面框外，因为真实项目里不该有这种东西：
 
-- 开发模式：未登记告警条、组件源码路径、待下架清单全都在。
-- 线上模式：这些全部消失，接口文档整块变成"仅内网可达"。
+- **完整视角**：未登记告警条、组件源码路径、待下架清单全都在。
+- **对外视角**：这些全部消失，接口文档整块变成"这一页对外不可达"。
 
-这个切换就是技能的核心——不是做四个文档页，是给内部事实装一个开关。看完再决定要不要装。
+差别是真的，值得先看清楚要防什么。但别学那个开关——真实项目里让它们消失的，是构建期剔除或服务端鉴权，而不是有人记得去点一下。**这也正是 2.0 删掉「开发模式/线上模式」的原因**，见 `references/visibility.md`。
 
 ## 它治的三个具体病
 
@@ -46,11 +46,11 @@ description_en: Internal docs that can't go stale — rules, a component registr
 
 | 步骤 | 做什么 | 读哪份 |
 |---|---|---|
-| 1 | 定模式：一个判定函数 + 一个模式角标 + 一份可见性矩阵 | `references/modes.md` |
+| 1 | 定边界：写清四问（哪些产物 / 谁能开 / 哪些字段 / 最坏后果），力度按后果选层 | `references/visibility.md` |
 | 2 | 建四件套骨架：先定唯一真相源在哪个文件，再写页面。**初始规则必须含 P-01 优雅原则与 S-01 上线门禁** | `references/pillars.md`、`elegance.md` |
 | 3 | 逐页实现：规则 → 组件 → 接口文档 → Wiki（顺序有讲究，规则定术语，后面三页才有共同语言） | `references/rules.md`、`components.md`、`api-docs.md`、`wiki.md` |
 | 4 | 挂门禁：脚本体检 + CI/提交前钩子 | `references/adoption.md`、`scripts/console-check.mjs` |
-| 5 | 发布前预检：漏洞扫描 + 依赖审计 + 五项人工，全绿才切线上模式 | `references/preflight.md`、`scripts/preflight-scan.mjs` |
+| 5 | 发布前预检：漏洞扫描 + 依赖审计 + 五项人工，全绿才发版 | `references/preflight.md`、`scripts/preflight-scan.mjs` |
 
 只想先做一半？看 `references/quickstart.md`（15 分钟，只装规则 + 组件，接口文档先用现成 Swagger 顶）。
 
@@ -69,13 +69,13 @@ description_en: Internal docs that can't go stale — rules, a component registr
 
 ## 七条铁律
 
-1. **模式只有一个判定函数。** 全项目只有 `resolveMode()` 知道 dev 还是 prod，任何组件不得自己读 `NODE_ENV`。判定点一散落，切线上时必然漏掉第七处。
+1. **边界只有一处声明，且修在该在的那一层。** 「该不该给看」写在一个可定位的地方，不散落在 `v-if` 里。「不好看」只动前端，「泄露内部」必须动服务端，「收不回来」必须动构建期——跨层修等于没修。**界面里不许出现模式角标或切换开关**：需要角标，说明这个决定被推到了运行时。
 2. **四件套禁止手写副本。** 页面上每一条内容都要能追溯到一个仓库文件。手写清单是"过期"的唯一来源。
 3. **规则页首先是给 AI 看的。** 验收标准不是"人觉得清楚"，而是"新 agent 只读导出的 Markdown 就不误解术语"。所以每条术语必须写清**它不是什么**。
 4. **组件未登记就不存在。** 注册表是准入名单，不是说明书。目录里有、注册表没有 = 构建告警。
 5. **接口文档只能由代码生成。** 判定"有文档"的标准是能授权试调，不是页面上有字。
 6. **"优雅"必须能回答是/否。** 优雅不是好看，是"少了它会觉得不方便"。所有取舍过一遍十条判定问题，评审时不许用"我觉得"下结论。
-7. **上线门禁不可跳过。** 顺序是"先扫、后关"——模式一开，内部事实就看不见了，扫晚了一无所获。
+7. **上线门禁不可跳过。** 顺序是"先扫、后发"——扫描永远在打包之前，因为产物一旦出去就收不回来。工具查不出的那五项才是真实事故集中地。
 
 ## 上线前门禁
 
@@ -84,8 +84,9 @@ node keel/console-check.mjs --strict        # 1 四件套完整
 node keel/preflight-scan.mjs --strict       # 2 静态漏洞（17 条规则）
 npm audit --audit-level=high                       # 3 依赖
 # 4 人工五项：越权 IDOR / 权限只在前端 / 逻辑绕过 / 上传 / SSRF
-node keel/preflight-scan.mjs --include-dist # 5 产物无密钥
-# 6 切线上模式 / 打 tag —— 必须在最后
+#   + 边界四问：哪些产物 / 谁能开 / 哪些字段 / 最坏后果
+node keel/preflight-scan.mjs --include-dist # 5 产物无密钥、无内部页面
+# 6 打 tag / 发版 —— 必须在最后
 ```
 
 **"上线时扫一遍"单独存在时必然失效**：它是一次性仪式，赶进度时第一个被跳过。所以脚本得挂进 CI，平时就跑。
@@ -96,14 +97,17 @@ node keel/preflight-scan.mjs --include-dist # 5 产物无密钥
 
 - ❌ 不要为四件套另做一套文档站 —— 两份必然分叉。
 - ❌ 不要把设置做成弹窗 —— 四件套是页面级内容，需要深链、刷新保持。
-- ❌ 不要用 `NODE_ENV` 当开发模式 —— 它表达构建方式，不表达"要不要给用户看内部事实"。
+- ❌ 不要用 `NODE_ENV` 判可见性 —— 它表达构建方式，不表达读者身份。同一个 prod 包要给两种人看时，它给不出答案。
+- ❌ 不要在界面上做模式角标或切换开关 —— 需要角标，说明这个决定被推到了运行时；`?mode=dev` 更是一个可被扫到的入口。
 - ❌ 不要让组件预览靠巨型 `v-if` 列举 —— 新增组件得回去改预览文件，必然漏。用同目录 demo。
 - ❌ 不要为了"优雅"砍掉正确性、可访问性、可维护性 —— 那三种情况该说"错了"，不是"不够优雅"。
 - ❌ 不要写没有原因的 `.preflightignore` 豁免 —— 等于关掉检测。
 
 ## 验收
 
-- [ ] `resolveMode` 之外没有第二处读环境变量做功能分支，界面上有模式角标且能说清来源
+- [ ] 边界声明可定位、四问都有答案；每条「不给看」都写了最坏后果，且修法与后果同层
+- [ ] 页面里没有任何「模式 / 形态」角标或切换开关
+- [ ] 无权限身份请求接口文档，返回 401/404，而不是前端看不见
 - [ ] 四件套每页都能回答"改了源文件之后，这里为什么会自动变"
 - [ ] 组件页能列出**未登记**与**未被引用**两类名单
 - [ ] 新增一个共享组件，不改任何已存在的文件，页面上就能看到它
@@ -114,12 +118,12 @@ node keel/preflight-scan.mjs --include-dist # 5 产物无密钥
 ## 资源
 
 **先看**
-- `templates/preview/console-demo.html` — 单文件演示，双击打开，切换模式看差异
+- `templates/preview/console-demo.html` — 单文件演示，双击打开，右下角对照两种视角
 - `references/quickstart.md` — 15 分钟最小版（只装两件）
 - `references/vs-alternatives.md` — 和 Storybook / Docusaurus / Notion 的边界，同类 agent 技能的分工，以及本项目的**已知局限**
 
 **方法与约束**
-- `references/modes.md` — 两种模式的定义 / 不是什么 / 可见性矩阵 / 角标 / 切换
+- `references/visibility.md` — 可见性边界：三层 / 四问 / 力度按后果定 / 各层骨架 / 从 1.x 迁移
 - `references/pillars.md` — 四件套总纲、自动更新的三个成立条件、各栈实现对照
 - `references/elegance.md` — 设计优雅原则：十条可判定条款、代价与收益的天平
 - `references/adoption.md` — 四步接入、脚本用法、分阶段验收、按栈常见坑
@@ -134,7 +138,7 @@ node keel/preflight-scan.mjs --include-dist # 5 产物无密钥
 - `references/preflight.md` — 四层机器扫描 + 五项人工检查
 
 **模板（`templates/`，拷进项目 `keel/`）**
-`devMode.ts` · `console.config.json` · `rules.json` · `components.json` · `wiki.json` · `README.md` · `SettingsConsole.skeleton.vue`
+`console.config.json` · `rules.json` · `components.json` · `wiki.json` · `README.md` · `SettingsConsole.skeleton.vue`
 
 **脚本（`scripts/`，零依赖，Node ≥ 18）**
 - `console-check.mjs` — 四件套完整性体检（`--strict` / `--json`）

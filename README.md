@@ -18,13 +18,13 @@ Keel 把这四页改成直接读仓库里的那一份源文件。**没有副本�
   <a href="https://www.chaierss.fun"><img src="https://img.shields.io/badge/website-chaierss.fun-16a34a" alt="website"></a>
 </p>
 
-<p><img src="docs/assets/console.png" width="800" alt="开发模式下设置页的组件页：注册表指标、未登记组件告警条、每张卡片的源码路径"></p>
+<p><img src="docs/assets/console.png" width="800" alt="完整视角下的设置页组件页：注册表指标、未登记组件告警条、每张卡片的源码路径"></p>
 
-<sub>同一个页面，两拨读者。开发模式看得见那个还没登记的组件、以及它躺在哪个文件里；点一下左下角的徽章，这些内部债整体消失——页面还是那个页面，代码还是那份代码。</sub>
+<sub>同一个页面，两拨读者。给内部人看时，那个还没登记的组件、以及它躺在哪个文件里都在；对外时这些整体消失——页面还是那个页面，代码还是那份代码。<b>让它消失的不是开关，是构建期剔除和接口鉴权。</b></sub>
 
 ## 30 秒，什么都不用装
 
-**看效果** → [打开在线演示](https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html)，点左下角徽章切开发 / 线上。想离线看也行：[下载单文件](skills/keel/templates/preview/console-demo.html) 双击即开，断网可用。
+**看效果** → [打开在线演示](https://chaierss.github.io/keel/skills/keel/templates/preview/console-demo.html)，右下角对照「完整视角 / 对外视角」。那个开关是演示专用的，真实项目里不该有。想离线看也行：[下载单文件](skills/keel/templates/preview/console-demo.html) 双击即开，断网可用。
 
 **量项目** → 只读，只告诉你缺什么，一个字节都不改：
 
@@ -83,11 +83,11 @@ npx skills add Chaierss/keel -g
 
 | 步 | 做什么 | 产出 |
 |---|---|---|
-| 1 | **定模式**：一个判定函数、一个角标、一份可见性矩阵 | `keel/devMode.ts` |
+| 1 | **定边界**：四问写清——哪些产物带它、谁能打开、哪些字段不能给 | 一份可定位的边界声明 |
 | 2 | **建骨架**：先定每页读哪个文件，再写页面 | `rules.json` / `components.json` / `wiki.json` |
 | 3 | **逐页实现**：规则 → 组件 → 接口 → Wiki（顺序有讲究，规则定术语，后面三页才有共同语言） | 四个 tab |
 | 4 | **挂门禁**：脚本进 CI | 一条 workflow |
-| 5 | **发版前预检**：先扫、后关 | 绿灯才切线上模式 |
+| 5 | **发版前预检**：先扫、后发 | 绿灯才打 tag |
 
 日常只有两条命令：
 
@@ -107,6 +107,8 @@ node keel/preflight-scan.mjs --strict    # 17 条代码模式规则 + 文件级�
 `preflight-scan` 覆盖私钥入库、硬编码凭证、云厂商密钥格式、动态执行、命令注入、不安全反序列化、关闭证书校验、XSS 注入点、调试残留、CORS 通配、SQL 拼接、默认口令、鉴权绕过、路径穿越、SSRF，外加一个**每条豁免都必须写原因**的 `.preflightignore`。
 
 两个脚本都不替代渗透测试。它们的存在，是为了让最便宜的那 80% 到不了线上。
+
+**它们也不检查可见性边界。** 哪些产物该带设置页、哪些字段不能给某个身份，是人的判断——机器能验「写了没有」，验不了「写得对不对」。所以那部分不设门禁项，交给 [`references/visibility.md`](skills/keel/references/visibility.md) 末尾那张验收清单，逐条人工过。假装能判定的门禁比没有门禁更糟。
 
 ## 和别的东西的分工
 
@@ -189,7 +191,7 @@ tools/  tests/  docs/     ← 本仓库的工具链，不随技能分发
 ## 参与开发
 
 ```bash
-node tests/run-tests.mjs        # 29 个用例，零依赖，几秒
+node tests/run-tests.mjs        # 30 个用例，零依赖，几秒
 node tools/package-skill.mjs    # dist/keel-<version>.zip，根目录就是 SKILL.md
 node tools/install-local.mjs --list
 ```

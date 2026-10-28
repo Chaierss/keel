@@ -1,7 +1,7 @@
 # Keel · 龙骨
 
 > **给项目装一副不会散架的脊梁。**
-> 规则、组件、接口文档、Wiki 四件套收进同一个设置页，全部从仓库源文件自动生成；开发/线上模式决定内部事实给谁看；两个零依赖脚本把它们钉成门禁。
+> 规则、组件、接口文档、Wiki 四件套收进同一个设置页，全部从仓库源文件自动生成；可见性边界定清哪些产物带它、谁能打开、哪些字段不能给；两个零依赖脚本把它们钉成门禁。
 
 *A self-updating skeleton for software projects — see the English summary at the bottom.*
 
@@ -19,12 +19,12 @@
 
 用浏览器打开 [`templates/preview/console-demo.html`](templates/preview/console-demo.html)，双击即可，无网络依赖。
 
-**点左下角的模式徽章**：
+右下角有个**演示对照**，它故意做在页面框外——真实项目里不该有这种东西：
 
-- 开发模式：未登记告警条、组件源码路径、"待下架"清单全都在。
-- 线上模式：这些全部消失，接口文档整块变成"仅内网可达"。
+- 完整视角：未登记告警条、组件源码路径、"待下架"清单全都在。
+- 对外视角：这些全部消失，接口文档整块变成"这一页对外不可达"。
 
-这个切换就是本项目的核心——不是做四个文档页，是给内部事实装一个开关。
+差别值得先看清楚，但别学那个开关：真实项目里让它们消失的是构建期剔除和服务端鉴权。**2.0 正是因此删掉了「开发模式 / 线上模式」**，理由写在 [`references/visibility.md`](references/visibility.md)。
 
 ## 安装
 
@@ -45,8 +45,8 @@ npx skills add Chaierss/keel -g
 | | 内容 |
 |---|---|
 | `SKILL.md` | 入口。五步落地、四件套判据、七条铁律、上线门禁 |
-| `references/` | 12 篇：模式边界、四件套总纲、优雅原则、形态词汇表（11 布局 + 9 交互）、逐页实现、漏洞预检、15 分钟最小版、和现成方案的边界 |
-| `templates/` | 可直接拷进项目的 `rules.json` / `components.json` / `wiki.json` / `devMode.ts` / 设置页外壳 |
+| `references/` | 12 篇：可见性边界、四件套总纲、优雅原则、形态词汇表（11 布局 + 9 交互）、逐页实现、漏洞预检、15 分钟最小版、和现成方案的边界 |
+| `templates/` | 可直接拷进项目的 `rules.json` / `components.json` / `wiki.json` / 设置页外壳 |
 | `scripts/` | `console-check.mjs`（四件套完整性体检）、`preflight-scan.mjs`（上线前漏洞扫描，17 条规则） |
 
 两个脚本都是**零依赖、Node ≥ 18**，不需要 `npm install`。
@@ -95,7 +95,7 @@ keel/
 
 ## 来源
 
-模式提炼自作者 [chaierss](https://www.chaierss.fun) 的系统设置实现（Vue3 + Arco + FastAPI），但技能**不绑定该仓库、不绑定 Vue、不绑定 Python**。它约束"什么算合格"，落地手法按目标栈替换。
+这套骨架提炼自作者 [chaierss](https://www.chaierss.fun) 的系统设置实现（Vue3 + Arco + FastAPI），但技能**不绑定该仓库、不绑定 Vue、不绑定 Python**。它约束"什么算合格"，落地手法按目标栈替换。
 
 - 主页：[www.chaierss.fun](https://www.chaierss.fun)
 - 仓库：[github.com/Chaierss/keel](https://github.com/Chaierss/keel)
@@ -103,4 +103,4 @@ keel/
 
 ---
 
-**English summary** — Keel gives a codebase a self-updating console with four single-source-of-truth surfaces: rules and terminology, a component registry with usage detection, API docs generated from code, and a wiki served straight from the repo. It adds a dev/prod visibility switch so internal debt stays internal, a vocabulary of page modes, testable elegance criteria, and a pre-release security gate. Two dependency-free Node scripts enforce it in CI. It does not replace Storybook, Docusaurus or Swagger — it covers the gap between them: who uses what, what should be deleted, and where the front door is. MIT licensed.
+**English summary** — Keel gives a codebase a self-updating console with four single-source-of-truth surfaces: rules and terminology, a component registry with usage detection, API docs generated from code, and a wiki served straight from the repo. It adds a visibility-boundary model (artifact / identity / field) so internal debt stays internal — no dev-vs-prod toggle — plus a vocabulary of page modes, testable elegance criteria, and a pre-release security gate. Two dependency-free Node scripts enforce it in CI. It does not replace Storybook, Docusaurus or Swagger — it covers the gap between them: who uses what, what should be deleted, and where the front door is. MIT licensed.
