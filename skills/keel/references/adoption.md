@@ -16,14 +16,17 @@
 # 1. 有没有设置中枢
 grep -rl "系统设置\|Settings\|设置" src/ --include=*.vue --include=*.tsx | head
 
-# 2. 有没有模式判定（还是散落的环境判断）
+# 2. 有没有 agent 入口与开荒骨架
+ls AGENTS.md keel/structure.json keel/project.json 2>/dev/null
+
+# 3. 有没有模式判定（还是散落的环境判断）
 grep -rn "NODE_ENV\|import.meta.env.DEV\|process.env.DEBUG" src/ | wc -l
 
-# 3. 四件套痕迹
+# 4. 四件套痕迹
 ls keel/ docs/wiki/ 2>/dev/null
 grep -rn "openapi\|swagger" --include=*.py --include=*.ts -l . | head
 
-# 4. 组件是否统一出口
+# 5. 组件是否统一出口
 ls src/components/ui/index.ts src/components/index.ts 2>/dev/null
 ```
 
@@ -35,6 +38,14 @@ ls src/components/ui/index.ts src/components/index.ts 2>/dev/null
 - 有 swagger 但没有 Authorize → 接口文档"有但不能用"。
 
 ## 四步接入（每步独立可验收）
+
+### 第 0 步：开荒（约半小时）
+
+1. 拷 `templates/AGENTS.md` 到项目根，按 `references/bootstrap.md` 改成本项目的路由。
+2. 拷 `templates/structure.json` 与 `templates/project.json` 到 `keel/`，登记顶层目录职责、目标与里程碑出口。
+3. 拷 `templates/wiki/` 五篇到 `docs/wiki/`，按真实结构改写。
+
+**验收**：`node keel/console-check.mjs` 里 `DIR-01` / `PRJ-01` 为 ok；`DIR-02` / `PRJ-02` 没有需要人处理的项。
 
 ### 第 1 步：定边界（约半小时）
 
@@ -52,7 +63,8 @@ ls src/components/ui/index.ts src/components/index.ts 2>/dev/null
 先建文件，别先写页面：
 
 ```
-keel/{console.config.json, rules.json, components.json, wiki.json}
+AGENTS.md                                  ← 项目根：跨工具入口，只做路由
+keel/{console.config.json, structure.json, project.json, rules.json, components.json, wiki.json}
 docs/wiki/{README,architecture,backend,frontend,operations}.md
 ```
 
@@ -121,6 +133,10 @@ node keel/console-check.mjs --root ../proj     # 指定项目根
 |---|---|---|
 | CFG-01 | error | `keel/console.config.json` 存在且合法（查的是配置就位，不是可见性边界） |
 | VER-01 | warn | `console.config.json` 的 `keelVersion` 与当前技能版本比对，提示有无模板更新（见 [`upgrading.md`](upgrading.md)） |
+| DIR-01 | error | `structure.json` 登记的目录真实存在、职责非空、无重复（缺文件只记 info） |
+| DIR-02 | warn | 顶层目录有、登记表没有（可能是新模块忘登记，也可能是生成物该进 `ignore`） |
+| PRJ-01 | error | `project.json` 必填字段齐全（`name` / `oneLiner` / `stage` / `goals` / `outOfScope` / `milestones`；缺文件只记 info） |
+| PRJ-02 | warn | 里程碑缺出口条件 `exit` 或状态 `status` |
 | RULE-01 | error | `rules.json` 可解析，含 `version` 与 `pageModes`/`rules` |
 | RULE-02 | error | 规则 `id` 唯一、必填字段齐全、`category`/`severity` 合法 |
 | RULE-03 | error | 术语词条含 `definition` / `signal` / `avoid`（缺 `avoid` 记 warn） |

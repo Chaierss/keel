@@ -1,0 +1,19 @@
+{
+  "$comment": "项目章程：只放会在评审和发版时被反复引用的事实。目标写结果不写动作，范围外写清楚不做什么，里程碑必须有出口条件——没有出口条件的里程碑等于许愿。",
+  "version": 1,
+  "name": "示例项目",
+  "oneLiner": "给谁解决什么问题，一句话说完",
+  "stage": "internal",
+  "goals": [
+    "新人只看 docs/wiki 就能跑起来并改对第一个需求",
+    "新增共享组件不需要修改任何已存在的文件"
+  ],
+  "outOfScope": [
+    "不做 SaaS 多租户",
+    "不做移动端"
+  ],
+  "milestones": [
+    { "id": "M-01", "title": "骨架可用", "exit": "console-check --strict 退出码 0", "status": "doing" },
+    { "id": "M-02", "title": "对外交付", "exit": "产物里搜不到设置页与 openapi.json", "status": "todo" }
+  ]
+}

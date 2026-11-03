@@ -1,6 +1,6 @@
 ---
 name: keel
-version: 2.1.0
+version: 2.2.0
 author: chaierss
 homepage: https://www.chaierss.fun
 repository: https://github.com/Chaierss/keel
@@ -40,17 +40,20 @@ description_en: Internal docs that can't go stale — rules, a component registr
 | 同一个卡片写了三遍，谁都不确定哪份是准的 | 改一次要改三处，漏一处就是线上样式不一致 |
 | 文档写完就过期，三个月后没人敢信 | 等于没有文档，新人只能读代码 |
 
-## 五步落地（不许跳步）
+## 开荒 + 五步落地（不许跳步）
 
 跳步的代价：先做视觉、后补地基，四件套一定半残。
 
 | 步骤 | 做什么 | 读哪份 |
 |---|---|---|
+| 0 | 开荒：登记顶层目录、写 `AGENTS.md`、定目标与里程碑 | `references/bootstrap.md` |
 | 1 | 定边界：写清四问（哪些产物 / 谁能开 / 哪些字段 / 最坏后果），力度按后果选层 | `references/visibility.md` |
 | 2 | 建四件套骨架：先定唯一真相源在哪个文件，再写页面。**初始规则必须含 P-01 优雅原则与 S-01 上线门禁** | `references/pillars.md`、`elegance.md` |
 | 3 | 逐页实现：规则 → 组件 → 接口文档 → Wiki（顺序有讲究，规则定术语，后面三页才有共同语言） | `references/rules.md`、`components.md`、`api-docs.md`、`wiki.md` |
 | 4 | 挂门禁：脚本体检 + CI/提交前钩子 | `references/adoption.md`、`scripts/console-check.mjs` |
 | 5 | 发布前预检：漏洞扫描 + 依赖审计 + 五项人工，全绿才发版 | `references/preflight.md`、`scripts/preflight-scan.mjs` |
+
+开荒只建三个小文件，不是第三套文档：`structure.json`（顶层目录职责）、`project.json`（目标 / 范围外 / 里程碑出口）、`AGENTS.md`（≤60 行，只做路由）。目录登记由 `DIR-01/02` 对账，项目章程由 `PRJ-01/02` 对账——手写的目录说明一定会过期。
 
 只想先做一半？看 `references/quickstart.md`（15 分钟，只装规则 + 组件，接口文档先用现成 Swagger 顶）。
 
@@ -123,6 +126,7 @@ node keel/preflight-scan.mjs --include-dist # 5 产物无密钥、无内部页�
 - `references/vs-alternatives.md` — 和 Storybook / Docusaurus / Notion 的边界，同类 agent 技能的分工，以及本项目的**已知局限**
 
 **方法与约束**
+- `references/bootstrap.md` — 开荒：目录登记 / AGENTS.md / 项目章程 / wiki 五篇；与 PM 类技能的分工
 - `references/visibility.md` — 可见性边界：三层 / 四问 / 力度按后果定 / 各层骨架 / 从 1.x 迁移
 - `references/pillars.md` — 四件套总纲、自动更新的三个成立条件、各栈实现对照
 - `references/elegance.md` — 设计优雅原则：十条可判定条款、代价与收益的天平
@@ -140,8 +144,8 @@ node keel/preflight-scan.mjs --include-dist # 5 产物无密钥、无内部页�
 **维护**
 - `references/upgrading.md` — 版本对照表 / 怎么知道有新版（`VER-01`）/ 升级的三种姿势。**没有自动升级**：`keel/` 是拷贝制，覆盖率会冲掉项目事实
 
-**模板（`templates/`，拷进项目 `keel/`）**
-`console.config.json` · `rules.json` · `components.json` · `wiki.json` · `README.md` · `SettingsConsole.skeleton.vue` · `ComponentCard.skeleton.vue`
+**模板（`templates/`，拷进项目根 / 项目 `keel/`）**
+`AGENTS.md` · `console.config.json` · `structure.json` · `project.json` · `rules.json` · `components.json` · `wiki.json` · `wiki/`（五篇骨架） · `README.md` · `SettingsConsole.skeleton.vue` · `ComponentCard.skeleton.vue`
 
 **脚本（`scripts/`，零依赖，Node ≥ 18）**
 - `console-check.mjs` — 四件套完整性体检（`--strict` / `--json`）

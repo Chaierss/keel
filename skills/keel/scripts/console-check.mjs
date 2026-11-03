@@ -17,7 +17,7 @@ import { join, resolve, relative, extname, basename, dirname } from 'node:path'
 import process from 'node:process'
 
 /** 技能版本。改这里必须同步改 package.json / SKILL.md frontmatter，测试会校验三者一致。 */
-const KEEL_VERSION = '2.1.0'
+const KEEL_VERSION = '2.2.0'
 
 const HELP = `keel 体检
   --root <dir>       项目根（默认 cwd）
@@ -154,6 +154,98 @@ function main() {
       push('VER-01', 'warn', `模板版本 ${declared}，当前技能 ${KEEL_VERSION}：有更新，先看 references/upgrading.md 再改，别整目录覆盖`)
     } else {
       push('VER-01', 'warn', `模板版本 ${declared} 比本脚本 ${KEEL_VERSION} 新：脚本该更新了，否则会漏检新增检查项`)
+    }
+  }
+
+  // ---------- 仓库目录登记 ----------
+  // 手写的「目录说明」三个月后没人敢信，所以只登记顶层目录与职责，实际目录由脚本对账。
+  // 缺文件只提示（老项目升级不该因为一个新检查变红）；登记了却不存在才是 error。
+  const structurePath = join(consoleDir, 'structure.json')
+  let structure = null
+  if (!existsSync(structurePath)) {
+    push('DIR-01', 'info', '还没有 structure.json（目录登记表）：先登记顶层目录的职责，别写一份会过期的目录说明')
+  } else {
+    const loaded = readJson(structurePath)
+    if (!loaded.ok) {
+      push('DIR-01', 'error', `structure.json 解析失败：${loaded.error}`)
+    } else {
+      structure = loaded.data
+      const dirs = Array.isArray(structure.dirs) ? structure.dirs : []
+      const seen = new Set()
+      const missing = []
+      const duplicated = []
+      const noPurpose = []
+      for (const entry of dirs) {
+        const path = typeof entry.path === 'string' ? posix(entry.path).replace(/\/+$/, '') : ''
+        if (!path) continue
+        if (seen.has(path)) duplicated.push(path)
+        seen.add(path)
+        if (!entry.purpose) noPurpose.push(path)
+        if (!existsSync(resolve(root, path))) missing.push(path)
+      }
+      const problems = duplicated.length || missing.length || noPurpose.length
+      push('DIR-01', problems ? 'error' : 'ok',
+        duplicated.length
+          ? `目录重复登记：${duplicated.join('、')}`
+          : missing.length
+            ? `登记的目录不存在：${missing.join('、')}`
+            : noPurpose.length
+              ? `目录缺 purpose（说不清它管什么，就等于没登记）：${noPurpose.join('、')}`
+              : `目录登记 ${dirs.length} 条，全部存在且写明职责`)
+    }
+  }
+
+  // 顶层目录多了没登记的 → warn：可能是新模块忘了登记，也可能是生成目录没进 ignore。
+  // 不设 error，因为「该不该算独立目录」是人的判断，机器只负责把差异摆出来。
+  if (structure && Array.isArray(structure.dirs)) {
+    const declared = new Set(
+      structure.dirs
+        .map((entry) => posix(String(entry.path || '')).replace(/\/+$/, ''))
+        .filter(Boolean),
+    )
+    const ignored = new Set([...(Array.isArray(structure.ignore) ? structure.ignore : []), ...config.excludeDirs])
+    let topDirs = []
+    try {
+      topDirs = readdirSync(root, { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => entry.name)
+        .filter((name) => !name.startsWith('.') && !ignored.has(name) && !declared.has(name))
+    } catch {
+      topDirs = []
+    }
+    push('DIR-02', topDirs.length ? 'warn' : 'ok',
+      topDirs.length ? `${topDirs.length} 个顶层目录未登记（structure.json 里没有它）` : '顶层目录与登记表一致',
+      topDirs.sort())
+  }
+
+  // ---------- 项目章程 ----------
+  // 项目目标与里程碑同样是会过期的事实。这里只查「必填字段在不在」，
+  // 里程碑出口条件是否真的可验收属于人的判断，缺了记 warn。
+  const projectPath = join(consoleDir, 'project.json')
+  if (!existsSync(projectPath)) {
+    push('PRJ-01', 'info', '还没有 project.json（项目章程）：目标、范围外、里程碑与出口条件值得先写清楚')
+  } else {
+    const loaded = readJson(projectPath)
+    if (!loaded.ok) {
+      push('PRJ-01', 'error', `project.json 解析失败：${loaded.error}`)
+    } else {
+      const project = loaded.data || {}
+      const missing = []
+      if (!project.name) missing.push('name')
+      if (!project.oneLiner) missing.push('oneLiner')
+      if (!project.stage) missing.push('stage')
+      if (!Array.isArray(project.goals) || !project.goals.length) missing.push('goals')
+      if (!Array.isArray(project.outOfScope) || !project.outOfScope.length) missing.push('outOfScope')
+      if (!Array.isArray(project.milestones) || !project.milestones.length) missing.push('milestones')
+      push('PRJ-01', missing.length ? 'error' : 'ok',
+        missing.length ? `project.json 缺字段：${missing.join('、')}` : `项目章程就位（${project.milestones.length} 个里程碑）`)
+
+      const weak = (project.milestones || [])
+        .filter((m) => !m || !m.id || !m.title || !m.status || !m.exit)
+        .map((m) => (m && (m.id || m.title)) || '(无名里程碑)')
+      push('PRJ-02', weak.length ? 'warn' : 'ok',
+        weak.length ? `里程碑缺出口条件或状态（没有出口条件的里程碑等于许愿）：${weak.join('、')}` : '里程碑均带出口条件与状态',
+        weak)
     }
   }
 

@@ -3,13 +3,24 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 这里的「破坏性变更」指**接入方已经拷贝走的文件**：改了 `rules.json` 字段结构、改了脚本退出码语义、删了模板文件，都算 major。
 
-## [未发布]
+## [2.2.0] — 2026-11-03
+
+开荒版本。四件套解决「页面上的事实不会过期」，这一版补上页面之外那三件同样会过期的东西：仓库目录、agent 入口、项目目标与里程碑。
+
+### 新增
+
+- **开荒骨架**：新增 `templates/AGENTS.md`（跨工具入口，≤60 行只做路由）、`templates/structure.json`（顶层目录职责登记）、`templates/project.json`（目标 / 范围外 / 里程碑出口）、`templates/wiki/` 五篇 Wiki 骨架（直接落到 `docs/wiki/`）。开荒不是再写一套文档，而是三个可对账的小文件。
+- **目录对账 `DIR-01/02`**：登记的目录不存在、职责为空、重复登记 = error；顶层目录存在却未登记 = warn。手写的目录说明一定会过期，所以只登记顶层职责，由脚本对账。缺 `structure.json` 只记 info——老项目升级不该因为新检查变红。
+- **项目章程对账 `PRJ-01/02`**：必填字段缺失 = error；里程碑缺出口条件 `exit` 或状态 = warn。「没有出口条件的里程碑等于许愿」。
+- 新增 `references/bootstrap.md`：五步开荒（目录 → AGENTS.md → 章程 → Wiki → 门禁），以及与 PM 类技能（`.ai/` 契约）的分工——已有 `.ai/` 的项目只加路由，不建第二套状态。
 
 ### 变更
 
+- `console-check` 检查项 15 → 19，用例 36 → 39。
+- `templates/README.md` 与 `references/adoption.md` 的接入清单同步加入 `AGENTS.md` / `structure.json` / `project.json` / `templates/wiki/`；`SKILL.md` 落地步骤增加第 0 步「开荒」。
+
 - **发版不再产生产物**：Release 页只留变更说明，不打包、不挂 zip 附件。装技能读的是仓库本身（`npx skills add`），多挂一个压缩包只会让人以为必须下载它。`tools/package-skill.mjs` 保留——往 WorkBuddy / Trae 这类「上传技能」的平台发布时，本地跑一次就够，那是人工动作，不该塞进每次发版。`validate.yml` 也去掉了 `upload-artifact`，CI 产物没人下载。
 - **发版说明改由 `CHANGELOG.md` 生成**：新增 `tools/release-notes.mjs`，按 tag 版本号抽出对应段落，加上安装命令与破坏性变更警示，拼成 Release 正文。`.github/workflows/release.yml` 里替换掉 `--generate-notes`——本仓库全走本地直推、没有 PR，自动生成的正文只有一句 compare 链接，发版页等于空着。CHANGELOG 漏写当前版本时打 warning 并退回自动生成，不卡发版。
-- 用例 34 → 36：一条守住「当前版本在 CHANGELOG 有段落、且每个版本都抽得出正文」（版本号改了忘记写 CHANGELOG 时，tag 已推、Release 已生成，只能在发版页上看到空白）；一条守住「发版流程不碰 dist/ 与 zip」，防止以后顺手把附件加回去。
 
 ## [2.1.0] — 2026-10-28
 

@@ -178,6 +178,96 @@ test('VER-01：模板版本落后 / 缺失 / 超前都只是 warn，不阻断 CI
   assert.equal(checkJson(root, ['--strict']).code, 0, '版本提醒不该让 --strict 失败 —— 升级不该挡发版')
 })
 
+test('DIR-01 / DIR-02：目录登记对账（缺文件只 info；登记缺失 error；未登记 warn）', () => {
+  const root = healthyProject('dirs')
+  assert.equal(find(checkJson(root).issues, 'DIR-01').level, 'info', '没有 structure.json 时只是提示，不该判红')
+
+  const structure = {
+    version: 1,
+    dirs: [
+      { path: 'src', purpose: '应用源码' },
+      { path: 'docs', purpose: '文档与 Wiki' },
+      { path: 'keel', purpose: '唯一真相源' },
+    ],
+  }
+  write(root, 'keel/structure.json', JSON.stringify(structure, null, 2))
+  const ok = checkJson(root)
+  assert.equal(find(ok.issues, 'DIR-01').level, 'ok')
+  assert.equal(find(ok.issues, 'DIR-02').level, 'ok')
+  assert.deepEqual(ids(ok.issues, 'error'), [])
+
+  // 登记了但目录不存在 → error
+  structure.dirs.push({ path: 'packages', purpose: '未来才建' })
+  write(root, 'keel/structure.json', JSON.stringify(structure, null, 2))
+  const missing = checkJson(root)
+  assert.equal(find(missing.issues, 'DIR-01').level, 'error')
+  assert.equal(run(CHECK, ['--root', root, '--strict']).code, 1)
+
+  // 目录存在但没登记 → warn，并点名
+  structure.dirs.pop()
+  write(root, 'keel/structure.json', JSON.stringify(structure, null, 2))
+  write(root, 'packages/app/index.ts', 'export const value = 1\n')
+  const undeclared = checkJson(root)
+  assert.equal(find(undeclared.issues, 'DIR-01').level, 'ok')
+  assert.equal(find(undeclared.issues, 'DIR-02').level, 'warn')
+  assert.deepEqual(find(undeclared.issues, 'DIR-02').items, ['packages'])
+  assert.equal(run(CHECK, ['--root', root, '--strict']).code, 0, '未登记目录是 warn，不该阻断 CI')
+})
+
+test('PRJ-01 / PRJ-02：项目章程字段与里程碑出口条件', () => {
+  const root = healthyProject('project')
+  assert.equal(find(checkJson(root).issues, 'PRJ-01').level, 'info', '没有 project.json 时只是提示')
+
+  write(root, 'keel/project.json', JSON.stringify({ name: 'demo' }, null, 2))
+  const broken = checkJson(root)
+  assert.equal(find(broken.issues, 'PRJ-01').level, 'error')
+  assert.equal(run(CHECK, ['--root', root, '--strict']).code, 1)
+
+  const project = {
+    version: 1,
+    name: 'demo',
+    oneLiner: '给团队解决内部事实分散的问题',
+    stage: 'team',
+    goals: ['新人只看 wiki 就能改对第一个需求'],
+    outOfScope: ['不做移动端'],
+    milestones: [{ id: 'M-01', title: '骨架可用', status: 'doing' }],
+  }
+  write(root, 'keel/project.json', JSON.stringify(project, null, 2))
+  const weak = checkJson(root)
+  assert.equal(find(weak.issues, 'PRJ-01').level, 'ok')
+  assert.equal(find(weak.issues, 'PRJ-02').level, 'warn', '里程碑缺 exit 应提示')
+  assert.deepEqual(find(weak.issues, 'PRJ-02').items, ['M-01'])
+  assert.equal(run(CHECK, ['--root', root, '--strict']).code, 0, 'warn 不该阻断')
+
+  project.milestones[0].exit = 'console-check --strict 退出码 0'
+  write(root, 'keel/project.json', JSON.stringify(project, null, 2))
+  assert.equal(find(checkJson(root).issues, 'PRJ-02').level, 'ok')
+})
+
+test('开荒模板：AGENTS.md 只做路由（≤60 行），目录 / 章程 / wiki 五篇齐备', () => {
+  const agents = readFileSync(join(TMPL, 'AGENTS.md'), 'utf8')
+  assert.ok(agents.split(/\r?\n/).length <= 60, 'AGENTS.md 超长：它只该放路由，细节指向 keel/ 与 docs/wiki/')
+  for (const needle of ['keel/README.md', 'keel/project.json', 'keel/structure.json', 'docs/wiki/', 'console-check.mjs', 'preflight-scan.mjs']) {
+    assert.ok(agents.includes(needle), `AGENTS.md 缺入口：${needle}`)
+  }
+
+  for (const f of ['structure.json', 'project.json']) {
+    JSON.parse(readFileSync(join(TMPL, f), 'utf8').replace(/^\uFEFF/, ''))
+  }
+  const structure = JSON.parse(readFileSync(join(TMPL, 'structure.json'), 'utf8'))
+  assert.ok(structure.dirs.every((entry) => entry.path && entry.purpose), 'structure.json 每条都要有 path 与 purpose')
+
+  const list = JSON.parse(readFileSync(join(TMPL, 'wiki.json'), 'utf8'))
+  for (const item of list) {
+    const doc = join(TMPL, 'wiki', item.name)
+    assert.ok(existsSync(doc), `模板缺 wiki/${item.name}`)
+    const content = readFileSync(doc, 'utf8')
+    assert.ok(content.trim().length >= 50, `wiki/${item.name} 太短，拷进项目会被 WIKI-01 判 warn`)
+    // 模板里不能出现真实引用指令：拷到别的项目路径必然不存在，WIKI-03 会直接红
+    assert.ok(!content.includes('<!-- keel:code'), `wiki/${item.name} 不该带真实代码引用`)
+  }
+})
+
 test('版本号四处一致：脚本 / package.json / SKILL.md / 模板', () => {
   const src = readFileSync(join(SKILL, 'scripts', 'console-check.mjs'), 'utf8')
   const scriptVer = /const KEEL_VERSION = '([^']+)'/.exec(src)?.[1]

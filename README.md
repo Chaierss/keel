@@ -88,10 +88,11 @@ npx skills add Chaierss/keel -g
 
 ## 装完之后怎么用
 
-在项目里说一句「给这个项目装 keel」，agent 会读 `SKILL.md` 按五步走。你也可以照单执行：
+在项目里说一句「给这个项目装 keel」，agent 会读 `SKILL.md` 按开荒 + 五步走。你也可以照单执行：
 
 | 步 | 做什么 | 产出 |
 |---|---|---|
+| 0 | **开荒**：登记顶层目录、写 agent 入口、定目标与里程碑 | `AGENTS.md` / `structure.json` / `project.json` |
 | 1 | **定边界**：四问写清——哪些产物带它、谁能打开、哪些字段不能给 | 一份可定位的边界声明 |
 | 2 | **建骨架**：先定每页读哪个文件，再写页面 | `rules.json` / `components.json` / `wiki.json` |
 | 3 | **逐页实现**：规则 → 组件 → 接口 → Wiki（顺序有讲究，规则定术语，后面三页才有共同语言） | 四个 tab |
@@ -101,7 +102,7 @@ npx skills add Chaierss/keel -g
 日常只有两条命令：
 
 ```bash
-node keel/console-check.mjs --strict     # 15 项检查：四件套齐、没有未登记组件
+node keel/console-check.mjs --strict     # 19 项检查：四件套齐、目录与里程碑对账、没有未登记组件
 node keel/preflight-scan.mjs --strict    # 17 条代码模式规则 + 文件级与产物级检查
 ```
 
@@ -188,9 +189,13 @@ node keel/preflight-scan.mjs --strict    # 17 条代码模式规则 + 文件级�
 
 ```
 skills/keel/              ← 技能本体，也就是装给你 agent 的那部分
-├── SKILL.md              ← 入口：五步落地、四件套判据、七条铁律、上线门禁
-├── references/           ← 12 篇按需加载，不占用入口上下文
-├── templates/            ← 拷进项目 keel/ 的骨架
+├── SKILL.md              ← 入口：开荒 + 五步落地、四件套判据、七条铁律、上线门禁
+├── references/           ← 14 篇按需加载，不占用入口上下文
+├── templates/            ← 拷进项目根 / 项目 keel/ 的骨架
+│   ├── AGENTS.md         ← 跨工具入口，≤60 行只做路由
+│   ├── structure.json    ← 顶层目录职责登记
+│   ├── project.json      ← 目标 / 范围外 / 里程碑出口
+│   ├── wiki/             ← docs/wiki 五篇骨架
 │   └── preview/console-demo.html
 └── scripts/              ← 零依赖可执行（Node ≥ 18）
     ├── console-check.mjs
@@ -202,7 +207,7 @@ tools/  tests/  docs/     ← 本仓库的工具链，不随技能分发
 ## 参与开发
 
 ```bash
-node tests/run-tests.mjs        # 36 个用例，零依赖，几秒
+node tests/run-tests.mjs        # 39 个用例，零依赖，几秒
 node tools/package-skill.mjs    # 只在往平台上传时才用：dist/keel-<version>.zip
 node tools/install-local.mjs --list
 ```

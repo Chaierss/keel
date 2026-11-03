@@ -1,0 +1,10 @@
+{
+  "$comment": "仓库顶层目录登记表。只登记顶层目录与职责，不抄文件树——文件树一定会过期。console-check 会对账：登记的目录不存在 = error，存在却没登记 = warn。ignore 只放生成物/依赖目录，不要用来藏真实目录。",
+  "version": 1,
+  "dirs": [
+    { "path": "src", "purpose": "应用源码（前后端分离时指前端）；页面只组合组件，不直连数据层", "layer": "app" },
+    { "path": "docs", "purpose": "文档与 Wiki 正文，Wiki 固定放 docs/wiki", "layer": "docs" },
+    { "path": "keel", "purpose": "唯一真相源：规则 / 组件注册表 / Wiki 清单 / 目录登记 / 门禁脚本", "layer": "console" }
+  ],
+  "ignore": ["node_modules", "dist", "build", "coverage", "tmp", "vendor"]
+}

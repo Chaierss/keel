@@ -79,10 +79,11 @@ A surface only counts as self-updating when three things hold: **the source live
 
 ## How to use it after installing
 
-Say "set up keel in this project" and the agent reads `SKILL.md` and follows five steps. Or do them yourself:
+Say "set up keel in this project" and the agent reads `SKILL.md` and follows the bootstrap plus five steps. Or do them yourself:
 
 | # | What | Output |
 |---|---|---|
+| 0 | **Bootstrap**: register top-level directories, write the agent entry, set goals and milestones | `AGENTS.md` / `structure.json` / `project.json` |
 | 1 | **Draw the boundary**: answer four questions — which artifacts carry it, who may open it, which fields stay out | one locatable declaration |
 | 2 | **Build the skeleton**: decide which file each page reads *before* writing the page | `rules.json` / `components.json` / `wiki.json` |
 | 3 | **Implement page by page**: rules → components → API → wiki (rules come first, they define the vocabulary) | four tabs |
@@ -92,7 +93,7 @@ Say "set up keel in this project" and the agent reads `SKILL.md` and follows fiv
 Day to day it's two commands:
 
 ```bash
-node keel/console-check.mjs --strict     # 12 checks: four surfaces complete, nothing unregistered
+node keel/console-check.mjs --strict     # 19 checks: four surfaces complete, directories and milestones reconciled
 node keel/preflight-scan.mjs --strict    # 17 code-pattern rules + file and build-artifact checks
 ```
 
@@ -173,9 +174,13 @@ It directly contradicts "no network requests". If it ever exists, it has to be a
 
 ```
 skills/keel/              ← the skill itself, the part your agent installs
-├── SKILL.md              ← entry: five steps, four-surface criteria, seven rules, release gate
-├── references/           ← 12 docs, loaded on demand, keeping the entry context small
-├── templates/            ← skeletons you copy into your project's keel/
+├── SKILL.md              ← entry: bootstrap + five steps, four-surface criteria, seven rules, release gate
+├── references/           ← 14 docs, loaded on demand, keeping the entry context small
+├── templates/            ← skeletons you copy into the project root / project's keel/
+│   ├── AGENTS.md         ← cross-tool entry, ≤60 lines, routing only
+│   ├── structure.json    ← top-level directory registry
+│   ├── project.json      ← goals / out of scope / milestone exit criteria
+│   ├── wiki/             ← five skeletons for docs/wiki
 │   └── preview/console-demo.html
 └── scripts/              ← dependency-free executables (Node ≥ 18)
     ├── console-check.mjs
@@ -187,7 +192,7 @@ tools/  tests/  docs/     ← toolchain for this repo, not shipped with the skil
 ## Development
 
 ```bash
-node tests/run-tests.mjs        # 36 cases, zero dependencies, a few seconds
+node tests/run-tests.mjs        # 39 cases, zero dependencies, a few seconds
 node tools/package-skill.mjs    # only for platform uploads: dist/keel-<version>.zip
 node tools/install-local.mjs --list
 ```

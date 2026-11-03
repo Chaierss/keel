@@ -7,11 +7,15 @@
 | 文件 | 是什么 | 谁消费 |
 |---|---|---|
 | `console.config.json` | 扫描范围（源码目录、组件目录、wiki 目录）+ 模板版本 `keelVersion` | 体检脚本 |
+| `structure.json` | 顶层目录登记：每层管什么、哪些生成目录不计入 | 体检脚本（`DIR-01/02`）+ 设置页目录树 |
+| `project.json` | 项目章程：目标、范围外、里程碑与出口条件 | 体检脚本（`PRJ-01/02`）+ 设置页总览 |
 | `rules.json` | 项目规则 + 页面形态术语 | 设置页「规则」→ 也会被导出成 AI 上下文 |
 | `components.json` | 前端组件注册表 | 设置页「组件」+ 体检脚本 |
 | `wiki.json` | wiki 导航清单 | 设置页「Wiki 文档」 |
 | `console-check.mjs` | 四件套完整性体检 | 本地钩子 / CI |
 | `preflight-scan.mjs` | 上线前漏洞扫描 | 发布门禁 / CI |
+
+`AGENTS.md` 拷到**项目根**，不放 `keel/`：它是跨工具入口，只做路由（≤60 行），内容分别指向 `keel/README.md`、`keel/project.json`、`keel/structure.json` 与 `docs/wiki/README.md`。
 
 接口文档**不在这里**：它的真相源是后端路由与类型定义，由框架自动生成 OpenAPI，页面直接内嵌。
 
@@ -21,6 +25,7 @@
 2. **新增组件必须登记 `components.json`**，否则体检脚本报错、设置页出告警条。
 3. **改了源文件刷新就能看到**。如果需要"点一下同步"才能看到，说明管道断了，去修管道而不是加同步按钮。
 4. **不要整目录覆盖升级**。这个目录是拷贝制，升级时按 `references/upgrading.md` 的版本区间逐条改——`rules.json` 和 `components.json` 是你的项目事实，覆盖掉就没了。
+5. **新增顶层目录先登记 `structure.json`**，新增共享组件先登记 `components.json`——登记是准入，不是搬家。
 
 ## 日常命令
 
@@ -47,6 +52,10 @@ node keel/preflight-scan.mjs --include-dist  # 连 dist/ 一起扫，查前端�
 **加一个组件** → 写组件 → 同目录写 `Xxx.demo.vue` → 在 `components.json` 加一条。**不要修改任何已存在的文件**（这是设计是否成立的自检点）。
 
 **加一篇 wiki** → 写 `docs/wiki/xxx.md` → `wiki.json` 加一行 → 刷新即可见。
+
+**加一个顶层目录** → 先改 `structure.json` 写清职责，再建目录。不登记的话 `DIR-02` 会报 warn——可能是该登记的模块，也可能是该进 `ignore` 的生成物，由人判断。
+
+**调整项目目标 / 里程碑** → 改 `project.json`。里程碑的 `exit` 必须是别人能复核的句子，`PRJ-02` 会盯着它有没有。
 
 ## 为什么用 JSON 而不是 TS
 

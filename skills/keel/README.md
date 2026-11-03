@@ -85,8 +85,12 @@ keel/
 ├── SKILL.md
 ├── LICENSE                  # MIT
 ├── README.md
-├── references/              # 12 篇按需加载
-├── templates/               # 拷进项目 keel/ 的骨架
+├── references/              # 14 篇按需加载
+├── templates/               # 拷进项目根的骨架
+│   ├── AGENTS.md            # 跨工具入口（≤60 行，只做路由）
+│   ├── structure.json       # 顶层目录职责登记
+│   ├── project.json         # 目标 / 范围外 / 里程碑出口
+│   ├── wiki/                # docs/wiki 五篇骨架
 │   └── preview/console-demo.html
 └── scripts/                 # 零依赖可执行
     ├── console-check.mjs
