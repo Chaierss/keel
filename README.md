@@ -1,21 +1,20 @@
 # Keel · 龙骨
 
-### 你的内部文档，活不过三个月。
+### 别写文档。让文档读代码。
 
-不是因为你懒。是因为它本来就是**第二份**——代码改一次，它得跟着改一次，而没有人会记得。
+新会话、新同事、新 AI 接手时，你又要讲一遍项目规则——因为上一轮的解释留在聊天记录里，不在仓库里。
 
-问题从来不是写文档慢，是**同一件事被写了两遍**。第一遍在代码里，第二遍在没有人的待办里。
+大多数「项目文档」其实是**第二份代码**：手写在 md 里，代码一改它就过期。Keel 把规则、组件、接口、Wiki 四页改成直接读仓库里的那一份源文件。
 
-Keel 把这四页改成直接读仓库里的那一份源文件。**没有副本，就没有过期。**
+不是写得更勤，是让文档不再有第二份。**页面没有副本，也就没有过期。**
+
+**4 页 · 0 副本 · 19 项体检 · 17 条扫描 · 0 依赖**
 
 中文 · [English](README.en.md)
 
 <p>
-  <a href="https://github.com/Chaierss/keel/actions/workflows/validate.yml"><img src="https://github.com/Chaierss/keel/actions/workflows/validate.yml/badge.svg" alt="validate"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a" alt="license"></a>
-  <a href="package.json"><img src="https://img.shields.io/badge/node-%E2%89%A518-0f172a" alt="node"></a>
-  <a href="package.json"><img src="https://img.shields.io/badge/dependencies-0-16a34a" alt="dependencies"></a>
-  <a href="https://www.chaierss.fun"><img src="https://img.shields.io/badge/website-chaierss.fun-16a34a" alt="website"></a>
+  <a href="https://github.com/Chaierss/keel/actions/workflows/validate.yml"><img src="https://github.com/Chaierss/keel/actions/workflows/validate.yml/badge.svg" alt="validate"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a" alt="license"></a> <a href="package.json"><img src="https://img.shields.io/badge/node-%E2%89%A518-0f172a" alt="node"></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/dependencies-0-16a34a" alt="dependencies"></a> <a href="https://www.chaierss.fun"><img src="https://img.shields.io/badge/website-chaierss.fun-16a34a" alt="website"></a>
 </p>
 
 <p><img src="docs/assets/console.png" width="800" alt="完整视角下的设置页组件页：注册表指标、未登记组件告警条、每张卡片的源码路径"></p>

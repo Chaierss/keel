@@ -1,21 +1,20 @@
 # Keel · 龙骨
 
-### Your internal docs won't survive three months.
+### Don't write docs. Make docs read code.
 
-Not because you're lazy. Because they're a **second copy** — change the code once and they have to change too, and nobody remembers.
+Every new session, new teammate, or new agent needs the same explanation again — because last round's context lives in the chat, not in the repo.
 
-The problem was never that writing docs is slow. It's that **the same thing gets written twice** — once in the code, once in a to-do list nobody reads.
+Most "project docs" are a **second copy of the code**: handwritten in markdown, stale the moment the code changes. Keel makes rules, components, API reference and wiki read the one source file in the repo.
 
-Keel makes all four read the single source of truth inside the repo. **No copy, nothing to go stale.**
+Don't write more. Remove the second copy. **No copies, nothing to go stale.**
+
+**4 pages · 0 copies · 19 checks · 17 scan rules · 0 dependencies**
 
 [中文](README.md) · English
 
 <p>
-  <a href="https://github.com/Chaierss/keel/actions/workflows/validate.yml"><img src="https://github.com/Chaierss/keel/actions/workflows/validate.yml/badge.svg" alt="validate"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a" alt="license"></a>
-  <a href="package.json"><img src="https://img.shields.io/badge/node-%E2%89%A518-0f172a" alt="node"></a>
-  <a href="package.json"><img src="https://img.shields.io/badge/dependencies-0-16a34a" alt="dependencies"></a>
-  <a href="https://www.chaierss.fun"><img src="https://img.shields.io/badge/website-chaierss.fun-16a34a" alt="website"></a>
+  <a href="https://github.com/Chaierss/keel/actions/workflows/validate.yml"><img src="https://github.com/Chaierss/keel/actions/workflows/validate.yml/badge.svg" alt="validate"></a> <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-0f172a" alt="license"></a> <a href="package.json"><img src="https://img.shields.io/badge/node-%E2%89%A518-0f172a" alt="node"></a>
+  <a href="package.json"><img src="https://img.shields.io/badge/dependencies-0-16a34a" alt="dependencies"></a> <a href="https://www.chaierss.fun"><img src="https://img.shields.io/badge/website-chaierss.fun-16a34a" alt="website"></a>
 </p>
 
 <p><img src="docs/assets/console.png" width="800" alt="The console's component page in full view: registry metrics, an unregistered-component warning, and each card's source path"></p>

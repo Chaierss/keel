@@ -15,8 +15,8 @@
 **Description（≤350 字符，英文，显示在仓库名下面）**
 
 ```
-A settings console that can't go stale: rules, a component registry, API reference and a wiki, each read straight
-from the repo. Adds a visibility-boundary model and a release gate. Zero dependencies, read-only, no network.
+Don't write docs. Make docs read code. A settings console where rules, components, API reference and wiki each read
+one repo source file. Adds a visibility boundary and a release gate. Zero dependencies, read-only, no network.
 By chaierss — https://www.chaierss.fun
 ```
 
@@ -37,7 +37,7 @@ design-system  component-registry  documentation  developer-tools  preflight  co
 **仓库简介（中文版，发国内平台时用）**
 
 ```
-一个不会过期的设置页：规则、组件注册表、接口文档、Wiki 各读一份仓库源文件；附可见性边界三层模型与上线前漏洞扫描门禁。零依赖、只读、不联网。作者 chaierss · chaierss.fun
+别写文档，让文档读代码：规则、组件注册表、接口文档、Wiki 各读一份仓库源文件；附可见性边界三层模型与上线前漏洞扫描门禁。零依赖、只读、不联网。作者 chaierss · chaierss.fun
 ```
 
 ## 二、WorkBuddy 市场卡片
@@ -53,7 +53,7 @@ Keel 龙骨
 **一句话简介**（20–120 字，卡片上只显示这一句，最重要）
 
 ```
-一个不会过期的设置页：规则、组件、接口文档、Wiki 各读一份仓库源文件，附可见性边界三层模型与上线前漏洞扫描门禁。
+一个不会过期的设置页：别写文档，让文档读代码——规则、组件、接口文档、Wiki 各读一份仓库源文件，附可见性边界三层模型与上线前漏洞扫描门禁。
 ```
 
 备选（更强调痛点，适合 A/B）：
@@ -103,6 +103,8 @@ Keel 龙骨 —— 让项目的规则、组件、接口文档、Wiki 各读一�
 **角度 A · 反常识结论**（X / Twitter，英文）
 
 ```
+Don't write docs. Make docs read code.
+
 Your internal docs go stale because they're a second copy of the truth.
 
 keel makes all four read the source instead:
