@@ -110,7 +110,7 @@ node keel/preflight-scan.mjs --strict    # 17 条代码模式规则 + 文件级�
 
 > **关于升级**：不能自动升级，这是设计不是偷懒。技能本体重新 `npx skills add` 会覆盖更新；你项目里的 `keel/` 是**拷贝制**——里面的 `rules.json`、组件登记、目录配置都是你的项目事实，整目录覆盖等于把它们冲掉。
 >
-> 所以改成对账：`console-check` 的 **`VER-01`** 每次都告诉你「模板版本 1.0.1，当前技能 2.0.0」，然后你照 [`references/upgrading.md`](skills/keel/references/upgrading.md) 的版本区间逐条改。它是 warn 不是 error——升级提醒不该让 CI 变红。
+> 所以改成对账：`console-check` 的 **`VER-01`** 每次都告诉你「模板版本 1.0.1，当前技能 2.2.1」，然后你照 [`references/upgrading.md`](skills/keel/references/upgrading.md) 的版本区间逐条改。它是 warn 不是 error——升级提醒不该让 CI 变红。
 
 ## 门禁只报机器能确定的事
 

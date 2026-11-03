@@ -17,7 +17,7 @@ import { join, resolve, relative, extname, basename, dirname } from 'node:path'
 import process from 'node:process'
 
 /** 技能版本。改这里必须同步改 package.json / SKILL.md frontmatter，测试会校验三者一致。 */
-const KEEL_VERSION = '2.2.0'
+const KEEL_VERSION = '2.2.1'
 
 const HELP = `keel 体检
   --root <dir>       项目根（默认 cwd）

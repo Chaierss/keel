@@ -344,7 +344,7 @@
   <aside class="rail">
     <div class="brand">
       <h1>系统设置</h1>
-      <p>Keel · 龙骨 · 四件套演示<br>全部内容来自仓库源文件</p>
+      <p>Keel · 龙骨 · 四件套演示（2.2.1）<br>全部内容来自仓库源文件 · 目录与项目章程由 DIR/PRJ 对账</p>
     </div>
     <nav class="nav" id="nav">
       <button class="on" data-view="rules"><span class="dot"></span>规则</button>
@@ -652,12 +652,13 @@
         <article>
           <h3>整体架构</h3>
           <p>文档内容直接读仓库里的 <code>docs/wiki/*.md</code>，后端以无缓存方式挂载，前端 <code>cache: 'no-store'</code> 拉取。改一个错别字，刷新页面就变了，不需要重新构建、不需要重启服务。</p>
-          <h4>三条管道</h4>
+          <h4>四条管道</h4>
           <table>
             <tr><th>内容</th><th>真相源</th><th>为什么不会过期</th></tr>
             <tr><td>规则</td><td>rules.json</td><td>页面直接读同一份数据</td></tr>
             <tr><td>组件</td><td>目录扫描</td><td>多出来的文件自动告警</td></tr>
             <tr><td>文档</td><td>docs/wiki/*.md</td><td>无缓存挂载，改文件即生效</td></tr>
+            <tr><td>目录 / 章程</td><td>structure.json / project.json</td><td>登记表 + DIR/PRJ 对账，不建第五页</td></tr>
           </table>
           <h4>核心算法：引用式内联</h4>
           <p>这一段不是粘进来的，是引用仓库里的真实文件。粘贴的副本三个月后一定是错的，而且没有任何东西会报错——它只是安静地骗下一个人。</p>

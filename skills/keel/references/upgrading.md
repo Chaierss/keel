@@ -20,8 +20,8 @@ node keel/console-check.mjs
 
 | 输出 | 含义 |
 |---|---|
-| `ok 模板版本 2.1.0（最新）` | 对齐了，不用管 |
-| `warn 模板版本 2.0.0，当前技能 2.1.0` | 有更新，看下面「版本区间」对应那一节 |
+| `ok 模板版本 2.2.1（最新）` | 对齐了，不用管 |
+| `warn 模板版本 2.2.0，当前技能 2.2.1` | 有更新，看下面「版本区间」对应那一节 |
 | `warn 未声明模板版本` | 老文件没有这个字段，补 `"keelVersion"` 即可 |
 
 它是 **warn 不是 error**：升级提醒不该让 CI 变红。红的东西会被整体忽略，包括真正该看的那些。
@@ -31,7 +31,7 @@ node keel/console-check.mjs
 ```json
 {
   "version": 1,
-  "keelVersion": "2.1.0"
+  "keelVersion": "2.2.1"
 }
 ```
 
@@ -47,6 +47,22 @@ node keel/console-check.mjs --version    # 确认脚本版本
 Trae / WorkBuddy 走各自的上传入口，传新 zip 覆盖即可。
 
 ## 版本区间
+
+### 2.2.0 → 2.2.1（纯文档）
+
+模板字段与脚本行为无变化，已接入 2.2.0 的项目**不需要改任何 `keel/` 文件**。`VER-01` 会提示版本差，把 `console.config.json` 的 `keelVersion` 改成 `2.2.1` 即可消除；这不是「改版本号掩盖迁移」，而是确实没有迁移。本次只修了文档、示例与演示页文案。
+
+### 2.1.x → 2.2.0（纯新增）
+
+老文件原样能跑。想用上开荒能力再做下面几件，全部可选：
+
+| 变化 | 你要做什么 |
+|---|---|
+| 新增 `structure.json`（顶层目录登记） | 可选。不建只记 `DIR-01 info`，不阻断；建了就要保证每个目录真实存在且 `purpose` 非空 |
+| 新增 `project.json`（项目章程） | 可选。不建只记 `PRJ-01 info`；建了要补齐 `name` / `oneLiner` / `stage` / `goals` / `outOfScope` / `milestones` |
+| 新增 `AGENTS.md`（跨工具入口） | 建议加在项目根，≤60 行只做路由，内容指向 `keel/README.md` / `project.json` / `structure.json` / `docs/wiki/` |
+| 新增 `templates/wiki/` 五篇 | 拷到 `docs/wiki/`，按真实结构改写；`wiki.json` 清单要与文件一致 |
+| `console-check` 新增 `DIR-01/02`、`PRJ-01/02` | CI 不需要改；若按 ID 过滤输出，补上四个新 ID |
 
 ### 2.0.x → 2.1.0（纯新增）
 
@@ -67,7 +83,7 @@ Trae / WorkBuddy 走各自的上传入口，传新 zip 覆盖即可。
 | `templates/devMode.ts` 删除 | 删掉 `keel/devMode.ts` 与所有 `isDev()` 调用，按 `visibility.md` 的三层重新落 |
 | `references/modes.md` → `visibility.md` | 改名 + 重写，不影响你的运行代码，只影响你读文档的路径 |
 | `console-check` 的 `MODE-01` → `CFG-01` | 若 CI 里按 ID 过滤输出，改这个 ID。检查逻辑与退出码语义未变 |
-| `console.config.json` 新增 `keelVersion` | 补 `"keelVersion": "2.1.0"` |
+| `console.config.json` 新增 `keelVersion` | 补 `"keelVersion": "2.2.1"` |
 | 页面里的模式角标 / 切换开关 | 删掉。迁移对照表在 `visibility.md` 末节 |
 
 ### 1.0.0 → 1.0.1（无破坏）

@@ -3,6 +3,19 @@
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 这里的「破坏性变更」指**接入方已经拷贝走的文件**：改了 `rules.json` 字段结构、改了脚本退出码语义、删了模板文件，都算 major。
 
+## [2.2.1] — 2026-11-03
+
+纯一致性补丁：2.2.0 发布后留下的旧版本引用与文档缺口。模板字段与脚本行为一行未改，已接入 2.2.0 的项目不需要改任何 `keel/` 文件。
+
+### 修复
+
+- `package-lock.json` 版本落后（2.1.0 → 2.2.1），与 `package.json` 对齐。
+- `references/upgrading.md` 补上 2.1.x → 2.2.0 迁移表与 2.2.0 → 2.2.1 说明；升级提示示例同步到当前版本。原先只写到 2.1.0，用户升级后不知道要补 `structure.json` / `project.json` / `AGENTS.md`。
+- `references/quickstart.md` 的接入步数改为「开荒 + 四步」，并说明最小版可以跳过目录与章程（只记 info，不阻断）。
+- `skills/keel/README.md` 与 `templates/README.md` 同步 2.2 的模板与检查项清单；纠正「设置页目录树 / 总览」的夸大表述——设置页仍是四页，目录与章程只做登记与对账。
+- `console-demo.html` 副标题与真相源表补上 2.2 的目录登记与项目章程；仍保持四页形态。
+- `docs/architecture.md` 新增 D8：开荒件为什么不建第五个 tab。
+
 ## [2.2.0] — 2026-11-03
 
 开荒版本。四件套解决「页面上的事实不会过期」，这一版补上页面之外那三件同样会过期的东西：仓库目录、agent 入口、项目目标与里程碑。

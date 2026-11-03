@@ -7,7 +7,7 @@
 | 你的情况 | 建议 |
 |---|---|
 | 单人项目、就想让设置页别散着 | 走最小版，做完规则 + 组件就停 |
-| 3 人以上、有 PR 评审 | 走全量（`adoption.md` 四步） |
+| 3 人以上、有 PR 评审 | 走全量（`adoption.md` 的开荒 + 四步） |
 | 已经手写过接口清单 / 组件清单 | 走最小版，正好把清单换成真相源 |
 | 只想先看看值不值 | 别装了，先打开 `templates/preview/console-demo.html` 看两分钟 |
 
@@ -33,6 +33,8 @@ cp <skill>/scripts/console-check.mjs          keel/
 ```
 
 暂时不建 `wiki.json`，体检脚本会报 WIKI-01 的 error，正常——这两件还没做。
+
+`structure.json` / `project.json` 同样可以跳过：`DIR-01` / `PRJ-01` 只记 info，不会阻断最小版。
 
 ## 第 2～6 分钟：写 5 条规则
 

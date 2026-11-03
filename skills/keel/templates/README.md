@@ -7,12 +7,12 @@
 | 文件 | 是什么 | 谁消费 |
 |---|---|---|
 | `console.config.json` | 扫描范围（源码目录、组件目录、wiki 目录）+ 模板版本 `keelVersion` | 体检脚本 |
-| `structure.json` | 顶层目录登记：每层管什么、哪些生成目录不计入 | 体检脚本（`DIR-01/02`）+ 设置页目录树 |
-| `project.json` | 项目章程：目标、范围外、里程碑与出口条件 | 体检脚本（`PRJ-01/02`）+ 设置页总览 |
+| `structure.json` | 顶层目录登记：每层管什么、哪些生成目录不计入 | 体检脚本（`DIR-01/02`）；设置页如需展示目录树，直接读它，不要另写一份 |
+| `project.json` | 项目章程：目标、范围外、里程碑与出口条件 | 体检脚本（`PRJ-01/02`）；设置页如需项目概览，直接读它 |
 | `rules.json` | 项目规则 + 页面形态术语 | 设置页「规则」→ 也会被导出成 AI 上下文 |
 | `components.json` | 前端组件注册表 | 设置页「组件」+ 体检脚本 |
 | `wiki.json` | wiki 导航清单 | 设置页「Wiki 文档」 |
-| `console-check.mjs` | 四件套完整性体检 | 本地钩子 / CI |
+| `console-check.mjs` | 四件套 + 目录 + 项目章程体检 | 本地钩子 / CI |
 | `preflight-scan.mjs` | 上线前漏洞扫描 | 发布门禁 / CI |
 
 `AGENTS.md` 拷到**项目根**，不放 `keel/`：它是跨工具入口，只做路由（≤60 行），内容分别指向 `keel/README.md`、`keel/project.json`、`keel/structure.json` 与 `docs/wiki/README.md`。

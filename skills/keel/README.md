@@ -44,10 +44,10 @@ npx skills add Chaierss/keel -g
 
 | | 内容 |
 |---|---|
-| `SKILL.md` | 入口。五步落地、四件套判据、七条铁律、上线门禁 |
-| `references/` | 13 篇：可见性边界、四件套总纲、优雅原则、形态词汇表（11 布局 + 9 交互）、逐页实现、漏洞预检、升级迁移、15 分钟最小版、和现成方案的边界 |
-| `templates/` | 可直接拷进项目的 `rules.json` / `components.json` / `wiki.json` / 设置页外壳 |
-| `scripts/` | `console-check.mjs`（四件套完整性体检）、`preflight-scan.mjs`（上线前漏洞扫描，17 条规则） |
+| `SKILL.md` | 入口。开荒 + 五步落地、四件套判据、七条铁律、上线门禁 |
+| `references/` | 14 篇：开荒、可见性边界、四件套总纲、优雅原则、形态词汇表（11 布局 + 9 交互）、逐页实现、漏洞预检、升级迁移、15 分钟最小版、和现成方案的边界 |
+| `templates/` | 可直接拷进项目的 `AGENTS.md` / `structure.json` / `project.json` / `rules.json` / `components.json` / `wiki.json` / `wiki/` 五篇 / 设置页外壳 |
+| `scripts/` | `console-check.mjs`（四件套 + 目录 + 项目章程，19 项）、`preflight-scan.mjs`（上线前漏洞扫描，17 条规则） |
 
 两个脚本都是**零依赖、Node ≥ 18**，不需要 `npm install`。
 
